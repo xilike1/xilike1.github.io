@@ -1,5 +1,5 @@
 {
-  "version": "2.1.0-ui-v3",
+  "version": "2.1.1-ui-v3.1",
   "profile": "normal",
   "files": {
     "balance.js": {
@@ -7,8 +7,8 @@
       "sha256": "db71537c28a0fe6ac782dbf8e7489197aaef8d8cec12793b17ab6d01892fc244"
     },
     "index.html": {
-      "bytes": 214426,
-      "sha256": "21a765bb04b21006552f4a0b636b1944f94136a6fae6034acf94fc684b38746b"
+      "bytes": 217284,
+      "sha256": "a6c563afc108b04323a7bfbb1de401259b83a9836358707f131174323cb1daee"
     },
     "levels.js": {
       "bytes": 2567,

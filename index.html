@@ -416,48 +416,64 @@ body{background:#030b21}
 #labTools button{background:#12385d;color:#fff;border:1px solid #5fb2d9;border-radius:6px;padding:8px;cursor:pointer}
 #labTools .labRow{display:flex;gap:8px;margin:8px 0}#labTools small{display:block;line-height:1.7;color:#a9c1da}
 
-/* ===== UI v3 (reference redesign): slim HUD, circular tools, compact tabs =====
-   Appended last so it wins over earlier rules at equal specificity.
-   HUD rows shrink 48/62/22 -> 42/30/18: the battlefield gains ~46px and the
-   combat projection already measures the real HUD bounds. The fixed offsets
-   for side tools / powers / pause move up by the same delta. */
-#hud{grid-template-rows:42px 30px 18px;gap:4px}
-#playerProgress{height:42px;padding:3px 6px}
-#playerProgress .rankEmblem{flex-basis:24px;width:24px;height:28px;font-size:20px}
+/* ===== UI v3.1 (reference redesign): ONE unified top bar, circular tools,
+   unified tab bar. Appended last so it wins at equal specificity.
+   The HUD becomes a single bordered panel: level / coins / gems / settings
+   are segments of one bar (row 1), defense + galaxy share row 2 as borderless
+   segments, and the status pill sits centered as row 3. Combat projection
+   measures the real HUD bounds, so the field follows automatically. ===== */
+#hud{top:calc(6px + env(safe-area-inset-top));left:8px;right:8px;
+ grid-template-rows:40px 28px 18px;gap:4px;
+ padding:6px 8px 7px;border:1px solid #2c5da8;border-radius:16px;
+ background:linear-gradient(180deg,rgba(7,16,40,.96),rgba(5,10,28,.94));
+ box-shadow:0 4px 18px rgba(0,0,0,.45),inset 0 0 18px rgba(38,110,220,.12)}
+#playerProgress{height:40px;padding:3px 8px 3px 4px;background:none!important;border:none!important;
+ box-shadow:none!important;border-radius:0!important;border-right:1px solid rgba(90,150,255,.25)!important}
+#playerProgress .rankEmblem{flex-basis:26px;width:26px;height:26px;border-radius:50%;font-size:19px}
 #playerLevel{font-size:13px!important;line-height:15px}
 #playerName{font-size:9px;line-height:11px}
-#goldBig.hudChip,.gemChip{height:42px}
+#goldBig.hudChip,.gemChip{height:40px;background:none!important;border:none!important;box-shadow:none!important;border-radius:0!important}
+#goldBig.hudChip{border-right:1px solid rgba(90,150,255,.25)!important}
 #goldBig .coinIcon,.gemChip>span{font-size:16px}
-#topSettings{font-size:18px}
-#baseWrap{height:30px;min-height:0;padding:3px 7px}
-.defShield{font-size:16px}
+#topSettings{width:34px;height:34px;justify-self:center;align-self:center;border-radius:50%;font-size:17px}
+#baseWrap{height:28px;min-height:0;padding:2px 8px 2px 2px;background:none!important;border:none!important;
+ box-shadow:none!important;border-radius:0!important;border-right:1px solid rgba(90,150,255,.25)!important}
+.defShield{font-size:15px}
 .defLabel{font-size:8px;margin-bottom:2px}
 #baseBarBg{height:6px}
 #baseTxt{font-size:9px;margin-top:0}
-#galaxyQuick{height:30px;min-height:0!important;padding:2px 5px!important}
-.galaxyPortal{width:23px;height:23px;flex-basis:23px;font-size:15px}
-.galaxyInfo{flex-direction:row;align-items:center;gap:6px}
-#hud #hGalaxy{font-size:11px}
-.galaxyInfo small{font-size:8px;white-space:nowrap}
-#galaxyNextLabel{margin-top:0;font-size:7px}
+#galaxyQuick{height:28px;min-height:0!important;padding:2px 2px 2px 6px!important;background:none!important;
+ border:none!important;box-shadow:none!important;border-radius:0!important}
+.galaxyPortal{width:22px;height:22px;flex-basis:22px;font-size:14px;border-radius:50%}
+.galaxyInfo{flex-direction:row;align-items:center;gap:5px}
+#hud #hGalaxy{font-size:12px}
+.galaxyInfo small{font-size:8.5px;white-space:nowrap}
+#galaxyNextLabel{margin-top:0;font-size:7.5px}
 #galaxyNextTrack{display:none}
+.galaxyArrow{font-size:12px}
 #combatLevelStatus{justify-self:center;width:fit-content;min-width:52%;padding:0 14px;
- border-radius:99px;font-size:10px;line-height:17px}
-#sideTools{top:calc(125px + env(safe-area-inset-top));left:6px;gap:8px}
+ border-radius:99px;font-size:10px;line-height:17px;background:rgba(20,50,110,.45)}
+#sideTools{top:calc(141px + env(safe-area-inset-top));left:6px;gap:8px}
 #sideTools button{width:44px;height:44px;border-radius:50%;gap:0}
 #sideTools button svg{width:20px;height:20px}
 #sideTools button::after{display:none}
-#powersCol{top:calc(131px + env(safe-area-inset-top));right:7px}
+#powersCol{top:calc(147px + env(safe-area-inset-top));right:7px}
 #ultimateToggle{width:46px;height:46px;border-radius:50%;font-size:21px}
 #ultimateToggle::after{font-size:6px;margin-top:-1px}
-#pauseBtn{top:calc(108px + env(safe-area-inset-top))}
+#pauseBtn{top:calc(129px + env(safe-area-inset-top))}
 #panelHandle{height:22px}
-#tabbar{min-height:54px;padding:4px 5px calc(4px + env(safe-area-inset-bottom))}
-#tabbar button{padding:4px 2px;border-radius:10px}
+#tabbar{min-height:54px;margin:0 8px calc(6px + env(safe-area-inset-bottom));
+ padding:5px;border:1px solid #2c5da8;border-radius:16px;
+ background:linear-gradient(180deg,rgba(7,16,40,.97),rgba(5,10,28,.97))}
+#tabbar button{padding:4px 2px;border:none;background:transparent;border-radius:99px}
 #tabbar button .ico{font-size:17px}
+#tabbar button.on{background:linear-gradient(180deg,#1a9bf5,#0d63c8);color:#fff;
+ box-shadow:0 0 10px rgba(30,150,255,.5)}
+#tabbar button.on::after{display:none}
 @media(max-width:390px){
  #playerLevel{font-size:12px!important}
  #combatLevelStatus{min-width:64%}
+ .galaxyInfo small{display:none}
 }
 </style>
 </head>
@@ -532,7 +548,7 @@ body{background:#030b21}
     <h1>NEON DEFENSE</h1>
     <p><b id="menuGalaxy">🌌 AURORA</b> — continuous defense, no waves<br>Hold the line across 5 lanes. Defense fires automatically. Tap enemies to prioritize, long-press to lock.</p>
     <div class="row"><button class="bigBtn go" id="btnStart">▶ START DEFENSE</button></div>
-    <p style="margin-top:12px;font-size:11px">v2.1 Gold Courier · UI v3 · progress saves locally</p>
+    <p style="margin-top:12px;font-size:11px">v2.1 Gold Courier · UI v3.1 · progress saves locally</p>
   </div>
 </div>
 
@@ -976,7 +992,7 @@ function renderPlayerProgress(){
   document.getElementById('playerLevel').textContent='LEVEL '+galaxyLevel(G.id);
   const spec=levelSpec(),done=Director.killed+Director.breached;
   document.getElementById('playerXpFill').style.width=(100*Math.min(1,done/spec.count))+'%';
-  document.getElementById('combatLevelStatus').textContent=Director.phase==='guardian'?'GUARDIAN · '+G.name:Director.phase==='complete'?'GALAXY COMPLETE':G.name+' · '+Director.killed+'/'+spec.count+' defeated'+(Director.breached?' · '+Director.breached+' breached':'');
+  document.getElementById('combatLevelStatus').textContent=Director.phase==='guardian'?'GUARDIAN · '+G.name:Director.phase==='complete'?'GALAXY COMPLETE':G.name+' · Galaxy '+(galaxyIndex(G.id)+1)+'/'+GALAXIES.length+' · '+Director.killed+'/'+spec.count+' defeated'+(Director.breached?' · '+Director.breached+' breached':'');
   const next=nextGalaxyRequirement();
   const name=document.getElementById('nextGalaxyName'),pct=document.getElementById('nextGalaxyPct');
   const fill=document.getElementById('nextGalaxyFill');
@@ -1301,31 +1317,41 @@ function drawDefenseLine() {
   const y = projY(1);
   const f = clamp(S.baseHP / S.baseMax, 0, 1);
   const shielded = S.time < (S.lineShieldUntil || 0);
-  /* UI v3: the line IS the defense health — a glowing platform edge whose
-     color follows hull integrity (green -> gold -> red), per the reference.
-     The label sits in a pill below the line, clear of the turret barrels
-     (the old centered label was clipped behind the turrets). */
+  /* UI v3.1: the turrets stand on a raised platform deck, as in the
+     reference. The deck's glowing front edge IS the defense line and follows
+     hull integrity (green -> gold -> red). Drawn before turrets/enemies, so
+     the weapons stand on it. The label rides the deck's front face. */
   const hue = shielded ? 160 : Math.round(f * 130);
   const pulse = 0.6 + 0.25 * Math.sin(S.time * 3);
-  const x0 = W * 0.04, x1 = W * 0.96;
+  const x0 = W * 0.03, x1 = W * 0.97;
+  const deckH = Math.max(16, Math.min(30, H - y - 2));
   ctx.save();
+  // deck body
+  const dg = ctx.createLinearGradient(0, y, 0, y + deckH);
+  dg.addColorStop(0, 'rgba(11,24,56,.94)');
+  dg.addColorStop(1, 'rgba(4,8,24,.97)');
+  ctx.fillStyle = dg;
+  ctx.fillRect(x0, y, x1 - x0, deckH);
+  // glow bed on the deck's top edge
   const g = ctx.createLinearGradient(0, 0, W, 0);
   g.addColorStop(0, 'hsla(' + hue + ',100%,60%,0)');
-  g.addColorStop(0.12, 'hsla(' + hue + ',100%,60%,' + (0.35 * pulse) + ')');
-  g.addColorStop(0.88, 'hsla(' + hue + ',100%,60%,' + (0.35 * pulse) + ')');
+  g.addColorStop(0.12, 'hsla(' + hue + ',100%,60%,' + (0.4 * pulse) + ')');
+  g.addColorStop(0.88, 'hsla(' + hue + ',100%,60%,' + (0.4 * pulse) + ')');
   g.addColorStop(1, 'hsla(' + hue + ',100%,60%,0)');
   ctx.fillStyle = g;
-  ctx.fillRect(x0, y - 5, x1 - x0, 10);
-  ctx.strokeStyle = 'hsla(' + hue + ',100%,' + (55 + 15 * f) + '%,' + (0.55 + 0.45 * pulse) + ')';
-  ctx.lineWidth = 3;
+  ctx.fillRect(x0, y - 3, x1 - x0, 6);
+  // top edge line (where the turrets stand)
+  ctx.strokeStyle = 'hsla(' + hue + ',100%,' + (55 + 15 * f) + '%,' + (0.6 + 0.4 * pulse) + ')';
+  ctx.lineWidth = 2.5;
   ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
+  // front edge = defense health, colored by hull
+  ctx.fillStyle = 'hsla(' + hue + ',100%,' + (50 + 18 * f) + '%,' + (0.7 + 0.3 * pulse) + ')';
+  ctx.fillRect(x0, y + deckH - 3, x1 - x0, 3);
+  // label on the deck's front face
   ctx.font = '700 9px Tahoma, Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   const label = shielded ? '🛡 LINE SHIELD ' + Math.ceil(S.lineShieldUntil - S.time) + 's' : 'DEFENSE LINE';
-  const tw = ctx.measureText(label).width + 16;
-  ctx.fillStyle = 'rgba(4,10,26,.72)';
-  ctx.fillRect(W / 2 - tw / 2, y + 7, tw, 14);
-  ctx.fillStyle = 'hsla(' + hue + ',100%,82%,.95)';
-  ctx.fillText(label, W / 2, y + 14.5);
+  ctx.fillStyle = 'hsla(' + hue + ',100%,84%,.95)';
+  ctx.fillText(label, W / 2, y + deckH - 11);
   ctx.restore();
   ctx.textBaseline = 'alphabetic';
 }
@@ -1415,15 +1441,17 @@ function drawEnemyBody(e, p, r) {
     ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.3, 0, TAU); ctx.fill();
     ctx.fillStyle = 'hsla(40,100%,70%,.9)';
     ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.15, 0, TAU); ctx.fill();
-  } else { // AURORA: smooth spherical energy orb — UI v3 hero-ball look
+  } else { // AURORA: smooth spherical energy orb — UI v3.1 hero-ball look
     drawSphere(p.x, p.y, r, hue, 90, 55, false);
     ctx.save();
-    ctx.strokeStyle = 'hsla(' + hue + ',100%,82%,.55)'; ctx.lineWidth = Math.max(1, 1.6 * p.s);
-    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.55, e.wob * 1.3, e.wob * 1.3 + 3.6); ctx.stroke();
-    ctx.strokeStyle = 'hsla(' + hue + ',100%,70%,.35)';
-    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.78, -e.wob, -e.wob + 2.4); ctx.stroke();
-    ctx.fillStyle = 'hsla(' + hue + ',100%,85%,.8)';
-    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.13, 0, TAU); ctx.fill();
+    ctx.strokeStyle = 'hsla(' + hue + ',100%,84%,.85)'; ctx.lineWidth = Math.max(1.4, 2.4 * p.s);
+    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.52, e.wob * 1.3, e.wob * 1.3 + 3.8); ctx.stroke();
+    ctx.strokeStyle = 'hsla(' + hue + ',100%,72%,.5)'; ctx.lineWidth = Math.max(1.2, 2 * p.s);
+    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.76, -e.wob, -e.wob + 2.6); ctx.stroke();
+    ctx.fillStyle = 'hsla(' + hue + ',100%,88%,.95)';
+    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.17, 0, TAU); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.9)';
+    ctx.beginPath(); ctx.arc(p.x - r * 0.3, p.y - r * 0.34, r * 0.07, 0, TAU); ctx.fill();
     ctx.restore();
   }
 }
@@ -2653,33 +2681,47 @@ function updateEnemies(dt) {
   }
 }
 
-/* UI v3 — the ball is the reference.
-   Segmented health ring wrapped around the enemy body itself, replacing the
-   floating HP bar. The dark track doubles as the thin outer rim from the
-   reference image; arc color keeps the old bar thresholds
-   (green > 50%, gold > 25%, red below). Pure painter: no state is touched. */
+/* UI v3.1 — the ball is the reference.
+   Every enemy wears the reference ball's hardware at all times: a segmented
+   ring around the body (dark track segments + lit segments = remaining HP),
+   a thin outer rim and tick marks. Full HP = full ring lit, so the design is
+   visible before the first hit — not only after damage. Pure painter. */
 function drawOrbHealthRing(e, p, r) {
-  if (!(e.hp < e.maxhp)) return;
   const frac = clamp(e.hp / e.maxhp, 0, 1);
-  const rr = r * 1.16, lw = Math.max(2, 2.6 * p.s), segs = 10;
+  const rr = r * 1.24, lw = Math.max(2.4, 3.4 * p.s), segs = 10;
   const col = frac > 0.5 ? '#7dff9a' : frac > 0.25 ? '#ffd54a' : '#ff5d5d';
   ctx.save();
-  // outer rim / track
-  ctx.lineWidth = lw;
-  ctx.strokeStyle = 'rgba(6,12,28,.55)';
+  // soft glow bed under the ring
+  ctx.lineWidth = lw * 2.1;
+  ctx.strokeStyle = 'hsla(' + e.hue + ',95%,55%,.16)';
   ctx.beginPath(); ctx.arc(p.x, p.y, rr, 0, TAU); ctx.stroke();
+  // outer rim + ticks (the reference ball's mechanical edge)
   ctx.lineWidth = 1;
-  ctx.strokeStyle = 'rgba(160,210,255,.30)';
-  ctx.beginPath(); ctx.arc(p.x, p.y, rr + lw * 0.85, 0, TAU); ctx.stroke();
-  // segmented health arc, starting at top, clockwise
-  ctx.strokeStyle = col; ctx.lineWidth = lw;
-  const gap = 0.09, span = (TAU - gap * segs) / segs, lit = frac * segs;
+  ctx.strokeStyle = 'rgba(170,215,255,.40)';
+  ctx.beginPath(); ctx.arc(p.x, p.y, rr + lw * 0.95, 0, TAU); ctx.stroke();
+  ctx.strokeStyle = 'rgba(170,215,255,.5)';
+  ctx.lineWidth = Math.max(1, 1.2 * p.s);
+  for (let k = 0; k < 12; k++) {
+    const a = k * TAU / 12 + 0.13, r0 = rr + lw * 1.05, r1 = r0 + lw * 0.55;
+    ctx.beginPath();
+    ctx.moveTo(p.x + Math.cos(a) * r0, p.y + Math.sin(a) * r0);
+    ctx.lineTo(p.x + Math.cos(a) * r1, p.y + Math.sin(a) * r1);
+    ctx.stroke();
+  }
+  // segmented ring: track first, then lit segments by HP, from the top
+  const gap = 0.10, span = (TAU - gap * segs) / segs, lit = frac * segs;
+  ctx.lineWidth = lw;
   for (let k = 0; k < segs; k++) {
-    if (k >= Math.ceil(lit)) break;
-    const a0 = -Math.PI / 2 + k * (span + gap);
-    const a1 = a0 + span * Math.min(1, lit - k);
-    if (a1 <= a0) continue;
+    const a0 = -Math.PI / 2 + k * (span + gap), a1 = a0 + span;
+    ctx.strokeStyle = 'rgba(10,18,38,.72)';
     ctx.beginPath(); ctx.arc(p.x, p.y, rr, a0, a1); ctx.stroke();
+    if (k < Math.ceil(lit)) {
+      const b1 = a0 + span * Math.min(1, lit - k);
+      if (b1 > a0) {
+        ctx.strokeStyle = col;
+        ctx.beginPath(); ctx.arc(p.x, p.y, rr, a0, b1); ctx.stroke();
+      }
+    }
   }
   ctx.restore();
 }
@@ -2694,7 +2736,7 @@ function drawEnemies() {
   list.sort((a, b) => a.t - b.t);
   for (const e of list) {
     const p = w2s(e.lane, e.t);
-    const r = Math.max(9,e.r * p.s);
+    const r = Math.max(9, e.r * p.s) * 1.15; // UI v3.1: hero-size orbs (visual only)
     if(e.bonusGold){drawGoldOrb(e,p,r);continue;}
     // glow halo
     const g = ctx.createRadialGradient(p.x, p.y, 1, p.x, p.y, r * 2.1);
@@ -2728,11 +2770,11 @@ function drawEnemies() {
     }
     if (e.type === 'TANK') {
       ctx.strokeStyle = 'rgba(200,220,255,.8)'; ctx.lineWidth = Math.max(2, 3 * p.s);
-      ctx.beginPath(); ctx.arc(p.x, p.y, r * 1.25, 0, TAU); ctx.stroke();
+      ctx.beginPath(); ctx.arc(p.x, p.y, r * 1.46, 0, TAU); ctx.stroke();
       ctx.fillStyle = 'rgba(200,220,255,.9)';
       for (let k = 0; k < 4; k++) {
         const a = k * Math.PI / 2 + 0.4;
-        ctx.beginPath(); ctx.arc(p.x + Math.cos(a) * r * 1.25, p.y + Math.sin(a) * r * 1.25, 2.4 * p.s, 0, TAU); ctx.fill();
+        ctx.beginPath(); ctx.arc(p.x + Math.cos(a) * r * 1.46, p.y + Math.sin(a) * r * 1.46, 2.4 * p.s, 0, TAU); ctx.fill();
       }
     } else if (e.type === 'BRUTE') {
       // monster orb: rotating spikes + pulsing core
