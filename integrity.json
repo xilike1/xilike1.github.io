@@ -1,30 +1,12 @@
 {
-  "version": "2.1.1-ui-v3.1",
+  "version": "2.1.2-families-v1",
   "profile": "normal",
   "files": {
-    "balance.js": {
-      "bytes": 2043,
-      "sha256": "db71537c28a0fe6ac782dbf8e7489197aaef8d8cec12793b17ab6d01892fc244"
-    },
-    "index.html": {
-      "bytes": 217284,
-      "sha256": "a6c563afc108b04323a7bfbb1de401259b83a9836358707f131174323cb1daee"
-    },
-    "levels.js": {
-      "bytes": 2567,
-      "sha256": "3244f7e204f2b3c2c6c5e28293a62b2d021afce032e0045bf3b2c59127795282"
-    },
-    "manifest.webmanifest": {
-      "bytes": 169,
-      "sha256": "5406d11b9208c0110c4299d4891c6f59ae4a2797414cb48a8178fedf8412db84"
-    },
-    "runtime-config.js": {
-      "bytes": 91,
-      "sha256": "4627992caae7812e83d0c9c24443957c588bfde757e458847d10d704ea94ae62"
-    },
-    "vercel.json": {
-      "bytes": 185,
-      "sha256": "44e1e1dd7b7646bae93556e978ed79157b5dea282b39a26616817c5c6b6b3f53"
-    }
+    "balance.js": "db71537c28a0fe6ac782dbf8e7489197aaef8d8cec12793b17ab6d01892fc244",
+    "index.html": "937b95d7b1a0177f18d8c4c08dd2e4027cd5596f896941c2c25ccea945ce11cf",
+    "levels.js": "3244f7e204f2b3c2c6c5e28293a62b2d021afce032e0045bf3b2c59127795282",
+    "manifest.webmanifest": "5406d11b9208c0110c4299d4891c6f59ae4a2797414cb48a8178fedf8412db84",
+    "runtime-config.js": "4627992caae7812e83d0c9c24443957c588bfde757e458847d10d704ea94ae62",
+    "vercel.json": "44e1e1dd7b7646bae93556e978ed79157b5dea282b39a26616817c5c6b6b3f53"
   }
 }

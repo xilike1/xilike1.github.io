@@ -548,7 +548,7 @@ body{background:#030b21}
     <h1>NEON DEFENSE</h1>
     <p><b id="menuGalaxy">🌌 AURORA</b> — continuous defense, no waves<br>Hold the line across 5 lanes. Defense fires automatically. Tap enemies to prioritize, long-press to lock.</p>
     <div class="row"><button class="bigBtn go" id="btnStart">▶ START DEFENSE</button></div>
-    <p style="margin-top:12px;font-size:11px">v2.1 Gold Courier · UI v3.1 · progress saves locally</p>
+    <p style="margin-top:12px;font-size:11px">v2.1 Gold Courier · UI v3.1 · Galaxy Families · progress saves locally</p>
   </div>
 </div>
 
@@ -1384,28 +1384,193 @@ function polyPath(x, y, r, n, rot) {
   }
   ctx.closePath();
 }
+/* ============ GALAXY FAMILIES v1 — one enemy family per galaxy ============
+   Replaces the shape painters in drawEnemyBody. Every galaxy gets the family
+   from its approved reference image, built only from canvas primitives
+   (polygons, arcs, gradients, dots, lines) so it renders identically in the
+   real game. The family's signature detail ESCALATES with the combat level
+   inside the galaxy (tier = galaxyLevel, capped 5): more cracks, more gear
+   teeth, more rings — every level looks a step richer than the last.
+   Presentation only: no gameplay, economy or save changes. */
+function famRand(e, k) { const x = Math.sin((e.id || 7) * 127.1 + k * 311.7) * 43758.5453; return x - Math.floor(x); }
 function drawEnemyBody(e, p, r) {
-  const shape = G.enemy.shape, hue = e.hue;
+  const shape = G.enemy.shape, hue = e.hue, gid = G.id;
+  const tier = Math.min(5, galaxyLevel(gid));
   if (r > 3) { // ground shadow (shared)
     ctx.fillStyle = 'rgba(0,0,0,.35)';
     ctx.beginPath(); ctx.ellipse(p.x, p.y + r * 0.95, r * 0.9, r * 0.3, 0, 0, TAU); ctx.fill();
   }
-  if (shape === 'hex') { // EMBER: faceted hexagon
+  if (gid === 'singularity') { // SINGULARITY: black-hole core, gold-violet accretion ring
+    ctx.save();
+    ctx.translate(p.x, p.y); ctx.rotate(-0.42); ctx.scale(1, 0.36);
+    ctx.lineWidth = Math.max(1.5, r * 0.16); ctx.strokeStyle = 'hsla(45,100%,62%,.55)';
+    ctx.beginPath(); ctx.arc(0, 0, r * 1.02, Math.PI, TAU); ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle = '#010102';
+    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.78, 0, TAU); ctx.fill();
+    ctx.strokeStyle = 'hsla(275,100%,72%,.9)'; ctx.lineWidth = Math.max(1.2, 1.8 * p.s);
+    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.78, 0, TAU); ctx.stroke();
+    ctx.save();
+    ctx.translate(p.x, p.y); ctx.rotate(-0.42); ctx.scale(1, 0.36);
+    ctx.lineWidth = Math.max(1.5, r * 0.16);
+    const ag = ctx.createLinearGradient(-r, 0, r, 0);
+    ag.addColorStop(0, 'hsla(45,100%,65%,.95)'); ag.addColorStop(0.5, 'hsla(280,100%,75%,.95)'); ag.addColorStop(1, 'hsla(45,100%,65%,.95)');
+    ctx.strokeStyle = ag;
+    ctx.beginPath(); ctx.arc(0, 0, r * 1.02, 0, Math.PI); ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle = 'hsla(45,100%,75%,.9)';
+    const sparks = 3 + tier;
+    for (let k = 0; k < sparks; k++) {
+      const sd = famRand(e, k + 3), a = sd * TAU + S.time * (0.5 + sd), rr = r * (1.05 - ((S.time * 0.12 + sd) % 0.35));
+      ctx.beginPath(); ctx.arc(p.x + Math.cos(a) * rr, p.y + Math.sin(a) * rr * 0.8, Math.max(0.8, 1.4 * p.s), 0, TAU); ctx.fill();
+    }
+  } else if (gid === 'bloodmoon') { // BLOODMOON: crimson segmented armor + horns + pulsing core
+    const pulse = 1 + 0.06 * Math.sin(S.time * 4 + e.wob);
+    ctx.fillStyle = 'hsla(350,65%,26%,1)';
+    for (const hp of [[-2.35, -0.5], [-0.79, 0.5]]) { // horns
+      ctx.beginPath();
+      ctx.moveTo(p.x + Math.cos(hp[0]) * r * 0.82, p.y + Math.sin(hp[0]) * r * 0.82);
+      ctx.lineTo(p.x + Math.cos(hp[0] + hp[1] * 0.35) * r * 1.22, p.y + Math.sin(hp[0] + hp[1] * 0.35) * r * 1.22);
+      ctx.lineTo(p.x + Math.cos(hp[0] + hp[1]) * r * 0.82, p.y + Math.sin(hp[0] + hp[1]) * r * 0.82);
+      ctx.closePath(); ctx.fill();
+    }
+    ctx.lineWidth = Math.max(2, r * 0.3);
+    for (let k = 0; k < 8; k++) {
+      const a0 = e.wob * 0.2 + k * TAU / 8 + 0.06, a1 = a0 + TAU / 8 - 0.12;
+      ctx.strokeStyle = k % 2 ? 'hsla(350,60%,30%,1)' : 'hsla(350,65%,38%,1)';
+      ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.8, a0, a1); ctx.stroke();
+    }
+    if (tier >= 3) {
+      ctx.lineWidth = Math.max(1.2, r * 0.09);
+      ctx.strokeStyle = 'hsla(350,80%,50%,.7)';
+      ctx.beginPath(); ctx.arc(p.x, p.y, r * 1.02, e.wob * 0.2, e.wob * 0.2 + 4.2); ctx.stroke();
+    }
+    drawSphere(p.x, p.y, r * 0.36 * pulse, 350, 95, 52, false);
+  } else if (gid === 'nexus') { // NEXUS: counter-rotating quantum double rings
+    ctx.save();
+    ctx.setLineDash([Math.max(2, r * 0.3), Math.max(2, r * 0.18)]);
+    ctx.lineDashOffset = -e.wob * 14;
+    ctx.lineWidth = Math.max(1.6, r * 0.13);
+    ctx.strokeStyle = 'hsla(' + hue + ',95%,68%,.95)';
+    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.95, 0, TAU); ctx.stroke();
+    ctx.restore();
+    ctx.lineWidth = Math.max(1.6, r * 0.15);
+    ctx.strokeStyle = 'hsla(' + hue + ',95%,62%,.95)';
+    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.62, 0, TAU); ctx.stroke();
+    ctx.lineWidth = Math.max(1, r * 0.07);
+    ctx.strokeStyle = 'hsla(' + hue + ',100%,84%,.95)';
+    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.62, -e.wob * 1.6, -e.wob * 1.6 + 2.4); ctx.stroke();
+    ctx.fillStyle = 'hsla(' + hue + ',100%,85%,.95)';
+    const nodes = 3 + (tier >= 3 ? 1 : 0) + (tier >= 5 ? 1 : 0);
+    for (let k = 0; k < nodes; k++) {
+      const a = -e.wob * 1.6 + k * TAU / nodes;
+      ctx.beginPath(); ctx.arc(p.x + Math.cos(a) * r * 0.62, p.y + Math.sin(a) * r * 0.62, Math.max(1.2, r * 0.07), 0, TAU); ctx.fill();
+    }
+    if (tier >= 4) { // third ring at high levels
+      ctx.lineWidth = Math.max(1, r * 0.06);
+      ctx.strokeStyle = 'hsla(' + hue + ',90%,70%,.6)';
+      ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.4, e.wob, e.wob + 3.6); ctx.stroke();
+    }
+    drawSphere(p.x, p.y, r * 0.28, hue, 95, 60, false);
+  } else if (gid === 'nova') { // NOVA: golden sun-machine, rotating gear ring
     const rot = e.wob * 0.3;
     const g2 = ctx.createLinearGradient(p.x - r, p.y - r, p.x + r, p.y + r);
-    g2.addColorStop(0, 'hsla(' + hue + ',90%,65%,1)');
-    g2.addColorStop(1, 'hsla(' + hue + ',90%,38%,1)');
+    g2.addColorStop(0, 'hsla(45,90%,58%,1)'); g2.addColorStop(1, 'hsla(38,90%,34%,1)');
+    polyPath(p.x, p.y, r * 0.72, 6, rot);
+    ctx.fillStyle = g2; ctx.fill();
+    ctx.strokeStyle = 'hsla(45,95%,72%,.9)'; ctx.lineWidth = Math.max(1.2, 1.6 * p.s); ctx.stroke();
+    const teeth = 10 + tier * 2, trot = S.time * 0.5 + e.wob;
+    ctx.fillStyle = 'hsla(43,85%,50%,1)';
+    for (let k = 0; k < teeth; k++) {
+      const a = trot + k * TAU / teeth;
+      ctx.save(); ctx.translate(p.x + Math.cos(a) * r * 0.88, p.y + Math.sin(a) * r * 0.88); ctx.rotate(a);
+      ctx.fillRect(-r * 0.05, -r * 0.09, r * 0.1, r * 0.18);
+      ctx.restore();
+    }
+    ctx.lineWidth = Math.max(1.4, r * 0.09);
+    ctx.strokeStyle = 'hsla(45,90%,60%,.9)';
+    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.88, 0, TAU); ctx.stroke();
+    ctx.strokeStyle = 'hsla(50,100%,76%,.95)'; ctx.lineWidth = Math.max(1.2, 1.8 * p.s);
+    for (let k = 0; k < 8; k++) {
+      const a = -S.time * 0.7 + k * TAU / 8;
+      ctx.beginPath();
+      ctx.moveTo(p.x + Math.cos(a) * r * 0.3, p.y + Math.sin(a) * r * 0.3);
+      ctx.lineTo(p.x + Math.cos(a) * r * 0.48, p.y + Math.sin(a) * r * 0.48);
+      ctx.stroke();
+    }
+    const sg = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 0.3);
+    sg.addColorStop(0, 'hsla(52,100%,88%,1)'); sg.addColorStop(1, 'hsla(45,100%,58%,1)');
+    ctx.fillStyle = sg;
+    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.3, 0, TAU); ctx.fill();
+  } else if (gid === 'cryon') { // CRYON: jagged ice shard, frost cracks, corner spikes
+    const rot = Math.PI / 4 + Math.sin(e.wob * 0.5) * 0.12;
+    const g2 = ctx.createLinearGradient(p.x, p.y - r, p.x, p.y + r);
+    g2.addColorStop(0, 'hsla(' + hue + ',90%,84%,1)');
+    g2.addColorStop(0.5, 'hsla(' + hue + ',85%,64%,1)');
+    g2.addColorStop(1, 'hsla(' + hue + ',85%,44%,1)');
+    polyPath(p.x, p.y, r, 4, rot);
+    ctx.fillStyle = g2; ctx.fill();
+    ctx.strokeStyle = 'hsla(' + hue + ',100%,90%,.95)'; ctx.lineWidth = Math.max(1.5, 2 * p.s); ctx.stroke();
+    ctx.fillStyle = 'hsla(' + hue + ',90%,70%,.9)';
+    for (let k = 0; k < 4; k++) { // corner spikes
+      const a = rot + k * TAU / 4 + Math.PI / 4 * 0 + k * 0; // corners of the diamond
+      const cx = p.x + Math.cos(a) * r, cy = p.y + Math.sin(a) * r;
+      const bx = Math.cos(a + 0.5) * r * 0.16, by = Math.sin(a + 0.5) * r * 0.16;
+      ctx.beginPath();
+      ctx.moveTo(cx - bx, cy - by);
+      ctx.lineTo(cx + Math.cos(a) * r * (0.22 + tier * 0.02), cy + Math.sin(a) * r * (0.22 + tier * 0.02));
+      ctx.lineTo(cx + bx, cy + by);
+      ctx.closePath(); ctx.fill();
+    }
+    ctx.strokeStyle = 'rgba(255,255,255,.65)'; ctx.lineWidth = 1;
+    const cracks = 2 + tier;
+    for (let k = 0; k < cracks; k++) { // frost cracks
+      const a = famRand(e, k + 11) * TAU, rr = r * (0.3 + famRand(e, k + 21) * 0.5);
+      const mx = p.x + Math.cos(a + 0.4) * rr * 0.6, my = p.y + Math.sin(a + 0.4) * rr * 0.6;
+      ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(mx, my);
+      ctx.lineTo(p.x + Math.cos(a) * rr, p.y + Math.sin(a) * rr); ctx.stroke();
+    }
+    polyPath(p.x, p.y, r * 0.34, 4, rot);
+    ctx.fillStyle = 'hsla(' + hue + ',100%,90%,.9)'; ctx.fill();
+    if (tier >= 4) {
+      ctx.strokeStyle = 'hsla(' + hue + ',100%,88%,.3)'; ctx.lineWidth = Math.max(1.4, 2.4 * p.s);
+      ctx.beginPath(); ctx.arc(p.x, p.y, r * 1.14, 0, TAU); ctx.stroke();
+    }
+  } else if (shape === 'hex') { // EMBER: molten hexagon, lava cracks to the core
+    const rot = e.wob * 0.3;
+    const g2 = ctx.createLinearGradient(p.x - r, p.y - r, p.x + r, p.y + r);
+    g2.addColorStop(0, 'hsla(' + hue + ',85%,52%,1)');
+    g2.addColorStop(1, 'hsla(' + hue + ',85%,28%,1)');
     polyPath(p.x, p.y, r, 6, rot);
     ctx.fillStyle = g2; ctx.fill();
-    ctx.strokeStyle = 'hsla(' + hue + ',95%,75%,.9)'; ctx.lineWidth = Math.max(1.5, 2 * p.s); ctx.stroke();
-    ctx.strokeStyle = 'hsla(' + hue + ',90%,30%,.55)'; ctx.lineWidth = 1;
+    ctx.strokeStyle = 'hsla(' + hue + ',95%,68%,.9)'; ctx.lineWidth = Math.max(1.5, 2 * p.s); ctx.stroke();
+    ctx.strokeStyle = 'hsla(' + hue + ',90%,24%,.6)'; ctx.lineWidth = 1;
     for (let k = 0; k < 6; k++) {
       const a = rot + k * TAU / 6;
       ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + Math.cos(a) * r, p.y + Math.sin(a) * r); ctx.stroke();
     }
-    ctx.fillStyle = 'hsla(' + hue + ',100%,80%,.9)';
-    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.22, 0, TAU); ctx.fill();
-  } else if (shape === 'cube') { // JADE: crystalline diamond
+    const cracks = 3 + tier;
+    for (let k = 0; k < cracks; k++) { // lava cracks: jagged glowing lines core -> rim
+      const a = rot + famRand(e, k + 5) * TAU;
+      const mx = p.x + Math.cos(a + 0.35) * r * 0.55, my = p.y + Math.sin(a + 0.35) * r * 0.55;
+      ctx.strokeStyle = 'hsla(28,100%,55%,.85)'; ctx.lineWidth = Math.max(1.6, 2.6 * p.s);
+      ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(mx, my);
+      ctx.lineTo(p.x + Math.cos(a) * r * 0.92, p.y + Math.sin(a) * r * 0.92); ctx.stroke();
+      ctx.strokeStyle = 'hsla(48,100%,72%,.95)'; ctx.lineWidth = Math.max(0.8, 1.2 * p.s);
+      ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(mx, my);
+      ctx.lineTo(p.x + Math.cos(a) * r * 0.92, p.y + Math.sin(a) * r * 0.92); ctx.stroke();
+    }
+    ctx.fillStyle = 'hsla(32,100%,56%,1)';
+    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.24, 0, TAU); ctx.fill();
+    ctx.fillStyle = 'hsla(48,100%,74%,.95)';
+    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.13, 0, TAU); ctx.fill();
+    ctx.fillStyle = 'hsla(35,100%,65%,.8)';
+    for (let k = 0; k < 1 + tier; k++) { // rising ember sparks
+      const sd = famRand(e, k + 31), sx = p.x + (sd - 0.5) * r * 1.2;
+      const sy = p.y - r * 0.4 - ((S.time * (0.24 + sd * 0.2) + sd) % 0.7) * r;
+      ctx.beginPath(); ctx.arc(sx, sy, Math.max(0.7, 1.2 * p.s), 0, TAU); ctx.fill();
+    }
+  } else if (shape === 'cube') { // JADE: crystalline diamond, layered at high levels
     const rot = Math.PI / 4 + Math.sin(e.wob * 0.5) * 0.15;
     const g2 = ctx.createLinearGradient(p.x, p.y - r, p.x, p.y + r);
     g2.addColorStop(0, 'hsla(' + hue + ',85%,72%,1)');
@@ -1414,34 +1579,63 @@ function drawEnemyBody(e, p, r) {
     polyPath(p.x, p.y, r, 4, rot);
     ctx.fillStyle = g2; ctx.fill();
     ctx.strokeStyle = 'hsla(' + hue + ',100%,82%,.95)'; ctx.lineWidth = Math.max(1.5, 2 * p.s); ctx.stroke();
+    ctx.strokeStyle = 'hsla(' + hue + ',90%,30%,.5)'; ctx.lineWidth = 1;
+    for (let k = 0; k < 4; k++) {
+      const a = rot + k * TAU / 4;
+      ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + Math.cos(a) * r, p.y + Math.sin(a) * r); ctx.stroke();
+    }
     polyPath(p.x, p.y, r * 0.45, 4, rot);
     ctx.fillStyle = 'hsla(' + hue + ',100%,88%,.85)'; ctx.fill();
-  } else if (shape === 'ring') { // INDIGO: energy ring + core
+    polyPath(p.x, p.y, r * 0.2, 4, rot + 0.3);
+    ctx.fillStyle = 'hsla(' + hue + ',100%,94%,.95)'; ctx.fill();
+    if (tier >= 3) { // armor diamond outline in later levels
+      polyPath(p.x, p.y, r * 1.13, 4, -rot * 0.6);
+      ctx.strokeStyle = 'hsla(' + hue + ',100%,80%,.55)'; ctx.lineWidth = Math.max(1.2, 1.8 * p.s); ctx.stroke();
+    }
+  } else if (shape === 'ring') { // INDIGO: hollow energy ring, orbiting core
     ctx.lineWidth = Math.max(2, r * 0.28);
     ctx.strokeStyle = 'hsla(' + hue + ',95%,62%,.95)';
     ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.82, 0, TAU); ctx.stroke();
     ctx.lineWidth = Math.max(1, r * 0.1);
-    ctx.strokeStyle = 'hsla(' + hue + ',100%,80%,.9)';
+    ctx.strokeStyle = 'hsla(' + hue + ',100%,82%,.95)';
     ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.82, e.wob, e.wob + 2.2); ctx.stroke();
-    drawSphere(p.x, p.y, r * 0.5, hue, 90, 55, false);
-  } else if (shape === 'mech') { // ECLIPSE: armored hex plate + ember core
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'hsla(' + hue + ',90%,75%,.3)';
+    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.45, 0, TAU); ctx.stroke();
+    const oa = e.wob * 1.5;
+    drawSphere(p.x + Math.cos(oa) * r * 0.45, p.y + Math.sin(oa) * r * 0.45, r * 0.17, hue, 95, 68, false);
+    ctx.fillStyle = 'hsla(' + hue + ',100%,85%,.5)';
+    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.07, 0, TAU); ctx.fill();
+    if (tier >= 3) {
+      ctx.lineWidth = Math.max(1, r * 0.07);
+      ctx.strokeStyle = 'hsla(' + hue + ',95%,70%,.65)';
+      ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.6, -e.wob * 0.8, -e.wob * 0.8 + 3.4); ctx.stroke();
+    }
+  } else if (shape === 'mech') { // ECLIPSE: armored hex plate, seams, rivets, ember core
     const rot = e.wob * 0.25;
     const g2 = ctx.createLinearGradient(p.x - r, p.y - r, p.x + r, p.y + r);
     g2.addColorStop(0, 'hsla(' + hue + ',12%,62%,1)');
     g2.addColorStop(1, 'hsla(' + hue + ',10%,34%,1)');
     polyPath(p.x, p.y, r, 6, rot);
     ctx.fillStyle = g2; ctx.fill();
-    ctx.strokeStyle = 'hsla(' + hue + ',15%,75%,.9)'; ctx.lineWidth = Math.max(1.5, 2 * p.s); ctx.stroke();
-    ctx.fillStyle = 'hsla(' + hue + ',10%,80%,.9)';
+    ctx.strokeStyle = 'hsla(' + hue + ',15%,78%,.95)'; ctx.lineWidth = Math.max(1.5, 2 * p.s); ctx.stroke();
+    polyPath(p.x, p.y, r * 0.64, 6, rot);
+    ctx.strokeStyle = 'hsla(' + hue + ',12%,22%,.75)'; ctx.lineWidth = Math.max(1, 1.4 * p.s); ctx.stroke();
+    ctx.fillStyle = 'hsla(' + hue + ',10%,84%,.95)';
     for (let k = 0; k < 6; k++) {
       const a = rot + k * TAU / 6;
-      ctx.beginPath(); ctx.arc(p.x + Math.cos(a) * r * 0.72, p.y + Math.sin(a) * r * 0.72, 1.8 * p.s, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(p.x + Math.cos(a) * r * 0.8, p.y + Math.sin(a) * r * 0.8, Math.max(1, 1.9 * p.s), 0, TAU); ctx.fill();
     }
+    if (tier >= 3) { // double-layer plate in later levels
+      polyPath(p.x, p.y, r * 1.1, 6, rot + 0.26);
+      ctx.strokeStyle = 'hsla(' + hue + ',14%,55%,.6)'; ctx.lineWidth = Math.max(1.2, 2 * p.s); ctx.stroke();
+    }
+    const pulse = 1 + 0.08 * Math.sin(S.time * 4 + e.wob);
     ctx.fillStyle = 'hsla(25,100%,55%,1)';
-    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.3, 0, TAU); ctx.fill();
-    ctx.fillStyle = 'hsla(40,100%,70%,.9)';
-    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.15, 0, TAU); ctx.fill();
-  } else { // AURORA: smooth spherical energy orb — UI v3.1 hero-ball look
+    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.3 * pulse, 0, TAU); ctx.fill();
+    ctx.fillStyle = 'hsla(40,100%,72%,.95)';
+    ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.15 * pulse, 0, TAU); ctx.fill();
+  } else { // AURORA: plasma orb — swirl, bright core, living bubbles
     drawSphere(p.x, p.y, r, hue, 90, 55, false);
     ctx.save();
     ctx.strokeStyle = 'hsla(' + hue + ',100%,84%,.85)'; ctx.lineWidth = Math.max(1.4, 2.4 * p.s);
@@ -1452,6 +1646,15 @@ function drawEnemyBody(e, p, r) {
     ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.17, 0, TAU); ctx.fill();
     ctx.fillStyle = 'rgba(255,255,255,.9)';
     ctx.beginPath(); ctx.arc(p.x - r * 0.3, p.y - r * 0.34, r * 0.07, 0, TAU); ctx.fill();
+    const bubbles = 3 + tier;
+    ctx.strokeStyle = 'hsla(' + hue + ',100%,86%,.75)'; ctx.lineWidth = 1;
+    ctx.fillStyle = 'hsla(' + hue + ',100%,80%,.18)';
+    for (let k = 0; k < bubbles; k++) {
+      const sd = famRand(e, k + 41), a = sd * TAU, rr = r * (0.25 + famRand(e, k + 51) * 0.45);
+      const bx = p.x + Math.cos(a) * rr, by = p.y + Math.sin(a) * rr + Math.sin(S.time * 2 + sd * 9) * r * 0.04;
+      const br = r * (0.05 + famRand(e, k + 61) * 0.055);
+      ctx.beginPath(); ctx.arc(bx, by, br, 0, TAU); ctx.fill(); ctx.stroke();
+    }
     ctx.restore();
   }
 }
