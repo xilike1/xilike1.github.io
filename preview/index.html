@@ -548,7 +548,7 @@ body{background:#030b21}
     <h1>NEON DEFENSE</h1>
     <p><b id="menuGalaxy">🌌 AURORA</b> — continuous defense, no waves<br>Hold the line across 5 lanes. Defense fires automatically. Tap enemies to prioritize, long-press to lock.</p>
     <div class="row"><button class="bigBtn go" id="btnStart">▶ START DEFENSE</button></div>
-    <p style="margin-top:12px;font-size:11px">v2.1 Gold Courier · UI v3.1 · Galaxy Families v2 · PREVIEW — all galaxies open · progress saves locally</p>
+    <p style="margin-top:12px;font-size:11px">v2.1 Gold Courier · UI v3.1 · Galaxy Families v2 · PREVIEW — all galaxies open + ⚡ Excitement Pack 1 · progress saves locally</p>
   </div>
 </div>
 
@@ -4496,6 +4496,195 @@ function enforcePortrait(){
 }
 window.addEventListener('resize',enforcePortrait);
 requestAnimationFrame(loop);
+</script>
+<script>
+/* ============================================================
+   EXCITEMENT PACK 1 — preview-only add-on script.
+   Loaded AFTER the game script; wraps global hooks, never edits them:
+     · LEVEL MUTATORS — deterministic per (galaxy, level): every level
+       gets its own traits (speed / armor / gold / volatile / minis / rush).
+     · MID-RUN EVENTS — every ~45-75s of combat: GOLD CONVOY bonus target,
+       MINI SWARM burst, or a SUPPLY DROP (shockwave / repair / slow / coins).
+   The main game build never includes this file.
+   ============================================================ */
+(function () {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+
+  /* ---------- mutator catalogue ---------- */
+  const MUTATORS = {
+    swift:    { icon: '⚡', name: 'SWIFT',        desc: 'enemies +35% speed' },
+    armored:  { icon: '🛡️', name: 'ARMORED',      desc: 'enemies +50% HP' },
+    gold:     { icon: '🪙', name: 'GOLDEN NIGHT', desc: 'all coin rewards ×2' },
+    volatile: { icon: '💥', name: 'VOLATILE',     desc: 'enemies explode on death' },
+    mini:     { icon: '🐝', name: 'MINI SWARM',   desc: 'every 4th spawn is a mini' },
+    rush:     { icon: '🔥', name: 'RUSH',         desc: 'spawns 28% faster, +25% rewards' },
+  };
+  const ALL = Object.keys(MUTATORS);
+  const GENTLE = ['gold', 'mini'];
+
+  function hashStr(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0); }
+  function mutatorsFor(gid, level) {
+    if (level <= 1) return [];
+    const h = hashStr(gid + '#' + level);
+    if (level <= 4) return [GENTLE[h % GENTLE.length]];
+    const first = ALL[h % ALL.length];
+    if (level >= 20 && level % 5 === 0) {
+      const second = ALL[(h >> 3) % ALL.length];
+      return second === first ? [first] : [first, second];
+    }
+    return [first];
+  }
+
+  /* ---------- state ---------- */
+  const EX = {
+    mutators: [], spawnCount: 0, nextEventAt: Infinity, pendingMinis: 0, miniT: 0, boomDepth: 0,
+    has: (m) => EX.mutators.includes(m),
+    mutatorsFor,
+  };
+  window.EXCITE = EX;
+
+  /* ---------- HUD chip ---------- */
+  const chip = document.createElement('div');
+  chip.id = 'excChip';
+  chip.style.cssText = 'position:fixed;top:calc(env(safe-area-inset-top,0px) + 104px);left:50%;transform:translateX(-50%);z-index:39;pointer-events:none;font:700 11px/1.5 system-ui;color:#ffe9b0;background:rgba(20,14,0,.55);border:1px solid rgba(255,200,80,.35);border-radius:999px;padding:2px 12px;display:none;white-space:nowrap';
+  document.body.appendChild(chip);
+  function renderChip() {
+    if (!EX.mutators.length || S.phase !== 'combat') { chip.style.display = 'none'; return; }
+    chip.textContent = EX.mutators.map(m => MUTATORS[m].icon + ' ' + MUTATORS[m].name).join('  ·  ');
+    chip.style.display = 'block';
+  }
+
+  /* ---------- mutator application ---------- */
+  const _spawnEnemy = spawnEnemy;
+  spawnEnemy = function (type, color, lane, t0) {
+    const e = _spawnEnemy(type, color, lane, t0);
+    if (!e || !e.on) return e;
+    e.excBoom = false; e.excDepth = 0; e.excCourier = false; // pooled objects: never leak excitement state
+    const special = type === 'AEGIS' || type === 'BLAST' || type === 'BOSS';
+    if (!special && S.phase === 'combat') {
+      EX.spawnCount++;
+      if (EX.has('mini') && EX.spawnCount % 4 === 0 && type !== 'MINI') {
+        const md = ENEMY_DEF.MINI, spec = levelSpec();
+        e.type = 'MINI';
+        e.hp = e.maxhp = Math.max(1, Math.round(e.maxhp * 0.35));
+        e.r = md.r * (G.enemy.sizeMul || 1);
+        e.speed = e.baseSpeed = md.speed * spec.speed * G.enemy.spdMul;
+        e.reward = galaxyReward(md.reward);
+      }
+      if (EX.has('swift')) { e.speed *= 1.35; e.baseSpeed *= 1.35; }
+      if (EX.has('armored')) { e.hp = e.maxhp = Math.round(e.maxhp * 1.5); if (e.maxShield) { e.maxShield = e.shield = Math.round(e.shield * 1.5); } }
+      if (EX.has('rush')) e.reward = Math.round(e.reward * 1.25);
+    }
+    return e;
+  };
+
+  const _addCoins = addCoins;
+  addCoins = function (n, activity) {
+    if (EX.has('gold') && S.phase === 'combat' && n > 0) n = Math.round(n * 2);
+    return _addCoins(n, activity);
+  };
+
+  const _killEnemy = killEnemy;
+  killEnemy = function (e, srcHue) {
+    const wasDead = !e || e.dead;
+    _killEnemy(e, srcHue);
+    if (wasDead || !e || e.bonusGold) return;
+    if (e.excCourier) { toast('🪙 CONVOY DOWN — big payout!'); return; }
+    if (!EX.has('volatile') || e.excBoom) return;
+    // chain reactions allowed, capped at depth 3 (EX.boomDepth marks kills
+    // caused by the blast currently being processed)
+    if (EX.boomDepth > 0 && !e.excDepth) e.excDepth = EX.boomDepth;
+    if ((e.excDepth || 0) >= 3) return;
+    e.excBoom = true;
+    const p = w2s(e.lane, e.t);
+    burst(p.x, p.y, 30, 18, 380);
+    const prevDepth = EX.boomDepth;
+    EX.boomDepth = (e.excDepth || 0) + 1;
+    for (let i = 0; i < enemies.n; i++) {
+      const n = enemies.arr[i];
+      if (!n.on || n.dead || n === e || n.bonusGold) continue;
+      const q = w2s(n.lane, n.t), dx = q.x - p.x, dy = q.y - p.y;
+      if (dx * dx + dy * dy <= 70 * 70) damageEnemy(n, Math.round(n.maxhp * 0.45), undefined, 'EXPLOSION');
+    }
+    EX.boomDepth = prevDepth;
+  };
+
+  const _interval = Director.interval;
+  Director.interval = function () { const v = _interval.call(Director); return EX.has('rush') ? v * 0.72 : v; };
+
+  /* ---------- events ---------- */
+  function spawnConvoy() {
+    const e = spawnEnemy('TANK', 'gold', randi(0, LANES - 1));
+    if (!e) return;
+    e.excCourier = true;
+    e.hp = e.maxhp = Math.round(e.maxhp * 2.2);
+    e.speed = e.baseSpeed = e.speed * 0.55;
+    e.reward = Math.round(e.reward * 8);
+    e.r *= 1.25;
+    const p = w2s(e.lane, e.t);
+    floatText(p.x, 60, '🪙 GOLD CONVOY — take it down!', '#ffd54a', true);
+    toast('🪙 GOLD CONVOY crossing — bonus coins if it falls!');
+  }
+  function spawnSwarm() {
+    EX.pendingMinis = 8; EX.miniT = 0;
+    toast('🐝 SWARM RUSH incoming!');
+  }
+  function supplyDrop() {
+    const roll = Math.random();
+    if (roll < 0.3) {
+      let hit = 0;
+      for (let i = 0; i < enemies.n; i++) { const n = enemies.arr[i]; if (n.on && !n.dead && !n.bonusGold && n.type !== 'AEGIS') { damageEnemy(n, Math.round(n.maxhp * 0.35), undefined, 'SHOCK'); hit++; } }
+      toast('📦 SUPPLY: shockwave hit ' + hit + ' hostiles!');
+    } else if (roll < 0.55) {
+      S.baseHP = Math.min(S.baseMax, S.baseHP + Math.round(S.baseMax * 0.2)); updateBaseHUD();
+      toast('📦 SUPPLY: defense line repaired +20%!');
+    } else if (roll < 0.8) {
+      for (let i = 0; i < enemies.n; i++) { const n = enemies.arr[i]; if (n.on && !n.dead) n.slowUntil = Math.max(n.slowUntil || 0, S.time + 4); }
+      toast('📦 SUPPLY: slow-field — enemies slowed 4s!');
+    } else {
+      addCoins(120);
+      toast('📦 SUPPLY: +120 🪙 salvage!');
+    }
+  }
+  const EVENTS = [spawnConvoy, spawnSwarm, supplyDrop];
+  EX.triggerEvent = function (kind) {
+    if (kind === 'convoy') return spawnConvoy();
+    if (kind === 'swarm') return spawnSwarm();
+    if (kind === 'supply') return supplyDrop();
+    EVENTS[Math.floor(Math.random() * EVENTS.length)]();
+  };
+
+  const _update = Director.update;
+  Director.update = function (dt) {
+    _update.call(Director, dt);
+    if (S.phase !== 'combat') return;
+    if (EX.pendingMinis > 0) {
+      EX.miniT -= dt;
+      if (EX.miniT <= 0) { EX.miniT = 0.22; EX.pendingMinis--; spawnEnemy('MINI', pick(G.enemy.colors)); }
+    }
+    if (Director.phase === 'spawn' && S.time >= EX.nextEventAt) {
+      EX.nextEventAt = S.time + 45 + Math.random() * 30;
+      EX.triggerEvent();
+    }
+    renderChip();
+  };
+
+  /* ---------- run start: roll mutators ---------- */
+  const _newRun = newRun;
+  newRun = function () {
+    _newRun();
+    EX.mutators = mutatorsFor(G.id, galaxyLevel(G.id));
+    EX.spawnCount = 0; EX.pendingMinis = 0;
+    EX.nextEventAt = S.time + 38 + Math.random() * 17;
+    if (EX.mutators.length) {
+      toast('🎲 ' + G.name + ' Lv.' + galaxyLevel(G.id) + ' — ' +
+        EX.mutators.map(m => MUTATORS[m].icon + ' ' + MUTATORS[m].name + ' (' + MUTATORS[m].desc + ')').join(' · '));
+    }
+    renderChip();
+  };
+})();
+
 </script>
 </body>
 </html>
