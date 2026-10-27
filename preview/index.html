@@ -548,7 +548,7 @@ body{background:#030b21}
     <h1>NEON DEFENSE</h1>
     <p><b id="menuGalaxy">🌌 AURORA</b> — continuous defense, no waves<br>Hold the line across 5 lanes. Defense fires automatically. Tap enemies to prioritize, long-press to lock.</p>
     <div class="row"><button class="bigBtn go" id="btnStart">▶ START DEFENSE</button></div>
-    <p style="margin-top:12px;font-size:11px">v2.1 Gold Courier · UI v3.1 · Galaxy Families v2 · PREVIEW — all galaxies open · starts Lv.5 + ⚡ Excitement Pack 1 · progress saves locally</p>
+    <p style="margin-top:12px;font-size:11px">v2.1 Gold Courier · UI v3.1 · Galaxy Families v2 · PREVIEW — all galaxies open · starts Lv.5 · 💰 500K coins + ⚡ Excitement Pack 1 · progress saves locally</p>
   </div>
 </div>
 
@@ -4669,6 +4669,19 @@ requestAnimationFrame(loop);
     }
     renderChip();
   };
+
+  /* ---------- preview rich start ----------
+     بدر kept dying at Lv.5 with a starter turret before he could see any of
+     the pack. Top the spendable balance up on every load (avail only —
+     lifetime totals and difficulty are untouched), so he can buy the
+     weapons/upgrades first and actually live long enough to play. */
+  try {
+    if (SAVE.econ.avail < 500000) {
+      SAVE.econ.avail = 500000;
+      persist();
+      if (typeof updateGoldHUD === 'function') updateGoldHUD();
+    }
+  } catch (e) { /* preview convenience only — never break the game over it */ }
 
   /* ---------- run start: roll mutators ---------- */
   const _newRun = newRun;
