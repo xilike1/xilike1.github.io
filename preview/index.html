@@ -548,7 +548,7 @@ body{background:#030b21}
     <h1>NEON DEFENSE</h1>
     <p><b id="menuGalaxy">🌌 AURORA</b> — continuous defense, no waves<br>Hold the line across 5 lanes. Defense fires automatically. Tap enemies to prioritize, long-press to lock.</p>
     <div class="row"><button class="bigBtn go" id="btnStart">▶ START DEFENSE</button></div>
-    <p style="margin-top:12px;font-size:11px">v2.1 Gold Courier · UI v3.1 · Galaxy Families v2 · PREVIEW — all galaxies open + ⚡ Excitement Pack 1 · progress saves locally</p>
+    <p style="margin-top:12px;font-size:11px">v2.1 Gold Courier · UI v3.1 · Galaxy Families v2 · PREVIEW — all galaxies open · starts Lv.5 + ⚡ Excitement Pack 1 · progress saves locally</p>
   </div>
 </div>
 
@@ -832,7 +832,7 @@ function defaultSave() {
     craft: { owned: false, up: { dmg: 0, spd: 0, rate: 0, radius: 0, range: 0, size: 0 } },
     powers: { storm: 0, magnet: 0, blackhole: 0 },
     spawnTier: 0, // index into SPAWN_TIERS
-    galaxy: { current: 'aurora', unlocked: ['aurora','ember','jade','indigo','eclipse','nova','cryon','bloodmoon','nexus','singularity'], notified: {}, difficulty: {}, progress: {} },
+    galaxy: { current: 'aurora', unlocked: ['aurora','ember','jade','indigo','eclipse','nova','cryon','bloodmoon','nexus','singularity'], notified: {}, difficulty: {}, progress: {'aurora':{coins:0,kills:0,visited:true,cleared:5,combatLevel:5,lastDefeated:4,levelSchema:2,finalDefeated:false,goldVisited:0,active:0},'ember':{coins:0,kills:0,visited:true,cleared:5,combatLevel:5,lastDefeated:4,levelSchema:2,finalDefeated:false,goldVisited:0,active:0},'jade':{coins:0,kills:0,visited:true,cleared:5,combatLevel:5,lastDefeated:4,levelSchema:2,finalDefeated:false,goldVisited:0,active:0},'indigo':{coins:0,kills:0,visited:true,cleared:5,combatLevel:5,lastDefeated:4,levelSchema:2,finalDefeated:false,goldVisited:0,active:0},'eclipse':{coins:0,kills:0,visited:true,cleared:5,combatLevel:5,lastDefeated:4,levelSchema:2,finalDefeated:false,goldVisited:0,active:0},'nova':{coins:0,kills:0,visited:true,cleared:5,combatLevel:5,lastDefeated:4,levelSchema:2,finalDefeated:false,goldVisited:0,active:0},'cryon':{coins:0,kills:0,visited:true,cleared:5,combatLevel:5,lastDefeated:4,levelSchema:2,finalDefeated:false,goldVisited:0,active:0},'bloodmoon':{coins:0,kills:0,visited:true,cleared:5,combatLevel:5,lastDefeated:4,levelSchema:2,finalDefeated:false,goldVisited:0,active:0},'nexus':{coins:0,kills:0,visited:true,cleared:5,combatLevel:5,lastDefeated:4,levelSchema:2,finalDefeated:false,goldVisited:0,active:0},'singularity':{coins:0,kills:0,visited:true,cleared:5,combatLevel:5,lastDefeated:4,levelSchema:2,finalDefeated:false,goldVisited:0,active:0}} },
     settings: { fx: true, sfx: true, haptic: true, dark: true, shake: true, craftVisible: true },
     stats: { kills: 0, dmg: 0 },
   };
@@ -4664,7 +4664,7 @@ requestAnimationFrame(loop);
       if (EX.miniT <= 0) { EX.miniT = 0.22; EX.pendingMinis--; spawnEnemy('MINI', pick(G.enemy.colors)); }
     }
     if (Director.phase === 'spawn' && S.time >= EX.nextEventAt) {
-      EX.nextEventAt = S.time + 45 + Math.random() * 30;
+      EX.nextEventAt = S.time + 35 + Math.random() * 25;
       EX.triggerEvent();
     }
     renderChip();
@@ -4676,7 +4676,7 @@ requestAnimationFrame(loop);
     _newRun();
     EX.mutators = mutatorsFor(G.id, galaxyLevel(G.id));
     EX.spawnCount = 0; EX.pendingMinis = 0;
-    EX.nextEventAt = S.time + 38 + Math.random() * 17;
+    EX.nextEventAt = S.time + 10; // preview: first surprise lands fast so the pack is felt immediately
     if (EX.mutators.length) {
       toast('🎲 ' + G.name + ' Lv.' + galaxyLevel(G.id) + ' — ' +
         EX.mutators.map(m => MUTATORS[m].icon + ' ' + MUTATORS[m].name + ' (' + MUTATORS[m].desc + ')').join(' · '));

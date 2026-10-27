@@ -3,7 +3,7 @@
   'use strict';
   const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, Number(n) || 0));
   const config = Object.freeze({
-    version: '2.1.0-courier', saveKey: 'neonDefense_preview_all',
+    version: '2.1.0-courier', saveKey: 'neonDefense_preview_fast',
     damageGrowth: 1.10, rateGrowth: 1.06, priceGrowth: 1.14,
     weapons: Object.freeze({LASER: 350, ROCKET: 900, VOID: 1800}),
     spacecraft: 600,

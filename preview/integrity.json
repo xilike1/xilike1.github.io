@@ -1,9 +1,9 @@
 {
-  "version": "2.1.4-preview-excite1",
+  "version": "2.1.5-preview-fast",
   "profile": "normal",
   "files": {
-    "balance.js": "6e91f3d80be97f3f05a213b73261cd755820cb993b30e288e5f87a49da236cfa",
-    "index.html": "e81b269bf401de3247a20ca08b05cdd97b042eb1a128d13b123dbddb038b0b36",
+    "balance.js": "8314e5cadc4de920f12f7dd08178ae3ca9b8ab2b9b2dd6ea88b1061b389228be",
+    "index.html": "eafb98849612ea69cad1149f39a392987d8b6bc3ddfe7c680cb4197f9941ad86",
     "levels.js": "3244f7e204f2b3c2c6c5e28293a62b2d021afce032e0045bf3b2c59127795282",
     "manifest.webmanifest": "5406d11b9208c0110c4299d4891c6f59ae4a2797414cb48a8178fedf8412db84",
     "runtime-config.js": "4627992caae7812e83d0c9c24443957c588bfde757e458847d10d704ea94ae62",
