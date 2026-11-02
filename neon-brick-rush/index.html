@@ -88,6 +88,29 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
 .sbtn{border:2px solid #2b4376;border-radius:16px;background:radial-gradient(circle at 30% 20%,#7ea2e4,#46679f 70%);color:#fff;font:inherit;font-size:16.5px;font-weight:800;padding:13px;cursor:pointer;box-shadow:0 4px 0 #2b4376;transition:transform .1s}
 .sbtn:active{transform:translateY(3px);box-shadow:0 1px 0 #2b4376}
 .sbtn.primary{background:#fff;color:#2c4a8a;border-color:#c9dcff;box-shadow:0 4px 0 #9db9e8}
+.whiteBtn{position:relative}
+#menu{padding-bottom:0}
+.page{flex:1;min-height:0;width:100%;display:flex;flex-direction:column;align-items:center;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding:2px 2px 8px}
+.page[hidden]{display:none}
+.dailyCard{width:84%;max-width:320px;margin-top:16px;border-radius:22px;padding:18px 16px 16px;background:linear-gradient(165deg,#e879f9,#a855f7 55%,#7c3aed);box-shadow:0 18px 36px rgba(30,5,60,.4),inset 0 1.5px 0 rgba(255,255,255,.45);text-align:center;color:#fff;flex:none}
+.dailyCard .dico{width:56px;height:56px;margin:0 auto 8px;border-radius:15px;background:rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;font-size:29px;box-shadow:0 6px 14px rgba(30,5,60,.25)}
+.dailyCard .dt{font-size:14.5px;font-weight:700;color:rgba(255,255,255,.85)}
+.dailyCard .dd{font-size:22px;font-weight:900;margin:2px 0 4px}
+.dailyCard .ds{font-size:13.5px;font-weight:700;color:rgba(255,255,255,.92);min-height:19px}
+.dailyCard .dbtn{margin-top:10px;border:0;border-radius:99px;background:rgba(255,255,255,.28);color:#fff;font:inherit;font-size:17px;font-weight:900;padding:8px 46px;cursor:pointer;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.35);transition:transform .1s}
+.dailyCard .dbtn:active{transform:scale(.96)}
+.playFlame{position:absolute;top:-15px;inset-inline-start:16px;background:linear-gradient(180deg,#ffb52e,#ff7b00);border:1.5px solid #ffe1a8;color:#fff;font-size:14.5px;font-weight:900;border-radius:99px;padding:3px 11px;box-shadow:0 5px 12px rgba(8,20,50,.35);z-index:2}
+#tabbar{flex:none;width:calc(100% + 44px);margin:4px -22px 0;display:flex;background:rgba(11,24,58,.55);border-top:1.5px solid rgba(160,195,255,.28);padding-bottom:env(safe-area-inset-bottom)}
+.tab{flex:1;background:none;border:0;color:#fff;font:inherit;padding:9px 0 8px;cursor:pointer;opacity:.55;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tab .ti{font-size:23px;line-height:1.1}
+.tab .tl{font-size:12.5px;font-weight:800}
+.tab.on{opacity:1;background:rgba(255,255,255,.13);box-shadow:inset 0 2.5px 0 #ffc93c}
+.pageTitle{font-size:21px;font-weight:900;margin-top:18px;flex:none}
+.miniCard{width:100%;max-width:340px;background:rgba(13,28,70,.35);border:1.5px solid rgba(160,195,255,.3);border-radius:18px;padding:4px 16px;margin-top:14px;text-align:start;flex:none}
+.histRow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.16);font-size:14.5px;font-weight:700}
+.histRow:last-child{border-bottom:0}
+.histRow .ok{color:#3dff62;font-weight:900}
+.histRow .no{color:#9db8e8}
 </style>
 </head>
 <body>
@@ -119,21 +142,58 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
 </div>
 
 <section class="overlay sunburst" id="menu">
-  <div class="arcTitle rise">كسّر الطوب…<br>قبل ما يوصلك! 🧱</div>
-  <h1 class="gameTitle chunk rise" style="animation-delay:.05s">NEON<br>BRICK RUSH</h1>
-  <div class="bestLine rise" style="animation-delay:.1s">🏆 أفضل نتيجة دائمًا: <span id="menuBest">0</span></div>
-  <div class="howCard rise" style="animation-delay:.16s">
+  <div class="page" id="pageHome">
+    <div class="dailyCard rise">
+      <div class="dico">📅</div>
+      <div class="dt">التحدي اليومي</div>
+      <div class="dd" id="dailyDate">—</div>
+      <div class="ds" id="dailyStatus"></div>
+      <button class="dbtn" id="btnDaily">العب</button>
+    </div>
+    <h1 class="gameTitle chunk rise" style="animation-delay:.05s;margin-top:28px">NEON<br>BRICK RUSH</h1>
+    <div class="bestLine rise" style="animation-delay:.1s">أفضل تصويبة دائمًا<br><span style="font-size:31px;color:#fff">🏆 <span id="menuBest">0</span></span></div>
+    <button class="whiteBtn rise" id="btnPlay" style="animation-delay:.16s"><span class="playFlame" id="playFlame" hidden>🔥 2</span><span class="t1" id="playT1">لعبة جديدة</span><span class="t2" id="playT2">مستوى 1</span></button>
+    <button class="textBtn rise" id="btnFreshMenu" style="animation-delay:.2s" hidden>ابدأ من الأول خالص</button>
+    <div class="tag rise" style="animation-delay:.22s;font-size:12px;color:#9db8e8">أفضل نتيجة بتتحفظ على جهازك تلقائيًا</div>
+  </div>
+  <div class="page" id="pageChal" hidden>
+    <div class="pageTitle rise">📅 التحديات</div>
+    <div class="dailyCard rise" style="margin-top:12px">
+      <div class="dico">📅</div>
+      <div class="dt">تحدي اليوم</div>
+      <div class="dd" id="dailyDate2">—</div>
+      <div class="ds" id="dailyStatus2"></div>
+      <button class="dbtn" id="btnDaily2">العب</button>
+    </div>
+    <div class="miniCard rise">
+      <div class="histRow"><span>تحديات خلّصتها لحد دلوقتي</span><b id="chalDoneCount">0</b></div>
+      <div id="chalHist"></div>
+    </div>
+  </div>
+  <div class="page" id="pageMe" hidden>
+    <div class="pageTitle rise">👤 أنا</div>
+    <div class="statCard rise" style="margin-top:14px;flex:none">
+      <div class="srow"><span class="lab">أفضل نتيجة دائمًا</span><span class="val" id="meBest">0</span></div>
+      <div class="srow"><span class="lab">واصل لمستوى</span><span class="val" id="meLevel">1</span></div>
+      <div class="srow"><span class="lab">الستريك الحالي</span><span class="val" id="meStreak">—</span></div>
+      <div class="srow"><span class="lab">أفضل نتيجة النهاردة</span><span class="val" id="meToday">0</span></div>
+    </div>
+    <div class="howCard rise">
     <div class="hrow"><span class="hi">🎯</span>اسحب بإصبعك للتصويب، وسيب عشان الكرات تنطلق</div>
     <div class="hrow"><span class="hi">🔺</span>الطوب المثلث بيحرّف الكورة بزاوية — استغله لصالحك</div>
     <div class="hrow"><span class="hi">✚</span>اجمع الكرات +، واضرب أهداف الليزر والمتقاطع لتفجير صفوف كاملة</div>
     <div class="hrow"><span class="hi">✦</span>الطوبة النجمة بتنفجر ليزر في ٨ اتجاهات، وعنصر التشتيت بيولّد كرات وهمية من أي كرة تلمسه</div>
     <div class="hrow"><span class="hi">🌊</span>«إضافة» +٥ كرات و«موجة» بتضعف كل الطوب — وأثناء اللعب الزراير بتبقى «عودة» و«تراجع»</div>
-    <div class="hrow"><span class="hi">🔥</span>اكسب ليفلات ورا بعض من غير ما تخسر عشان تكبّر الستريك اللي جنب الترس</div>
+    <div class="hrow"><span class="hi">🔥</span>اكسب مستويات ورا بعض من غير ما تخسر عشان تكبّر الستريك اللي جنب الترس</div>
     <div class="hrow"><span class="hi">🏁</span>كل مستوى لوحده كامل — خلّص كل الطوب قبل ما يوصلك عشان تعدّي للمستوى اللي بعده</div>
+    </div>
+    <button class="textBtn rise" id="btnFreshMe" style="margin-top:18px;font-size:14.5px;color:#b9cff5">ابدأ من الأول خالص</button>
   </div>
-  <button class="whiteBtn rise" id="btnPlay" style="animation-delay:.22s"><span class="t1" id="playT1">لعبة جديدة</span><span class="t2" id="playT2">مستوى 1</span></button>
-  <button class="textBtn rise" id="btnFreshMenu" style="animation-delay:.26s" hidden>ابدأ من الأول خالص</button>
-  <div class="tag rise" style="animation-delay:.28s;font-size:12px;color:#9db8e8">أفضل نتيجة بتتحفظ على جهازك تلقائيًا</div>
+  <nav id="tabbar">
+    <button class="tab on" id="tabHome"><span class="ti">🏠</span><span class="tl">الرئيسية</span></button>
+    <button class="tab" id="tabChal"><span class="ti">📅</span><span class="tl">التحديات</span></button>
+    <button class="tab" id="tabMe"><span class="ti">👤</span><span class="tl">أنا</span></button>
+  </nav>
 </section>
 
 <section class="overlay scrim" id="pauseMenu" hidden>
@@ -186,7 +246,9 @@ const $=id=>document.getElementById(id);
 const DPR=Math.min(2,window.devicePixelRatio||1);
 canvas.width=W*DPR;canvas.height=H*DPR;
 const fmt=n=>Math.round(n).toLocaleString('en-US');
-const rand=(a,b)=>a+Math.random()*(b-a);
+let seedRnd=null;
+function rnd(){return seedRnd?seedRnd():Math.random()}
+const rand=(a,b)=>a+rnd()*(b-a);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
 let bricks=[],pickups=[],balls=[],particles=[],floats=[],beams=[];
@@ -199,6 +261,7 @@ let volleyHits=0,combo=0,maxCombo=0,shake=0,lastSpawnT=0,soundOn=localStorage.nb
 let volleyScore=0,volleyKills=0,strongestHp=0,volleyStrongDone=false,brickSeq=0;
 let volleyHitIds=new Set(),volleyStartIds=new Set();
 let streak=+(localStorage.nbrStreak||0),boostLeft=3,waveLeft=2;
+let dailyMode=false;
 let bricksDestroyedLevel=0,bricksSpawnedLevel=0,aimTarget=null,aimPlus=false;
 
 /* ball colour theme changes every 2 levels (orange → pink → cyan → lime → violet) */
@@ -208,6 +271,23 @@ const pw=()=>level; /* difficulty driver = level number */
 function loadProgress(){try{const p=JSON.parse(localStorage.nbrProgress||'null');if(p){if(p.s>=1&&p.l>=1)return{l:(p.s-1)*3+p.l};if(p.l>=1)return{l:p.l}}}catch(e){}return{l:1}}
 function saveProgress(lv){localStorage.nbrProgress=JSON.stringify({l:lv})}
 function ballFloor(L){return 6+4*L}
+/* ===== Daily challenge ===== */
+const MONTHS_AR=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+function dateKey(d){return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
+function todayKey(){return dateKey(new Date())}
+function dailyLevel(){const d=new Date();const doy=Math.floor((d-new Date(d.getFullYear(),0,0))/864e5);return 4+(doy%7)}
+function makeDailyRnd(){let h=2166136261;const k=todayKey();for(let i=0;i<k.length;i++){h^=k.charCodeAt(i);h=Math.imul(h,16777619)}let a=h>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function loadDaily(){try{return JSON.parse(localStorage.nbrDaily||'{}')}catch(e){return{}}}
+function recordDaily(sc,completed){
+  const all=loadDaily(),k=todayKey(),cur=all[k]||{best:0,done:false,tries:0};
+  cur.tries++;cur.best=Math.max(cur.best,sc);if(completed)cur.done=true;
+  all[k]=cur;localStorage.nbrDaily=JSON.stringify(all);return cur;
+}
+function startDaily(){
+  dailyMode=true;level=dailyLevel();score=0;maxCombo=0;ballCount=ballFloor(level);
+  boostLeft=3;waveLeft=2;seedRnd=makeDailyRnd();
+  startLevel();
+}
 
 /* ===== Sound ===== */
 let AC=null,lastHitSnd=0;
@@ -260,7 +340,7 @@ function updateControls(){
 }
 function updateUI(){
   setScoreBig();
-  $('level').textContent=level;$('stageLbl').textContent='مستوى';$('best').textContent=fmt(best);
+  $('level').textContent=dailyMode?'📅':level;$('stageLbl').textContent=dailyMode?'تحدي اليوم':'مستوى';$('best').textContent=fmt(best);
   const pct=bricksSpawnedLevel?Math.min(100,Math.round(bricksDestroyedLevel/bricksSpawnedLevel*100)):0;
   $('lvlFill').style.width=pct+'%';$('lvlStar').style.left=pct+'%';$('lvlStar').style.opacity=pct>=80?1:.45;
   const stb=$('streakBadge');stb.hidden=streak<2;stb.textContent='🔥'+streak;
@@ -284,23 +364,63 @@ function startLevel(){
   mode='playing';hideOverlays();
   for(let i=0;i<2;i++)spawnRow();
   updateUI();
-  addFloat(W/2,topY+46,'مستوى '+level,'#ffffff',24);
+  addFloat(W/2,topY+46,dailyMode?'تحدي اليوم 📅':'مستوى '+level,'#ffffff',24);
 }
 function startRun(lv){
+  dailyMode=false;seedRnd=null;
   level=lv;score=0;maxCombo=0;ballCount=ballFloor(lv);
   boostLeft=3;waveLeft=2;
   startLevel();
 }
-function retryLevel(){score=scoreLevelStart;ballCount=ballCountLevelStart;startLevel()}
+function retryLevel(){score=scoreLevelStart;ballCount=ballCountLevelStart;if(dailyMode)seedRnd=makeDailyRnd();startLevel()}
+function renderHome(){
+  const d=new Date(),label=d.getDate()+' '+MONTHS_AR[d.getMonth()];
+  $('dailyDate').textContent=label;$('dailyDate2').textContent=label;
+  const all=loadDaily(),cur=all[todayKey()];
+  const st=cur?(cur.done?'خلّصته النهاردة ✓':'أحسن نتيجة: '+fmt(cur.best)):'لسه ملعبتوش النهاردة';
+  $('dailyStatus').textContent=st;$('dailyStatus2').textContent=st;
+  $('btnDaily').textContent=cur&&cur.done?'العب تاني':'العب';$('btnDaily2').textContent=$('btnDaily').textContent;
+  $('chalDoneCount').textContent=Object.values(all).filter(x=>x.done).length;
+  let hist='';
+  for(let i=0;i<7;i++){
+    const dd=new Date(d.getFullYear(),d.getMonth(),d.getDate()-i),k=dateKey(dd),r=all[k];
+    const nm=i===0?'النهاردة':i===1?'إمبارح':dd.getDate()+' '+MONTHS_AR[dd.getMonth()];
+    hist+='<div class="histRow"><span>'+nm+'</span>'+(r?(r.done?'<span class="ok">✓ '+fmt(r.best)+'</span>':'<span>'+fmt(r.best)+'</span>'):'<span class="no">لم يُلعب</span>')+'</div>';
+  }
+  $('chalHist').innerHTML=hist;
+  $('meBest').textContent=fmt(best);
+  $('meLevel').textContent=loadProgress().l;
+  $('meStreak').textContent=streak>=2?'🔥 ×'+streak:'—';
+  const per=loadPeriods(),pk=periodKeys();
+  $('meToday').textContent=fmt(per.d&&per.d.k===pk.day?per.d.v:0);
+  const fl=$('playFlame');fl.hidden=streak<2;fl.textContent='🔥 '+streak;
+}
+function setTab(name){
+  for(const pg of ['pageHome','pageChal','pageMe'])$(pg).hidden=pg!=='page'+name;
+  for(const tb of ['tabHome','tabChal','tabMe'])$(tb).classList.toggle('on',tb==='tab'+name);
+}
 function goHome(){
-  mode='menu';shooting=false;aiming=false;
+  mode='menu';shooting=false;aiming=false;dailyMode=false;seedRnd=null;
   $('menuBest').textContent=fmt(best);
+  renderHome();setTab('Home');
   const pr=loadProgress();
   if(pr.l>1){$('playT1').textContent='كمّل اللعب';$('playT2').textContent='مستوى '+pr.l;$('btnFreshMenu').hidden=false}
   else{$('playT1').textContent='لعبة جديدة';$('playT2').textContent='مستوى 1';$('btnFreshMenu').hidden=true}
   showOverlay('menu');updateUI();
 }
 function levelComplete(){
+  if(dailyMode){
+    const bonus=40*level;score+=bonus;
+    if(score>best){best=score;localStorage.nbrBest=best}
+    recordDaily(score,true);
+    mode='clear';shooting=false;aiming=false;
+    $('lcTitle').textContent='🏆 خلّصت تحدي اليوم!';
+    $('lcSub').innerHTML='نتيجتك في التحدي: '+fmt(score)+' نقطة ⭐<br>ارجع بكرة — في تحدي جديد كل يوم';
+    $('btnNextLevel').textContent='🏠 الرئيسية';
+    showOverlay('levelMenu');updateUI();sLevel();if(navigator.vibrate)navigator.vibrate([30,40,30]);
+    return;
+  }
+  $('btnNextLevel').textContent='▶ اللي بعده';
   const doneLvl=level,bonus=40*level;
   score+=bonus;
   if(score>best){best=score;localStorage.nbrBest=best}
@@ -326,8 +446,9 @@ function captureBoard(){
   }catch(e){/* snapshot is decorative */}
 }
 function endGame(){
+  if(mode==='over')return;
   mode='over';shooting=false;aiming=false;
-  streak=0;localStorage.nbrStreak=0;
+  if(dailyMode)recordDaily(score,false);else{streak=0;localStorage.nbrStreak=0}
   const rec=score>0&&score>=best;
   if(score>best){best=score;localStorage.nbrBest=best}
   captureBoard();
@@ -337,7 +458,7 @@ function endGame(){
   $('ovScore').textContent=fmt(score);
   $('vDay').textContent=fmt(per.day);$('vWeek').textContent=fmt(per.week);$('vMonth').textContent=fmt(per.month);$('vAll').textContent=fmt(per.all);
   const dl='+'+fmt(score);$('dDay').textContent=dl;$('dWeek').textContent=dl;$('dMonth').textContent=dl;$('dAll').textContent=dl;
-  $('ovLevelTxt').textContent='مستوى '+level;
+  $('ovLevelTxt').textContent=dailyMode?'تحدي اليوم 📅':'مستوى '+level;
   showOverlay('overMenu');updateUI();sOver();
 }
 
@@ -351,12 +472,12 @@ function spawnRow(){
     let c=Math.floor(rand(0,cols)),tries=0;
     while(occupied.has(c)&&tries++<20)c=Math.floor(rand(0,cols));
     if(occupied.has(c))continue;occupied.add(c);
-    const roll=Math.random();
+    const roll=rnd();
     let type='sq';
     if((w>=2||rowsSpawned>=2)&&roll<.22)type='tri';
     else if(w>=2&&roll<.34)type='bomb';
     else if(w>=3&&roll<.42)type='star';
-    const heavy=Math.random()<.12;
+    const heavy=rnd()<.12;
     const hp=Math.max(3,Math.round(levelBalls*rand(.35,1.15)*(1+rowsSpawned*.05)*(heavy?1.8:1)));
     bricks.push({id:++brickSeq,c,r:0,hp,maxHp:hp,type,ori:Math.floor(rand(0,4)),flash:0,born:performance.now()+c*45});
     bricksSpawnedLevel++;
@@ -800,7 +921,13 @@ $('btnPlay').onclick=()=>{ac();const pr=loadProgress();startRun(pr.l)};
 $('btnFreshMenu').onclick=()=>{saveProgress(1);startRun(1)};
 $('btnAgain').onclick=()=>{ac();retryLevel()};
 $('btnFresh').onclick=()=>{saveProgress(1);startRun(1)};
-$('btnNextLevel').onclick=()=>{ac();startLevel()};
+$('btnNextLevel').onclick=()=>{ac();if(dailyMode)goHome();else startLevel()};
+$('btnDaily').onclick=()=>{ac();startDaily()};
+$('btnDaily2').onclick=()=>{ac();startDaily()};
+$('tabHome').onclick=()=>setTab('Home');
+$('tabChal').onclick=()=>setTab('Chal');
+$('tabMe').onclick=()=>setTab('Me');
+$('btnFreshMe').onclick=()=>{saveProgress(1);startRun(1)};
 $('btnResume').onclick=resumeGame;
 $('btnRestart2').onclick=()=>retryLevel();
 $('btnHome').onclick=goHome;$('btnHome2').onclick=goHome;$('btnHome3').onclick=goHome;
