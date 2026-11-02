@@ -28,6 +28,11 @@ canvas{width:100%;height:100%;display:block;touch-action:none}
 .side.best{text-align:end}
 #scoreBig{flex:1;text-align:center;font-size:47px;line-height:1;font-weight:900;font-style:italic;letter-spacing:.5px;color:#fff;-webkit-text-stroke:2.2px var(--ink);paint-order:stroke fill;text-shadow:0 4px 0 rgba(14,28,66,.55),0 8px 22px rgba(10,25,60,.35);font-variant-numeric:tabular-nums;transition:color .25s}
 #scoreBig.t1{color:#3dff62}
+#stageProg{display:flex;gap:5px;margin:9px 86px 0}
+#stageProg i{flex:1;height:6px;border-radius:99px;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.25)}
+#stageProg i.done{background:#3dff62;border-color:#3dff62}
+#stageProg i.now{background:rgba(255,201,60,.45);border-color:var(--gold);animation:segPulse 1.1s ease-in-out infinite alternate}
+@keyframes segPulse{from{box-shadow:0 0 2px rgba(255,201,60,.3)}to{box-shadow:0 0 10px rgba(255,201,60,.85)}}
 #scoreBig.t2{color:#ff4fd8;animation:scoreGlow .7s ease-in-out infinite alternate}
 @keyframes scoreGlow{from{text-shadow:0 4px 0 rgba(14,28,66,.55),0 0 14px rgba(255,79,216,.55)}to{text-shadow:0 4px 0 rgba(14,28,66,.55),0 0 30px rgba(255,79,216,.95)}}
 /* toast */
@@ -94,8 +99,9 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
   <div id="scoreRow">
     <div class="side best"><small>دائمًا</small><b><span id="best">0</span> 🏆</b></div>
     <div id="scoreBig">0</div>
-    <div class="side level"><small>مستوى</small><b id="level">1</b></div>
+    <div class="side level"><small id="stageLbl">المرحلة 1</small><b id="level">ليفل 1/3</b></div>
   </div>
+  <div id="stageProg"><i></i><i></i><i></i></div>
 </div>
 <div id="toast"></div>
 
@@ -119,8 +125,10 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
     <div class="hrow"><span class="hi">🔺</span>الطوب المثلث بيحرّف الكورة بزاوية — استغله لصالحك</div>
     <div class="hrow"><span class="hi">✚</span>اجمع الكرات +، واضرب أهداف الليزر والمتقاطع لتفجير صفوف كاملة</div>
     <div class="hrow"><span class="hi">⬇</span>زرار «عودة» بيستدعي الكرات فورًا لو الدور طول</div>
+    <div class="hrow"><span class="hi">🏁</span>كل مرحلة ٣ ليفل — خلّص كل الطوب قبل ما يوصلك عشان تعدّي الليفل</div>
   </div>
-  <button class="whiteBtn rise" id="btnPlay" style="animation-delay:.22s"><span class="t1">لعبة جديدة</span><span class="t2">المستوى 1</span></button>
+  <button class="whiteBtn rise" id="btnPlay" style="animation-delay:.22s"><span class="t1" id="playT1">لعبة جديدة</span><span class="t2" id="playT2">المرحلة 1 — ليفل 1</span></button>
+  <button class="textBtn rise" id="btnFreshMenu" style="animation-delay:.26s" hidden>ابدأ من الأول خالص</button>
   <div class="tag rise" style="animation-delay:.28s;font-size:12px;color:#9db8e8">أفضل نتيجة بتتحفظ على جهازك تلقائيًا</div>
 </section>
 
@@ -130,7 +138,7 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
     <button class="sbtn primary" id="btnResume">▶ كمّل لعب</button>
     <button class="sbtn" id="btnSpeed">⚡ السرعة ×1</button>
     <button class="sbtn" id="btnSound">🔊 الصوت: شغال</button>
-    <button class="sbtn" id="btnRestart2">↻ لعبة من الأول</button>
+    <button class="sbtn" id="btnRestart2">↻ إعادة الليفل ده</button>
     <button class="sbtn" id="btnHome2">🏠 القايمة الرئيسية</button>
   </div>
 </section>
@@ -149,8 +157,18 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
     <div class="srow"><span class="lab">هذا الشهر</span><span class="val"><span class="delta" id="dMonth">+0</span><span id="vMonth">0</span></span></div>
     <div class="srow"><span class="lab">جميع الأوقات</span><span class="val"><span class="delta" id="dAll">+0</span><span id="vAll">0</span></span></div>
   </div>
-  <button class="whiteBtn rise" id="btnAgain" style="animation-delay:.28s"><span class="t1">لعبة جديدة</span><span class="t2" id="ovLevelTxt">المستوى 1</span></button>
+  <button class="whiteBtn rise" id="btnAgain" style="animation-delay:.28s"><span class="t1">↩ حاول الليفل ده تاني</span><span class="t2" id="ovLevelTxt">المرحلة 1 — ليفل 1</span></button>
   <button class="textBtn rise" id="btnHome" style="animation-delay:.34s">الرئيسية</button>
+  <button class="textBtn rise" id="btnFresh" style="animation-delay:.38s;font-size:14.5px;color:#b9cff5">ابدأ من الأول خالص</button>
+</section>
+
+<section class="overlay scrim" id="levelMenu" hidden>
+  <div class="sheet rise" style="text-align:center">
+    <h2 id="lcTitle">🎉 خلّصت الليفل!</h2>
+    <p id="lcSub" style="margin:0;color:#d7e5ff;font-weight:700;line-height:1.8">مكافأة إكمال: +0 نقطة</p>
+    <button class="sbtn primary" id="btnNextLevel" style="margin-top:8px">▶ اللي بعده</button>
+    <button class="sbtn" id="btnHome3">🏠 القايمة الرئيسية</button>
+  </div>
 </section>
 
 </div></div>
@@ -169,14 +187,18 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
 let bricks=[],pickups=[],balls=[],particles=[],floats=[],beams=[];
 let mode='menu';
-let level=1,score=0,best=+(localStorage.nbrBest||0),ballCount=1,volleyTotal=0;
+let stage=1,lvl=1,rowsSpawned=0,rowsTotal=9,scoreLevelStart=0,ballCountLevelStart=1,marchTick=0;
+let score=0,best=+(localStorage.nbrBest||0),ballCount=1,volleyTotal=0;
 let shooting=false,aiming=false,angle=-Math.PI/2,speed=+(localStorage.nbrSpeed||1),undoUsed=false,snapshot=null;
 let returnX=225,firstReturn=null,launchTime=0,launched=0,finished=0;
 let volleyHits=0,combo=0,maxCombo=0,shake=0,lastSpawnT=0,soundOn=localStorage.nbrSound!=='0';
 
 /* ball colour theme changes every 2 levels (orange → pink → cyan → lime → violet) */
 const BALL_THEMES=[['#ffd76e','#ffa726','#e07f00'],['#ffb1e6','#ff5fc8','#d81b9a'],['#a5f3fc','#22d3ee','#0284c7'],['#bef264','#84cc16','#4d7c0f'],['#ddd6fe','#a78bfa','#7c3aed']];
-const ballTheme=()=>BALL_THEMES[Math.floor((level-1)/2)%BALL_THEMES.length];
+const ballTheme=()=>BALL_THEMES[(stage-1)%BALL_THEMES.length];
+const pw=()=>(stage-1)*3+(lvl-1)+1; /* overall power 1.. */
+function loadProgress(){try{const p=JSON.parse(localStorage.nbrProgress||'null');if(p&&p.s>=1&&p.l>=1&&p.l<=3)return p}catch(e){}return{s:1,l:1}}
+function saveProgress(sv,lv){localStorage.nbrProgress=JSON.stringify({s:sv,l:lv})}
 
 /* ===== Sound ===== */
 let AC=null,lastHitSnd=0;
@@ -208,24 +230,58 @@ function scoreTier(){return volleyHits>=40?2:volleyHits>=15?1:0}
 function updateUI(){
   const sb=$('scoreBig');sb.textContent=fmt(score);sb.className=scoreTier()?'t'+scoreTier():'';
   sb.id='scoreBig';
-  $('level').textContent=level;$('best').textContent=fmt(best);
+  $('level').textContent='ليفل '+lvl+'/3';$('stageLbl').textContent='المرحلة '+stage;$('best').textContent=fmt(best);
+  [...$('stageProg').children].forEach((el,i)=>{el.className=i<lvl-1?'done':i===lvl-1?'now':''});
   $('undoBadge').textContent=undoUsed?0:1;
   $('btnUndo').classList.toggle('off',undoUsed||shooting||!snapshot);
   $('btnRecall').classList.toggle('off',!shooting);
   $('btnSpeed').textContent='⚡ السرعة ×'+speed;
   $('btnSound').textContent=soundOn?'🔊 الصوت: شغال':'🔇 الصوت: مقفول';
 }
-function showOverlay(id){['menu','pauseMenu','overMenu'].forEach(o=>$(o).hidden=o!==id)}
-function hideOverlays(){['menu','pauseMenu','overMenu'].forEach(o=>$(o).hidden=true)}
+function showOverlay(id){['menu','pauseMenu','overMenu','levelMenu'].forEach(o=>$(o).hidden=o!==id)}
+function hideOverlays(){['menu','pauseMenu','overMenu','levelMenu'].forEach(o=>$(o).hidden=true)}
 
 /* ===== Flow ===== */
-function reset(){
+function rowsForLevel(){return 5+lvl+Math.min(3,stage-1)}
+function baseBalls(sv,lv){return 1+(sv-1)*4+(lv-1)*2}
+function startLevel(){
   bricks=[];pickups=[];balls=[];particles=[];floats=[];beams=[];
-  level=1;score=0;ballCount=1;combo=0;maxCombo=0;volleyHits=0;shooting=false;aiming=false;
-  undoUsed=false;snapshot=null;returnX=225;firstReturn=null;shake=0;
-  mode='playing';hideOverlays();spawn();updateUI();
+  combo=0;volleyHits=0;shooting=false;aiming=false;undoUsed=false;snapshot=null;
+  returnX=225;firstReturn=null;shake=0;
+  rowsSpawned=0;rowsTotal=rowsForLevel();marchTick=0;
+  scoreLevelStart=score;ballCountLevelStart=ballCount;
+  mode='playing';hideOverlays();
+  for(let i=0;i<2;i++)spawnRow();
+  updateUI();
+  addFloat(W/2,topY+46,'المرحلة '+stage+' — ليفل '+lvl,'#ffffff',24);
 }
-function goHome(){mode='menu';shooting=false;aiming=false;$('menuBest').textContent=fmt(best);showOverlay('menu');updateUI()}
+function startRun(sv,lv){
+  stage=sv;lvl=lv;score=0;maxCombo=0;ballCount=baseBalls(sv,lv);
+  startLevel();
+}
+function retryLevel(){score=scoreLevelStart;ballCount=ballCountLevelStart;startLevel()}
+function goHome(){
+  mode='menu';shooting=false;aiming=false;
+  $('menuBest').textContent=fmt(best);
+  const pr=loadProgress();
+  if(pr.s>1||pr.l>1){$('playT1').textContent='كمّل اللعب';$('playT2').textContent='المرحلة '+pr.s+' — ليفل '+pr.l;$('btnFreshMenu').hidden=false}
+  else{$('playT1').textContent='لعبة جديدة';$('playT2').textContent='المرحلة 1 — ليفل 1';$('btnFreshMenu').hidden=true}
+  showOverlay('menu');updateUI();
+}
+function levelComplete(){
+  const wasStageEnd=lvl===3,cs=stage,cl=lvl;
+  const bonus=40*pw()+(wasStageEnd?60:0);
+  score+=bonus;
+  if(score>best){best=score;localStorage.nbrBest=best}
+  ballCount+=wasStageEnd?3:2;
+  if(lvl<3)lvl++;else{stage++;lvl=1}
+  saveProgress(stage,lvl);
+  mode='clear';shooting=false;aiming=false;
+  $('lcTitle').textContent=wasStageEnd?'🏆 خلّصت المرحلة '+cs+'!':'🎉 خلّصت الليفل!';
+  $('lcSub').innerHTML='مكافأة إكمال: +'+fmt(bonus)+' نقطة ⭐<br>كراتك بقت ×'+ballCount+' — اللي جاي: مرحلة '+stage+' ليفل '+lvl;
+  showOverlay('levelMenu');updateUI();
+  sLevel();if(navigator.vibrate)navigator.vibrate([30,40,30]);
+}
 function pauseGame(){if(mode!=='playing')return;mode='paused';aiming=false;showOverlay('pauseMenu');updateUI()}
 function resumeGame(){if(mode!=='paused')return;mode='playing';hideOverlays();updateUI()}
 function captureBoard(){
@@ -244,39 +300,47 @@ function endGame(){
   captureBoard();
   const per=recordScore(score);
   $('overTitle').innerHTML=rec?'أفضل تصويبة<br>جديدة دائمًا':'انتهت اللعبة 💥';
-  $('ovPill').textContent=rec?'مكتمل 🏆':'وصلت للمستوى '+level;
+  $('ovPill').textContent=rec?'مكتمل 🏆':'وصلت لمرحلة '+stage+' ليفل '+lvl;
   $('ovScore').textContent=fmt(score);
   $('vDay').textContent=fmt(per.day);$('vWeek').textContent=fmt(per.week);$('vMonth').textContent=fmt(per.month);$('vAll').textContent=fmt(per.all);
   const dl='+'+fmt(score);$('dDay').textContent=dl;$('dWeek').textContent=dl;$('dMonth').textContent=dl;$('dAll').textContent=dl;
-  $('ovLevelTxt').textContent='المستوى '+level;
+  $('ovLevelTxt').textContent='المرحلة '+stage+' — ليفل '+lvl;
   showOverlay('overMenu');updateUI();sOver();
 }
 
-/* ===== Spawning (squares + triangles + bombs, like the reference) ===== */
-function spawn(){
+/* ===== Spawning: finite rows per level, board marches every volley ===== */
+function spawnRow(){
   for(const b of bricks)b.r++;for(const p of pickups)p.r++;
   lastSpawnT=performance.now();
-  const occupied=new Set();let count=Math.min(2+Math.floor(level/3),5);
+  const w=pw(),occupied=new Set();
+  let count=Math.min(2+Math.floor((w+rowsSpawned)/4),5);
   for(let i=0;i<count;i++){
     let c=Math.floor(rand(0,cols)),tries=0;
     while(occupied.has(c)&&tries++<20)c=Math.floor(rand(0,cols));
     if(occupied.has(c))continue;occupied.add(c);
     const roll=Math.random();
     let type='sq';
-    if(level>=2&&roll<.22)type='tri';
-    else if(level>=3&&roll<.34)type='bomb';
-    const hp=Math.max(1,Math.round(level*1.9+rand(0,level*2+2)));
+    if((w>=2||rowsSpawned>=2)&&roll<.22)type='tri';
+    else if(w>=2&&roll<.34)type='bomb';
+    const hp=Math.max(1,Math.round(1+w*1.6+rowsSpawned*.55+rand(0,2+w*.9+rowsSpawned*.3)));
     bricks.push({c,r:0,hp,maxHp:hp,type,ori:Math.floor(rand(0,4)),flash:0});
   }
   let c=Math.floor(rand(0,cols));
   if(!occupied.has(c)||Math.random()<.5)pickups.push({c,r:0,type:'ball'});
-  if(level%4===0){let lc=Math.floor(rand(0,cols));pickups.push({c:lc,r:1,type:'laser'})}
-  if(level>=3&&level%3===0){let xc=Math.floor(rand(0,cols));if(!pickups.some(p=>p.c===xc&&p.r===1))pickups.push({c:xc,r:1,type:'cross'})}
+  if(rowsSpawned===2)pickups.push({c:Math.floor(rand(0,cols)),r:0,type:'laser'});
+  if(lvl===3&&rowsSpawned===3)pickups.push({c:Math.floor(rand(0,cols)),r:0,type:'cross'});
+  rowsSpawned++;
+  if(bricks.some(b=>topY+b.r*cell+cell>bottomY-6))endGame();
+}
+function marchDown(){
+  for(const b of bricks)b.r++;for(const p of pickups)p.r++;
+  lastSpawnT=performance.now();
+  pickups=pickups.filter(p=>topY+p.r*cell<bottomY);
   if(bricks.some(b=>topY+b.r*cell+cell>bottomY-6))endGame();
 }
 function fire(){
   if(shooting||mode!=='playing')return;
-  snapshot=JSON.stringify({bricks,pickups,ballCount,level,score,returnX,combo,maxCombo});
+  snapshot=JSON.stringify({bricks,pickups,ballCount,stage,lvl,rowsSpawned,rowsTotal,score,returnX,combo,maxCombo});
   shooting=true;volleyTotal=ballCount;balls=[];launched=0;finished=0;
   firstReturn=null;launchTime=0;aiming=false;combo=0;volleyHits=0;sLaunch();updateUI();
 }
@@ -287,11 +351,13 @@ function recall(){
   launched=volleyTotal;finished=volleyTotal;
 }
 function endVolley(){
-  shooting=false;returnX=firstReturn??returnX;level++;combo=0;volleyHits=0;
+  shooting=false;returnX=firstReturn??returnX;combo=0;volleyHits=0;
   if(score>best){best=score;localStorage.nbrBest=best}
-  sLevel();burst(returnX,launcherY-4,ballTheme()[1],10);
-  spawn();updateUI();
-  if(mode==='playing')addFloat(W/2,topY+44,'المستوى '+level,'#ffffff',26);
+  burst(returnX,launcherY-4,ballTheme()[1],6);
+  if(bricks.length===0&&rowsSpawned>=rowsTotal){updateUI();levelComplete();return}
+  if(rowsSpawned<rowsTotal)spawnRow();else{marchTick++;if(marchTick%2===0)marchDown()}
+  if(mode==='playing'&&bricks.length===0&&rowsSpawned>=rowsTotal){updateUI();levelComplete();return}
+  updateUI();
 }
 
 /* ===== Combat ===== */
@@ -303,7 +369,7 @@ function killBrick(b){
   burst(x,y,b.type==='bomb'?'#fb923c':'#ffffff',9);
   if(b.type==='bomb'){
     shake=Math.max(shake,9);sBomb();comic(x,y-6,'!بووم','#ffd76e');
-    for(const o of bricks){if(o!==b&&o.hp>0&&Math.abs(o.c-b.c)<=1&&Math.abs(o.r-b.r)<=1){o.hp-=Math.max(3,level*2);o.flash=1;if(o.hp<=0)score+=5}}
+    for(const o of bricks){if(o!==b&&o.hp>0&&Math.abs(o.c-b.c)<=1&&Math.abs(o.r-b.r)<=1){o.hp-=Math.max(3,pw()*2);o.flash=1;if(o.hp<=0)score+=5}}
     bricks=bricks.filter(o=>o.hp>0);
   }else sBreak();
   score+=5;combo++;maxCombo=Math.max(maxCombo,combo);
@@ -392,7 +458,7 @@ function physics(){
         const px=offsetX+p.c*cell+31,py=topY+p.r*cell+31;
         if(Math.hypot(ball.x-px,ball.y-py)<19){
           pickups.splice(pickups.indexOf(p),1);
-          const pts=Math.max(2,level);
+          const pts=Math.max(2,pw()+1);
           if(p.type==='ball'){ballCount++;addFloat(px,py-12,'كرة +1','#ffd76e',16);sPickup()}
           else if(p.type==='laser'){beams.push({kind:'row',r:p.r,t:performance.now()});damageCell(b=>b.r===p.r,pts);comic(px,py,'!ليزر','#a5f3fc');sLaser()}
           else{beams.push({kind:'cross',r:p.r,c:p.c,t:performance.now()});damageCell(b=>b.r===p.r||b.c===p.c,pts);comic(px,py,'!متقاطع','#ffd76e');sLaser();shake=Math.max(shake,5)}
@@ -593,17 +659,20 @@ canvas.addEventListener('pointercancel',()=>{aiming=false});
 canvas.addEventListener('contextmenu',e=>e.preventDefault());
 
 /* ===== Buttons ===== */
-$('btnPlay').onclick=()=>{ac();reset()};
-$('btnAgain').onclick=()=>{ac();reset()};
+$('btnPlay').onclick=()=>{ac();const pr=loadProgress();startRun(pr.s,pr.l)};
+$('btnFreshMenu').onclick=()=>{saveProgress(1,1);startRun(1,1)};
+$('btnAgain').onclick=()=>{ac();retryLevel()};
+$('btnFresh').onclick=()=>{saveProgress(1,1);startRun(1,1)};
+$('btnNextLevel').onclick=()=>{ac();startLevel()};
 $('btnResume').onclick=resumeGame;
-$('btnRestart2').onclick=()=>reset();
-$('btnHome').onclick=goHome;$('btnHome2').onclick=goHome;
+$('btnRestart2').onclick=()=>retryLevel();
+$('btnHome').onclick=goHome;$('btnHome2').onclick=goHome;$('btnHome3').onclick=goHome;
 $('btnBack').onclick=()=>{if(mode==='playing'||mode==='paused')goHome()};
 $('btnGear').onclick=()=>{if(mode==='playing')pauseGame();else if(mode==='paused')resumeGame();else if(mode==='menu')goHome()};
 $('btnUndo').onclick=()=>{
   if(undoUsed||shooting||!snapshot||mode!=='playing')return;
   const s=JSON.parse(snapshot);
-  bricks=s.bricks;pickups=s.pickups;ballCount=s.ballCount;level=s.level;score=s.score;returnX=s.returnX;combo=s.combo;maxCombo=s.maxCombo;
+  bricks=s.bricks;pickups=s.pickups;ballCount=s.ballCount;stage=s.stage;lvl=s.lvl;rowsSpawned=s.rowsSpawned;rowsTotal=s.rowsTotal;score=s.score;returnX=s.returnX;combo=s.combo;maxCombo=s.maxCombo;
   undoUsed=true;balls=[];volleyHits=0;updateUI();toast('رجعنا خطوة ↩');
 };
 $('btnRecall').onclick=()=>{if(shooting&&mode==='playing'){recall();toast('تم استدعاء الكرات ⬇',700)}};
@@ -613,8 +682,9 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&mode==='pl
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(mode==='playing')pauseGame();else if(mode==='paused')resumeGame()}});
 
 /* ===== Boot ===== */
-$('menuBest').textContent=fmt(best);
-spawn();updateUI();goHome();
+stage=1;lvl=1;rowsSpawned=0;rowsTotal=rowsForLevel();
+for(let i=0;i<2;i++)spawnRow();
+updateUI();goHome();
 requestAnimationFrame(frame);
 })();
 </script>
