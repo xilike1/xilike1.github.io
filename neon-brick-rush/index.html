@@ -180,7 +180,7 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
 (()=>{'use strict';
 /* ===== Setup ===== */
 const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');
-const W=450,H=800,cols=8,cell=54,offsetX=9,topY=150,bottomY=676,launcherY=660;
+const W=450,H=800,cols=8,cell=50,offsetX=25,topY=150,bottomY=676,launcherY=660;
 const ROWS=Math.floor((bottomY-topY)/cell);
 const $=id=>document.getElementById(id);
 const DPR=Math.min(2,window.devicePixelRatio||1);
@@ -208,6 +208,7 @@ const pw=()=>level; /* difficulty driver = level number */
 function loadProgress(){try{const p=JSON.parse(localStorage.nbrProgress||'null');if(p){if(p.s>=1&&p.l>=1)return{l:(p.s-1)*3+p.l};if(p.l>=1)return{l:p.l}}}catch(e){}return{l:1}}
 function saveProgress(lv){localStorage.nbrProgress=JSON.stringify({l:lv})}
 function ballFloor(L){return 6+4*L}
+function designBalls(L){return ballFloor(L)+2*(L-1)} /* par ball count the level's HP is tuned against */
 
 /* ===== Sound ===== */
 let AC=null,lastHitSnd=0;
@@ -278,7 +279,7 @@ function startLevel(){
   combo=0;volleyHits=0;shooting=false;aiming=false;undoUsed=false;snapshot=null;
   returnX=225;firstReturn=null;shake=0;
   rowsSpawned=0;rowsTotal=rowsForLevel();marchTick=0;
-  ballCount=Math.max(ballCount,ballFloor(level));levelBalls=ballCount;
+  ballCount=Math.max(ballCount,ballFloor(level));levelBalls=designBalls(level);
   bricksDestroyedLevel=0;bricksSpawnedLevel=0;volleyScore=0;
   scoreLevelStart=score;ballCountLevelStart=ballCount;
   mode='playing';hideOverlays();
@@ -356,8 +357,8 @@ function spawnRow(){
     if((w>=2||rowsSpawned>=2)&&roll<.22)type='tri';
     else if(w>=2&&roll<.34)type='bomb';
     else if(w>=3&&roll<.42)type='star';
-    const heavy=Math.random()<.12;
-    const hp=Math.max(3,Math.round(levelBalls*rand(.35,1.15)*(1+rowsSpawned*.05)*(heavy?1.8:1)));
+    const heavy=Math.random()<.10;
+    const hp=Math.min(Math.round(levelBalls*2),Math.max(3,Math.round(levelBalls*rand(.3,1.05)*(heavy?1.7:1))));
     bricks.push({id:++brickSeq,c,r:0,hp,maxHp:hp,type,ori:Math.floor(rand(0,4)),flash:0,born:performance.now()+c*45});
     bricksSpawnedLevel++;
   }
@@ -420,7 +421,7 @@ function volleyKillCommon(b){
   if(!volleyStrongDone&&strongestHp>=8&&b.maxHp>=strongestHp){volleyStrongDone=true;setTimeout(()=>comic(W/2,topY+120,'تم إسقاط أقوى كتلة!','#ffd76e'),60)}
 }
 function killBrick(b,byBall){
-  const x=offsetX+b.c*cell+31,y=topY+b.r*cell+31;
+  const x=offsetX+b.c*cell+cell/2,y=topY+b.r*cell+cell/2;
   burst(x,y,b.type==='bomb'?'#fb923c':palOf(b)[1],13);
   volleyKillCommon(b);
   if(b.type==='bomb'){
@@ -442,7 +443,7 @@ function killBrick(b,byBall){
 }
 function hit(b,ball){
   b.hp--;b.flash=1;b.pop=performance.now();score++;volleyScore++;volleyHits++;volleyHitIds.add(b.id);sHit();
-  const x=offsetX+b.c*cell+31,y=topY+b.r*cell+31;
+  const x=offsetX+b.c*cell+cell/2,y=topY+b.r*cell+cell/2;
   for(let i=0;i<3;i++)particles.push({x:x+rand(-16,16),y:y+rand(-16,16),vx:rand(-2.4,2.4),vy:rand(-2.4,2.4),life:15,max:15,color:'#e0f2fe',sz:rand(2,3.4)});
   if(b.hp<=0){killBrick(b,ball);bricks=bricks.filter(o=>o.hp>0)}
   setScoreBig();
@@ -522,7 +523,7 @@ function physics(){
       }
       if(collided)break;
       for(const p of[...pickups]){
-        const px=offsetX+p.c*cell+31,py=topY+p.r*cell+31;
+        const px=offsetX+p.c*cell+cell/2,py=topY+p.r*cell+cell/2;
         if(Math.hypot(ball.x-px,ball.y-py)<19){
           pickups.splice(pickups.indexOf(p),1);
           const pts=Math.max(2,Math.round(levelBalls*.25));
@@ -553,7 +554,7 @@ const PALETTE=[
  ['#ffd0a1','#ff922e','#e06f00'],
  ['#ffb1e6','#ff5fc8','#d81b9a'],
 ];
-function palOf(b){if(b.type==='bomb')return PALETTE[3];if(b.type==='star')return['#e0fbff','#3ae2ff','#0891b2'];const hp=b.hp;return PALETTE[hp<=4?0:hp<=9?1:hp<=16?2:hp<=26?3:4]}
+function palOf(b){if(b.type==='bomb')return PALETTE[3];if(b.type==='star')return['#e0fbff','#3ae2ff','#0891b2'];const r=b.hp/Math.max(1,levelBalls);return PALETTE[r<=.45?0:r<=.8?1:r<=1.15?2:r<=1.6?3:4]}
 function spawnShift(now){const t=(now-lastSpawnT)/270;if(t>=1)return 0;const u=t-1;const e=1+2.2*u*u*u+1.2*u*u;return -(1-e)*cell}
 function bevelSquare(x,y,s,pal,flash){
   const[lt,md,dk]=pal;
@@ -636,7 +637,7 @@ function draw(now){
   }
   /* bricks */
   for(const b of bricks){
-    const cx0=offsetX+b.c*cell+31,cy0=topY+b.r*cell+31+shift;
+    const cx0=offsetX+b.c*cell+cell/2,cy0=topY+b.r*cell+cell/2+shift;
     const ez=b.born?clamp((now-b.born)/170,0,1):1,eze=1-Math.pow(1-ez,2);
     const s=Math.max((cell-3)*eze,4),x=cx0-s/2,y=cy0-s/2;
     const popF=b.pop?1+.13*Math.max(0,1-(now-b.pop)/130):1;
@@ -672,7 +673,7 @@ function draw(now){
   }
   /* pickups */
   for(const p of pickups){
-    const x=offsetX+p.c*cell+31,y=topY+p.r*cell+31+shift,pl=1+.1*Math.sin(now/230+p.c*1.7);
+    const x=offsetX+p.c*cell+cell/2,y=topY+p.r*cell+cell/2+shift,pl=1+.1*Math.sin(now/230+p.c*1.7);
     if(p.type==='ball'){
       ctx.strokeStyle='rgba(255,255,255,.85)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,15.5*pl,0,6.283);ctx.stroke();
       drawBall(x,y,9.5*pl,['#fff7cc','#ffc93c','#e07f00']);
@@ -705,7 +706,7 @@ function draw(now){
       let stopB=null;
       for(const b of bricks){const bx=offsetX+b.c*cell,by=topY+b.r*cell;if(x>bx-3&&x<bx+cell+1&&y>by-3&&y<by+cell+1){stopB=b;break}}
       if(stopB){aimTarget=stopB;pts.push([x,y]);break}
-      if(!aimPlus)for(const pk of pickups){if(pk.type==='ball'){const px=offsetX+pk.c*cell+31,py=topY+pk.r*cell+31;if(Math.hypot(x-px,y-py)<17){aimPlus=true;break}}}
+      if(!aimPlus)for(const pk of pickups){if(pk.type==='ball'){const px=offsetX+pk.c*cell+cell/2,py=topY+pk.r*cell+cell/2;if(Math.hypot(x-px,y-py)<17){aimPlus=true;break}}}
       if(y>=launcherY&&vy>0){pts.push([x,launcherY]);break}
       if(i===339)pts.push([x,y]);
     }
