@@ -11,7 +11,7 @@
 html,body{height:100%}
 body{margin:0;background:#2e4a85;color:#fff;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
 #app{height:100dvh;display:flex;align-items:center;justify-content:center;background:radial-gradient(80vw 50vh at 50% -10%,#557cc0,#2e4a85 70%)}
-#shell{position:relative;width:min(100vw,56.25dvh);height:min(100dvh,177.777vw);background:linear-gradient(180deg,#4a6db3 0%,#3f61a1 55%,#385792 100%);overflow:hidden}
+#shell{position:relative;width:100vw;height:100dvh;background:linear-gradient(180deg,#4a6db3 0%,#3f61a1 55%,#385792 100%);overflow:hidden}
 @media(min-width:520px) and (min-height:900px){#shell{border-radius:28px;box-shadow:0 40px 90px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.15)}}
 canvas{width:100%;height:100%;display:block;touch-action:none}
 /* ===== Top bar ===== */
@@ -246,8 +246,9 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
 (()=>{'use strict';
 /* ===== Setup ===== */
 const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');
-const W=450,H=800,cols=8,cell=54,offsetX=9,topY=150,bottomY=676,launcherY=660;
-const ROWS=Math.floor((bottomY-topY)/cell);
+const W=450,cols=8,cell=54,offsetX=9,BOARD_H=526;
+let H=800,topY=150,bottomY=676,launcherY=660;
+const ROWS=Math.floor(BOARD_H/cell);
 const $=id=>document.getElementById(id);
 const DPR=Math.min(2,window.devicePixelRatio||1);
 canvas.width=W*DPR;canvas.height=H*DPR;
@@ -256,9 +257,20 @@ let seedRnd=null;
 function rnd(){return seedRnd?seedRnd():Math.random()}
 const rand=(a,b)=>a+rnd()*(b-a);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function fit(){
+  const cw=canvas.clientWidth,ch=canvas.clientHeight;
+  if(!cw||!ch)return;
+  H=clamp(Math.round(W*ch/cw),800,1040);
+  const extra=H-800;
+  topY=150+Math.round(extra*.3);bottomY=topY+BOARD_H;launcherY=bottomY-16;
+  canvas.width=W*DPR;canvas.height=H*DPR;
+}
+fit();
+if(window.addEventListener){window.addEventListener('resize',fit);window.addEventListener('orientationchange',()=>setTimeout(fit,60))}
 
 let bricks=[],pickups=[],balls=[],particles=[],floats=[],beams=[];
 let mode='menu';
+let dangerOn=false;
 let level=1,levelBalls=10,rowsSpawned=0,rowsTotal=9,scoreLevelStart=0,ballCountLevelStart=1,marchTick=0;
 let score=0,best=+(localStorage.nbrBest||0),ballCount=1,volleyTotal=0;
 let shooting=false,aiming=false,angle=-Math.PI/2,speed=+(localStorage.nbrSpeed||1),undoUsed=false,snapshot=null;
@@ -724,6 +736,17 @@ function draw(now){
   ctx.strokeStyle='rgba(255,255,255,.05)';ctx.lineWidth=1;
   for(let x=offsetX;x<W-6;x+=cell){ctx.beginPath();ctx.moveTo(x,topY);ctx.lineTo(x,bottomY);ctx.stroke()}
   for(let y=topY;y<bottomY;y+=cell){ctx.beginPath();ctx.moveTo(6,y);ctx.lineTo(W-6,y);ctx.stroke()}
+  /* danger: bricks close to the line -> red pulse */
+  let maxR=-1;for(const b of bricks)if(b.r>maxR)maxR=b.r;
+  dangerOn=mode==='playing'&&maxR>=ROWS-3;
+  if(dangerOn){
+    const pl=.5+.5*Math.sin(now/170);
+    const grd=ctx.createLinearGradient(0,bottomY-cell*2.2,0,bottomY);
+    grd.addColorStop(0,'rgba(255,45,60,0)');grd.addColorStop(1,'rgba(255,45,60,'+(.26+.22*pl).toFixed(3)+')');
+    ctx.fillStyle=grd;ctx.fillRect(6,bottomY-cell*2.2,W-12,cell*2.2);
+    ctx.strokeStyle='rgba(255,60,75,'+(.5+.45*pl).toFixed(3)+')';ctx.lineWidth=3+1.2*pl;rr(3,topY-5,W-6,bottomY-topY+11,10);ctx.stroke();
+    ctx.fillStyle='rgba(255,70,85,'+(.45+.4*pl).toFixed(3)+')';ctx.fillRect(6,bottomY-2,W-12,3.5);
+  }
   const shift=spawnShift(now),theme=ballTheme();
   /* beams (laser row / cross) under bricks glow */
   beams=beams.filter(bm=>now-bm.t<330);
