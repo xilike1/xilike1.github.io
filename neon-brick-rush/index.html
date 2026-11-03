@@ -65,6 +65,16 @@ canvas{width:100%;height:100%;display:block;touch-action:none}
 @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 .rise{animation:rise .45s cubic-bezier(.2,.8,.2,1) both}
 .sunburst{background:repeating-conic-gradient(from -90deg at 50% 30%,rgba(255,255,255,.055) 0deg 9deg,rgba(255,255,255,0) 9deg 18deg),linear-gradient(180deg,var(--blue-600) 0%,var(--blue-700) 45%,var(--blue-900) 100%)}
+#overMenu .whiteBtn{padding:9px 16px 8px;margin-top:10px}
+#overMenu .whiteBtn .t1{font-size:16.5px}
+#overMenu .whiteBtn .t2{font-size:11.5px;margin-top:1px}
+#overMenu .textBtn{padding:7px 22px;margin-top:9px;font-size:15px}
+#overMenu .srow{padding:6.5px 0}
+#overMenu .statCard{padding:2px 16px}
+#overMenu .shotFrame{margin-top:8px}
+#overMenu .shotFrame img{max-height:24dvh}
+#overMenu .arcTitle{font-size:23px}
+.srow .delta[hidden]{display:none}
 .chunk{font-weight:900;font-style:italic;color:#fff;-webkit-text-stroke:2px var(--ink);paint-order:stroke fill;text-shadow:0 4px 0 rgba(14,28,66,.5)}
 h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
 .arcTitle{font-size:25px;font-weight:900;line-height:1.45;text-shadow:0 3px 10px rgba(10,30,80,.35)}
@@ -303,7 +313,6 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
   <button class="whiteBtn rise" id="btnRevive" style="animation-delay:.24s" hidden><span class="t1">استمر — ادفع الطوب صفّين للأعلى</span><span class="t2" id="reviveTxt">دفعات متبقية: 2</span></button>
   <button class="whiteBtn rise" id="btnAgain" style="animation-delay:.28s"><span class="t1"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5.5 4.8 9.2l3.7 3.7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 9.2h9.5a5 5 0 0 1 0 10H11" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg> حاول هذا المستوى مجددًا</span><span class="t2" id="ovLevelTxt">المستوى 1</span></button>
   <button class="textBtn rise" id="btnHome" style="animation-delay:.34s">الرئيسية</button>
-  <button class="textBtn rise" id="btnFresh" style="animation-delay:.38s;font-size:14.5px;color:#b9cff5">ابدأ من جديد</button>
 </section>
 
 <section class="overlay scrim" id="shopMenu" hidden>
@@ -363,7 +372,7 @@ let bricks=[],pickups=[],balls=[],particles=[],floats=[],beams=[];
 let mode='menu';
 let dangerOn=false;
 let level=1,levelBalls=10,rowsSpawned=0,rowsTotal=9,scoreLevelStart=0,ballCountLevelStart=1,marchTick=0;
-let score=0,best=+(localStorage.nbrBest||0),ballCount=1,volleyTotal=0;
+let score=0,best=+(localStorage.nbrBest||0),ballCount=1,volleyTotal=0,runPrevBest=best;
 let shooting=false,aiming=false,angle=-Math.PI/2,speed=+(localStorage.nbrSpeed||1),undoUsed=false,snapshot=null;
 let returnX=225,firstReturn=null,launchTime=0,launched=0,finished=0;
 let volleyHits=0,combo=0,maxCombo=0,shake=0,lastSpawnT=0,soundOn=localStorage.nbrSound!=='0';
@@ -436,7 +445,7 @@ function recordDaily(sc,completed){
   all[k]=cur;localStorage.nbrDaily=JSON.stringify(all);return cur;
 }
 function startDaily(){
-  dailyMode=true;level=dailyLevel();score=0;maxCombo=0;ballCount=ballFloor(level);
+  dailyMode=true;runPrevBest=best;level=dailyLevel();score=0;maxCombo=0;ballCount=ballFloor(level);
   boostLeft=3;waveLeft=maxWave();pushLeft=maxPush();seedRnd=makeDailyRnd();
   startLevel();
 }
@@ -457,11 +466,12 @@ const sOver=()=>{[392,330,262,196].forEach((f,i)=>setTimeout(()=>beep(f,.16,'tri
 /* ===== Period bests (day / week / month / all-time) ===== */
 function periodKeys(){const d=new Date();const day=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();const mon=d.getFullYear()+'-'+(d.getMonth()+1);const onejan=new Date(d.getFullYear(),0,1);const week=d.getFullYear()+'-W'+Math.ceil((((d-onejan)/864e5)+onejan.getDay()+1)/7);return{day,week,mon}}
 function loadPeriods(){try{return JSON.parse(localStorage.nbrPeriods||'{}')}catch(e){return{}}}
-function recordScore(sc){
+function recordScore(sc,prevBest){
   const k=periodKeys(),p=loadPeriods();
-  const upd=(key,label)=>{const cur=p[key]&&p[key].k===label?p[key].v:0;const nv=Math.max(cur,sc);p[key]={k:label,v:nv};return nv};
-  const out={day:upd('d',k.day),week:upd('w',k.week),month:upd('m',k.mon),all:Math.max(best,sc)};
-  localStorage.nbrPeriods=JSON.stringify(p);return out;
+  const upd=(key,label)=>{const cur=p[key]&&p[key].k===label?p[key].v:0;const nv=Math.max(cur,sc);p[key]={k:label,v:nv};return[nv,cur]};
+  const[day,pDay]=upd('d',k.day),[week,pWeek]=upd('w',k.week),[month,pMonth]=upd('m',k.mon);
+  localStorage.nbrPeriods=JSON.stringify(p);
+  return{day,week,month,all:Math.max(prevBest||0,sc),pDay,pWeek,pMonth};
 }
 
 /* ===== UI ===== */
@@ -529,7 +539,7 @@ function startLevel(){
   addFloat(W/2,topY+46,dailyMode?'تحدي اليوم':'مستوى '+level,'#ffffff',24);
 }
 function startRun(lv,fresh){
-  dailyMode=false;seedRnd=null;
+  dailyMode=false;seedRnd=null;runPrevBest=best;
   level=lv;score=0;maxCombo=0;ballCount=ballFloor(lv);
   applyCharges();
   if(fresh){allotLevel=0;localStorage.nbrAllot=0;baseWave=1;basePush=1;saveCharges()}
@@ -628,6 +638,7 @@ function captureBoard(){
     const c=document.createElement('canvas');const sw=(W-4)*DPR,sh=(bottomY-topY+16)*DPR;
     c.width=sw;c.height=sh;const g=c.getContext('2d');
     g.fillStyle='#141f45';g.fillRect(0,0,sw,sh);
+    draw(performance.now());
     g.drawImage(canvas,2*DPR,(topY-8)*DPR,sw,sh,0,0,sw,sh);
     $('boardShot').src=c.toDataURL('image/png');
   }catch(e){/* snapshot is decorative */}
@@ -636,15 +647,16 @@ function endGame(){
   if(mode==='over')return;
   mode='over';shooting=false;aiming=false;
   if(dailyMode)recordDaily(score,false);else{streak=0;localStorage.nbrStreak=0}
-  const rec=score>0&&score>=best;
+  const rec=score>0&&score>=best;const prevBest=runPrevBest;
   if(score>best){best=score;localStorage.nbrBest=best}
   captureBoard();
-  const per=recordScore(score);
+  const per=recordScore(score,prevBest);
   $('overTitle').innerHTML=rec?'أفضل نتيجة<br>جديدة على الإطلاق':'انتهت اللعبة';
-  $('ovPill').textContent=rec?'مكتمل':'وصلت إلى المستوى '+level;
+  $('ovPill').textContent=dailyMode?'تحدي اليوم':'وصلت إلى المستوى '+level;
   $('ovScore').textContent=fmt(score);
   $('vDay').textContent=fmt(per.day);$('vWeek').textContent=fmt(per.week);$('vMonth').textContent=fmt(per.month);$('vAll').textContent=fmt(per.all);
-  const dl='+'+fmt(score);$('dDay').textContent=dl;$('dWeek').textContent=dl;$('dMonth').textContent=dl;$('dAll').textContent=dl;
+  const setDelta=(id,nv,prev)=>{const el=$(id);if(nv<=prev){el.hidden=true}else{el.hidden=false;el.textContent=prev>0?'+'+fmt(nv-prev):'جديد'}};
+  setDelta('dDay',per.day,per.pDay);setDelta('dWeek',per.week,per.pWeek);setDelta('dMonth',per.month,per.pMonth);setDelta('dAll',per.all,prevBest);
   $('ovLevelTxt').textContent=dailyMode?'تحدي اليوم':'مستوى '+level;
   $('btnRevive').hidden=pushAvail()+stock.push<=0;$('reviveTxt').textContent='دفعات متبقية: '+(pushAvail()+stock.push);
   showOverlay('overMenu');updateUI();sOver();
@@ -1162,7 +1174,6 @@ canvas.addEventListener('contextmenu',e=>e.preventDefault());
 $('btnPlay').onclick=()=>{ac();const pr=loadProgress();startRun(pr.l,pr.l<=1)};
 $('btnFreshMenu').onclick=()=>{saveProgress(1);startRun(1,true)};
 $('btnAgain').onclick=()=>{ac();retryLevel()};
-$('btnFresh').onclick=()=>{saveProgress(1);startRun(1,true)};
 $('btnNextLevel').onclick=()=>{ac();if(dailyMode)startDaily();else startLevel()};
 $('btnRevive').onclick=()=>{ac();if((pushAvail()<=0&&stock.push<=0)||mode!=='over')return;mode='playing';balls=[];shooting=false;aiming=false;hideOverlays();pushUp();addFloat(W/2,topY+90,'استمر!','#7dd3fc',22)};
 $('btnDaily').onclick=()=>{ac();startDaily()};
