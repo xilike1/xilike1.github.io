@@ -236,6 +236,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
     <div class="hrow"><span class="hi">≈</span>«إضافة» تمنحك +٥ كرات و«موجة» تُضعف كل الطوب — وأثناء اللعب تتحول الأزرار إلى «عودة» و«تراجع»</div>
     <div class="hrow"><span class="hi">⬆</span>«دفعة» تُرجع كل الطوب صفّين إلى الأعلى — عدد دفعاتك يزيد بترقيات «أنا»، وتظهر عند الخسارة لتكمل من نفس النقطة</div>
     <div class="hrow"><span class="hi"><svg viewBox="0 0 24 24"><path d="M12.7 2.4c.4 3.3-1 5-2.3 6.5C9.2 10.3 8 11.9 8 14a4.5 4.5 0 0 0 9 0c0-1.6-.7-2.9-1.5-4.1-.3 1-.9 1.8-1.7 2.2.4-3-.6-6.7-3.1-9.7z" fill="#ff922e"/><path d="M12 21.6a2.9 2.9 0 0 1-2.9-2.9c0-1.3.7-2.3 1.4-3.2.5-.6 1-1.3 1.5-2.1.5.8 1 1.5 1.5 2.1.7.9 1.4 1.9 1.4 3.2A2.9 2.9 0 0 1 12 21.6z" fill="#ffc93c"/></svg></span>اربح مستويات متتالية دون أن تخسر لتكبّر سلسلة انتصاراتك الظاهرة بجانب الترس</div>
+    <div class="hrow"><span class="hi"><svg viewBox="0 0 24 24"><path d="M3 17 2 7l5.5 4L12 5l4.5 6L22 7l-1 10z" fill="#ffc93c"/><rect x="3" y="18.4" width="18" height="2.4" fill="#ffc93c"/></svg></span>كل 10 مستويات يظهر زعيم — كتلة عملاقة 2×2 بصحة واحدة مشتركة، تتشقّق على مراحل وتنهار دفعة واحدة</div>
     <div class="hrow"><span class="hi">⚑</span>كل مستوى قائم بذاته — دمّر كل الطوب قبل أن يصل إليك لتنتقل إلى المستوى التالي</div>
     </div>
     <button class="textBtn rise" id="btnFreshMe" style="margin-top:18px;font-size:14.5px;color:#b9cff5">ابدأ من جديد</button>
@@ -328,7 +329,7 @@ let score=0,best=+(localStorage.nbrBest||0),ballCount=1,volleyTotal=0;
 let shooting=false,aiming=false,angle=-Math.PI/2,speed=+(localStorage.nbrSpeed||1),undoUsed=false,snapshot=null;
 let returnX=225,firstReturn=null,launchTime=0,launched=0,finished=0;
 let volleyHits=0,combo=0,maxCombo=0,shake=0,lastSpawnT=0,soundOn=localStorage.nbrSound!=='0';
-let volleyScore=0,volleyKills=0,strongestHp=0,volleyStrongDone=false,brickSeq=0;
+let volleyScore=0,volleyKills=0,strongestHp=0,volleyStrongDone=false,brickSeq=0,bossSeq=0;
 let volleyHitIds=new Set(),volleyStartIds=new Set();
 let streak=+(localStorage.nbrStreak||0),boostLeft=3,waveLeft=2,pushLeft=2,pushLeftLevelStart=2;
 let coins=+(localStorage.nbrCoins||0);
@@ -442,6 +443,7 @@ function startLevel(){
   scoreLevelStart=score;ballCountLevelStart=ballCount;pushLeftLevelStart=pushLeft;
   mode='playing';hideOverlays();
   for(let i=0;i<2;i++)spawnRow();
+  if(!dailyMode&&level%10===0)spawnBoss();
   updateUI();
   addFloat(W/2,topY+46,dailyMode?'تحدي اليوم':'مستوى '+level,'#ffffff',24);
 }
@@ -639,13 +641,35 @@ function volleyKillCommon(b){
   else if(volleyKills===10)comic(W/2,topY+120,'تم تدمير 10 من الكتل!','#ffb52e');
   if(!volleyStrongDone&&strongestHp>=8&&b.maxHp>=strongestHp){volleyStrongDone=true;setTimeout(()=>comic(W/2,topY+120,'تم إسقاط أقوى كتلة!','#ffd76e'),60)}
 }
+function spawnBoss(){
+  const hp=Math.max(40,Math.round(levelBalls*5));
+  const boss={id:++bossSeq,hp,maxHp:hp};
+  const before=bricks.length;
+  bricks=bricks.filter(b=>!((b.c===3||b.c===4)&&(b.r===0||b.r===1)));
+  bricksSpawnedLevel-=before-bricks.length;
+  for(const r of[0,1])for(const c of[3,4])bricks.push({id:++brickSeq,c,r,hp,maxHp:hp,type:'boss',ori:0,flash:0,born:performance.now()+(c-3+r*2)*45,boss,anchor:c===3&&r===0,bossDy:r,bossDx:c-3});
+  bricksSpawnedLevel+=4;
+  comic(W/2,topY+120,'!الزعيم','#ff8fab');
+}
+function mirrorBoss(b){for(const o of bricks)if(o.type==='boss'&&o.boss===b.boss){o.hp=b.boss.hp;o.maxHp=b.boss.maxHp}}
+function destroyBoss(b){
+  const cells=bricks.filter(o=>o.type==='boss'&&o.boss===b.boss);
+  for(const o of cells){const x=offsetX+o.c*cell+31,y=topY+o.r*cell+31;burst(x,y,'#ff5f8f',12);o.hp=0;volleyKillCommon(o)}
+  score+=5*cells.length;volleyScore+=5*cells.length;combo+=cells.length;maxCombo=Math.max(maxCombo,combo);
+  shake=Math.max(shake,10);sBomb();comic(W/2,topY+120,'!سقط الزعيم','#ffd76e');
+  bricks=bricks.filter(o=>o.hp>0);
+}
+function splashDamage(o,pts){
+  if(o.type==='boss'){if(o.boss.hp>0){o.boss.hp-=pts;o.flash=1;mirrorBoss(o);if(o.boss.hp<=0)destroyBoss(o)}return}
+  o.hp-=pts;o.flash=1;if(o.hp<=0){score+=5;volleyScore+=5;earnCoins(1)}
+}
 function killBrick(b,byBall){
   const x=offsetX+b.c*cell+31,y=topY+b.r*cell+31;
   burst(x,y,b.type==='bomb'?'#fb923c':palOf(b)[1],13);
   volleyKillCommon(b);
   if(b.type==='bomb'){
     shake=Math.max(shake,9);sBomb();comic(x,y-6,'!بووم','#ffd76e');
-    for(const o of bricks){if(o!==b&&o.hp>0&&Math.abs(o.c-b.c)<=1&&Math.abs(o.r-b.r)<=1){o.hp-=Math.max(3,Math.round(levelBalls*.3));o.flash=1;if(o.hp<=0){score+=5;volleyScore+=5;earnCoins(1)}}}
+    for(const o of bricks){if(o!==b&&o.hp>0&&Math.abs(o.c-b.c)<=1&&Math.abs(o.r-b.r)<=1)splashDamage(o,Math.max(3,Math.round(levelBalls*.3)))}
     bricks=bricks.filter(o=>o.hp>0);
   }else if(b.type==='star'){
     const pts=Math.max(2,Math.round(levelBalls*.25));
@@ -661,6 +685,14 @@ function killBrick(b,byBall){
   if(combo===25)comic(W/2,topY+120,'!!مذهل','#ff4fd8');
 }
 function hit(b,ball){
+  if(b.type==='boss'){
+    b.boss.hp--;b.flash=1;b.pop=performance.now();score++;volleyScore++;volleyHits++;volleyHitIds.add(b.id);sHit();
+    const bx=offsetX+b.c*cell+31,by=topY+b.r*cell+31;
+    for(let i=0;i<3;i++)particles.push({x:bx+rand(-16,16),y:by+rand(-16,16),vx:rand(-2.4,2.4),vy:rand(-2.4,2.4),life:15,max:15,color:'#ffd3e0',sz:rand(2,3.4)});
+    mirrorBoss(b);
+    if(b.boss.hp<=0){destroyBoss(b);bricks=bricks.filter(o=>o.hp>0)}
+    setScoreBig();return;
+  }
   b.hp--;b.flash=1;b.pop=performance.now();score++;volleyScore++;volleyHits++;volleyHitIds.add(b.id);sHit();
   const x=offsetX+b.c*cell+31,y=topY+b.r*cell+31;
   for(let i=0;i<3;i++)particles.push({x:x+rand(-16,16),y:y+rand(-16,16),vx:rand(-2.4,2.4),vy:rand(-2.4,2.4),life:15,max:15,color:'#e0f2fe',sz:rand(2,3.4)});
@@ -668,7 +700,10 @@ function hit(b,ball){
   setScoreBig();
 }
 function damageCell(testFn,pts){
-  for(const b of bricks)if(testFn(b)){b.hp-=pts;b.flash=1;if(b.hp<=0){score+=5;volleyScore+=5;volleyKillCommon(b)}}
+  for(const b of bricks)if(testFn(b)){
+    if(b.type==='boss'){if(b.boss.hp>0){b.boss.hp-=pts;b.flash=1;mirrorBoss(b);if(b.boss.hp<=0)destroyBoss(b)}continue}
+    b.hp-=pts;b.flash=1;if(b.hp<=0){score+=5;volleyScore+=5;volleyKillCommon(b)}
+  }
   bricks=bricks.filter(b=>b.hp>0);
 }
 
@@ -773,7 +808,7 @@ const PALETTE=[
  ['#ffd0a1','#ff922e','#e06f00'],
  ['#ffb1e6','#ff5fc8','#d81b9a'],
 ];
-function palOf(b){if(b.type==='bomb')return PALETTE[3];if(b.type==='star')return['#e0fbff','#3ae2ff','#0891b2'];const hp=b.hp;return PALETTE[hp<=4?0:hp<=9?1:hp<=16?2:hp<=26?3:4]}
+function palOf(b){if(b.type==='boss')return['#ff8fab','#e0235f','#6d0f30'];if(b.type==='bomb')return PALETTE[3];if(b.type==='star')return['#e0fbff','#3ae2ff','#0891b2'];const hp=b.hp;return PALETTE[hp<=4?0:hp<=9?1:hp<=16?2:hp<=26?3:4]}
 function spawnShift(now){const t=(now-lastSpawnT)/270;if(t>=1)return 0;const u=t-1;const e=1+2.2*u*u*u+1.2*u*u;return -(1-e)*cell}
 function bevelSquare(x,y,s,pal,flash){
   const[lt,md,dk]=pal;
@@ -888,6 +923,16 @@ function draw(now){
           ctx.strokeStyle='#26355e';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cx0+4,cy0-19);ctx.quadraticCurveTo(cx0+8,cy0-24,cx0+11.5,cy0-22);ctx.stroke();
           star4(cx0+12.5,cy0-23,4.6,'#ff922e');
           ctx.font='900 22px system-ui';ctx.fillStyle='rgba(10,25,55,.9)';ctx.fillText(b.hp,cx0,cy0+13);
+        }
+      }else if(b.type==='boss'){
+        const stage=b.hp>b.maxHp*2/3?0:b.hp>b.maxHp/3?1:2;
+        if(stage>=1){ctx.strokeStyle='rgba(30,4,18,.5)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x2+8,y2+6);ctx.lineTo(x2+20,y2+18);ctx.lineTo(x2+15,y2+30);ctx.stroke()}
+        if(stage>=2){ctx.strokeStyle='rgba(30,4,18,.55)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x2+s2-10,y2+8);ctx.lineTo(x2+s2-22,y2+20);ctx.lineTo(x2+s2-14,y2+34);ctx.moveTo(x2+6,y2+s2-8);ctx.lineTo(x2+18,y2+s2-18);ctx.stroke()}
+        if(b.anchor&&eze>.4){
+          const bx=cx0+31,by=cy0+31;
+          ctx.fillStyle='#ffc93c';ctx.beginPath();ctx.moveTo(bx-21,by-11);ctx.lineTo(bx-21,by-24);ctx.lineTo(bx-10,by-15);ctx.lineTo(bx,by-26);ctx.lineTo(bx+10,by-15);ctx.lineTo(bx+21,by-24);ctx.lineTo(bx+21,by-11);ctx.closePath();ctx.fill();
+          ctx.fillRect(bx-21,by-8,42,4.5);
+          ctx.font='900 25px system-ui';ctx.fillStyle='#ffffff';ctx.fillText(b.hp,bx,by+16);
         }
       }else if(b.type==='star'){
         if(eze>.4){
@@ -1054,6 +1099,13 @@ function pushUp(){
     const items=colsMap[c].sort((a,b)=>a.r-b.r);let prev=-1;
     for(const o of items){o.r=Math.max(o.r-2,prev+1);prev=o.r;o.ju=now}
   }
+  const bossCells=bricks.filter(b=>b.type==='boss');
+  if(bossCells.length){
+    const topMin=Math.min(...bossCells.map(b=>b.r));
+    for(const b of bossCells){b.r=topMin+b.bossDy;b.ju=now}
+    const block=new Set(bossCells.map(b=>b.c+','+b.r));
+    for(const o of bricks){if(o.type!=='boss'&&block.has(o.c+','+o.r)){const taken=new Set(bricks.filter(x=>x!==o).map(x=>x.c+','+x.r));let nr=o.r+1;while(taken.has(o.c+','+nr))nr++;o.r=nr;o.ju=now}}
+  }
   pushLeft--;
   comic(W/2,topY+120,'دفعة إنقاذ!','#7dd3fc');sPickup();
   if(navigator.vibrate)navigator.vibrate(25);
@@ -1062,7 +1114,8 @@ function pushUp(){
 function doUndo(){
   if(undoUsed||!snapshot||mode!=='playing')return;
   const s=JSON.parse(snapshot);
-  bricks=s.bricks;pickups=s.pickups;ballCount=s.ballCount;level=s.level;rowsSpawned=s.rowsSpawned;rowsTotal=s.rowsTotal;score=s.score;returnX=s.returnX;combo=s.combo;maxCombo=s.maxCombo;
+  bricks=s.bricks;pickups=s.pickups;
+  const bossById={};for(const b of bricks)if(b.type==='boss'&&b.boss){const k=b.boss.id;if(!bossById[k])bossById[k]={id:k,hp:b.boss.hp,maxHp:b.boss.maxHp};b.boss=bossById[k]}ballCount=s.ballCount;level=s.level;rowsSpawned=s.rowsSpawned;rowsTotal=s.rowsTotal;score=s.score;returnX=s.returnX;combo=s.combo;maxCombo=s.maxCombo;
   undoUsed=true;shooting=false;balls=[];firstReturn=null;volleyScore=0;volleyHits=0;updateUI();toast('تراجعنا خطوة ↩');
 }
 $('btnA').onclick=()=>{
