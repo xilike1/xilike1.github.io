@@ -73,11 +73,13 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
 .srow .lab{font-size:17.5px;font-weight:700}
 .srow .val{display:flex;align-items:center;gap:9px;font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
 .srow .delta{background:#fff;color:var(--ink-2);font-size:13.5px;font-weight:900;border-radius:8px;padding:2.5px 8px;direction:ltr}
-.whiteBtn{margin-top:auto;width:88%;max-width:360px;border:0;border-radius:99px;background:#fff;color:var(--ink-2);font:inherit;padding:13px 10px 11px;cursor:pointer;box-shadow:0 8px 0 rgba(16,36,88,.4),0 18px 34px rgba(5,18,55,.35);transition:transform .12s}
-.whiteBtn:active{transform:scale(.97)}
-.whiteBtn .t1{display:block;font-size:21px;font-weight:900}
+.whiteBtn{margin-top:auto;width:88%;max-width:360px;border:1.5px solid #d7e4ff;border-radius:99px;background:linear-gradient(180deg,#ffffff 0%,#e9f0ff 100%);color:var(--ink-2);font:inherit;padding:13px 18px 11px;cursor:pointer;box-shadow:0 5px 0 #a9c2ee,0 14px 26px rgba(5,18,55,.3),inset 0 1.5px 0 #ffffff;transition:transform .1s,box-shadow .1s}
+.whiteBtn:active{transform:translateY(3px);box-shadow:0 2px 0 #a9c2ee,0 8px 16px rgba(5,18,55,.3),inset 0 1.5px 0 #ffffff}
+.whiteBtn .t1{display:block;font-size:19px;font-weight:900;white-space:nowrap}
+#btnRevive .t1{font-size:16.5px}
 .whiteBtn .t2{display:block;font-size:13.5px;font-weight:700;color:#8499c6;margin-top:1px}
-.textBtn{margin-top:16px;background:none;border:0;color:#fff;font:inherit;font-size:18px;font-weight:800;cursor:pointer;text-shadow:0 2px 8px rgba(10,30,80,.4)}
+.textBtn{margin-top:16px;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.4);border-radius:99px;color:#fff;font:inherit;font-size:16.5px;font-weight:800;cursor:pointer;padding:10px 28px;box-shadow:0 4px 12px rgba(5,18,55,.22),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .1s,box-shadow .1s;text-shadow:0 1px 3px rgba(10,30,80,.35)}
+.textBtn:active{transform:scale(.96)}
 .howCard{width:100%;max-width:340px;margin-top:20px;background:rgba(13,28,70,.35);border:1.5px solid rgba(160,195,255,.3);border-radius:18px;padding:13px 15px;display:flex;flex-direction:column;gap:10px;text-align:start}
 .hrow{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:700;color:#e6efff;line-height:1.55}
 .hrow .hi{width:31px;height:31px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;background:rgba(255,255,255,.14);border:1.5px solid rgba(255,255,255,.25)}
@@ -86,9 +88,10 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
 .scrim{background:rgba(8,17,43,.72);backdrop-filter:blur(6px);justify-content:center}
 .sheet{width:100%;max-width:330px;background:linear-gradient(180deg,#4d6fb2,#3a5896);border:2px solid rgba(170,200,255,.4);border-radius:24px;padding:22px 20px;box-shadow:0 30px 60px rgba(3,10,35,.55);display:flex;flex-direction:column;gap:10px}
 .sheet h2{margin:0 0 6px;font-size:23px;font-weight:900}
-.sbtn{border:2px solid var(--ctl-border);border-radius:16px;background:radial-gradient(circle at 30% 20%,var(--sbtn-hi),var(--sbtn-mid) 70%);color:#fff;font:inherit;font-size:16.5px;font-weight:800;padding:13px;cursor:pointer;box-shadow:0 4px 0 var(--ctl-border);transition:transform .1s}
-.sbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ctl-border)}
-.sbtn.primary{background:#fff;color:var(--ink-2);border-color:#c9dcff;box-shadow:0 4px 0 #9db9e8}
+.sbtn{border:1.5px solid rgba(190,214,255,.55);border-radius:16px;background:linear-gradient(180deg,#6f97dd 0%,#46679f 100%);color:#fff;font:inherit;font-size:17px;font-weight:900;padding:14px 13px;cursor:pointer;box-shadow:0 4px 0 #2b4376,0 10px 20px rgba(5,18,55,.28),inset 0 1.5px 0 rgba(255,255,255,.45);transition:transform .1s,box-shadow .1s;text-shadow:0 1px 2px rgba(10,25,60,.35)}
+.sbtn:active{transform:translateY(3px);box-shadow:0 1px 0 #2b4376,0 5px 10px rgba(5,18,55,.28),inset 0 1.5px 0 rgba(255,255,255,.45)}
+.sbtn.primary{background:linear-gradient(180deg,#ffffff 0%,#e9f0ff 100%);color:var(--ink-2);border-color:#d7e4ff;box-shadow:0 4px 0 #a9c2ee,0 10px 20px rgba(5,18,55,.25),inset 0 1.5px 0 #ffffff;text-shadow:none}
+.sbtn.primary:active{box-shadow:0 1px 0 #a9c2ee,0 5px 10px rgba(5,18,55,.25),inset 0 1.5px 0 #ffffff}
 .whiteBtn{position:relative}
 #menu{padding-bottom:0}
 .page{flex:1;min-height:0;width:100%;display:flex;flex-direction:column;align-items:center;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding:2px 2px 8px}
@@ -98,8 +101,8 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
 .dailyCard .dt{font-size:14.5px;font-weight:700;color:rgba(255,255,255,.85)}
 .dailyCard .dd{font-size:22px;font-weight:900;margin:2px 0 4px}
 .dailyCard .ds{font-size:13.5px;font-weight:700;color:rgba(255,255,255,.92);min-height:19px}
-.dailyCard .dbtn{margin-top:10px;border:0;border-radius:99px;background:rgba(255,255,255,.28);color:#fff;font:inherit;font-size:17px;font-weight:900;padding:8px 46px;cursor:pointer;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.35);transition:transform .1s}
-.dailyCard .dbtn:active{transform:scale(.96)}
+.dailyCard .dbtn{margin-top:10px;border:0;border-radius:99px;background:linear-gradient(180deg,rgba(255,255,255,.38),rgba(255,255,255,.2));color:#fff;font:inherit;font-size:17px;font-weight:900;padding:9px 46px;cursor:pointer;box-shadow:0 3px 0 rgba(46,16,101,.4),inset 0 0 0 1.5px rgba(255,255,255,.4),inset 0 1.5px 0 rgba(255,255,255,.5);transition:transform .1s,box-shadow .1s}
+.dailyCard .dbtn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(46,16,101,.4),inset 0 0 0 1.5px rgba(255,255,255,.4)}
 .playFlame{position:absolute;top:-15px;inset-inline-start:16px;background:linear-gradient(180deg,var(--accent-2),var(--accent));border:1.5px solid #ffe1a8;color:#fff;font-size:14.5px;font-weight:900;border-radius:99px;padding:3px 11px;box-shadow:0 5px 12px rgba(8,20,50,.35);z-index:2}
 #tabbar{flex:none;width:calc(100% + 44px);margin:4px -22px 0;display:flex;background:rgba(11,24,58,.55);border-top:1.5px solid rgba(160,195,255,.28);padding-bottom:env(safe-area-inset-bottom)}
 .tab{flex:1;background:none;border:0;color:#fff;font:inherit;padding:9px 0 8px;cursor:pointer;opacity:.55;display:flex;flex-direction:column;align-items:center;gap:2px}
@@ -128,10 +131,11 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
 .upPips{display:flex;gap:4px;margin-top:5px}
 .upPips i{width:16px;height:5px;border-radius:3px;background:rgba(255,255,255,.22)}
 .upPips i.on{background:#ffc93c}
-.buyBtn{flex:none;display:flex;align-items:center;gap:5px;border:0;border-radius:999px;padding:9px 13px;font:inherit;font-size:14px;font-weight:900;background:#ffc93c;color:#3a2403;cursor:pointer;font-variant-numeric:tabular-nums}
+.buyBtn{flex:none;display:flex;align-items:center;gap:5px;border:0;border-radius:999px;padding:9px 13px;font:inherit;font-size:14px;font-weight:900;background:linear-gradient(180deg,#ffd76e,#ffc93c);color:#3a2403;cursor:pointer;font-variant-numeric:tabular-nums;box-shadow:0 3px 0 #cf9205,0 6px 12px rgba(5,18,55,.25);transition:transform .1s,box-shadow .1s}
+.buyBtn:active{transform:translateY(2px);box-shadow:0 1px 0 #cf9205,0 3px 6px rgba(5,18,55,.25)}
 .buyBtn svg{width:15px;height:15px}
-.buyBtn:disabled{background:rgba(255,255,255,.18);color:#9db8e8;cursor:default}
-.buyBtn.maxed{background:rgba(255,255,255,.18);color:#7ee2a0}
+.buyBtn:disabled{background:rgba(255,255,255,.18);color:#9db8e8;cursor:default;box-shadow:none}
+.buyBtn.maxed{background:rgba(255,255,255,.18);color:#7ee2a0;box-shadow:none}
 .shopNote{font-size:12.5px;color:#9db8e8;font-weight:600;padding-top:9px}
 .tab .ti svg{width:26px;height:26px;display:block}
 .dailyCard .dico svg{width:37px;height:37px}
@@ -144,6 +148,7 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
 button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .ic{width:16px;height:16px;vertical-align:-3px}
 .sbtn .ic{width:18px;height:18px;vertical-align:-4px}
+.whiteBtn .ic{width:20px;height:20px;vertical-align:-4px}
 .side b .ic{width:15px;height:15px;vertical-align:-2px}
 .playFlame .ic{width:14px;height:14px;vertical-align:-2px}
 #streakBadge .ic{width:14px;height:14px;vertical-align:-2px}
@@ -274,7 +279,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
     <div class="srow"><span class="lab">جميع الأوقات</span><span class="val"><span class="delta" id="dAll">+0</span><span id="vAll">0</span></span></div>
   </div>
   <button class="whiteBtn rise" id="btnRevive" style="animation-delay:.24s" hidden><span class="t1">استمر — ادفع الطوب صفّين للأعلى</span><span class="t2" id="reviveTxt">دفعات متبقية: 2</span></button>
-  <button class="whiteBtn rise" id="btnAgain" style="animation-delay:.28s"><span class="t1">↩ حاول هذا المستوى مجددًا</span><span class="t2" id="ovLevelTxt">المستوى 1</span></button>
+  <button class="whiteBtn rise" id="btnAgain" style="animation-delay:.28s"><span class="t1"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5.5 4.8 9.2l3.7 3.7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 9.2h9.5a5 5 0 0 1 0 10H11" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg> حاول هذا المستوى مجددًا</span><span class="t2" id="ovLevelTxt">المستوى 1</span></button>
   <button class="textBtn rise" id="btnHome" style="animation-delay:.34s">الرئيسية</button>
   <button class="textBtn rise" id="btnFresh" style="animation-delay:.38s;font-size:14.5px;color:#b9cff5">ابدأ من جديد</button>
 </section>
