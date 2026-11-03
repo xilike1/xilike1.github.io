@@ -40,7 +40,8 @@ canvas{width:100%;height:100%;display:block;touch-action:none}
 #toast{position:absolute;top:17.5%;left:50%;transform:translate(-50%,-6px) scale(.9);z-index:6;background:rgba(14,26,58,.92);border:1.5px solid rgba(255,201,60,.6);color:#ffe9a8;font-weight:900;font-size:15.5px;padding:8px 18px;border-radius:99px;opacity:0;pointer-events:none;transition:all .2s cubic-bezier(.2,.9,.3,1.4);white-space:nowrap;box-shadow:0 10px 26px rgba(5,12,35,.4)}
 #toast.show{opacity:1;transform:translate(-50%,0) scale(1)}
 /* ===== Bottom controls: two big circles like the reference ===== */
-#controls{position:absolute;bottom:calc(16px + env(safe-area-inset-bottom));left:0;right:0;z-index:5;display:flex;justify-content:center;gap:64px}
+#controls{position:absolute;bottom:calc(16px + env(safe-area-inset-bottom));left:0;right:0;z-index:5;display:flex;justify-content:center;gap:38px}
+.whiteBtn[hidden]{display:none}
 .ctl{display:flex;flex-direction:column;align-items:center;gap:5px}
 .cbtn{position:relative;width:74px;height:74px;border-radius:50%;border:2px solid #2b4376;background:radial-gradient(circle at 33% 27%,#86aaea,#4d6fb2 56%,#3a5896);box-shadow:0 6px 0 #2b4376,0 12px 22px rgba(8,20,50,.4),inset 0 2px 3px rgba(255,255,255,.5);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .1s;font:inherit}
 .cbtn:active{transform:translateY(4px);box-shadow:0 2px 0 #2b4376,0 6px 12px rgba(8,20,50,.4),inset 0 2px 3px rgba(255,255,255,.5)}
@@ -145,6 +146,10 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
     <button class="cbtn" id="btnB"><span class="glyph" id="glyphB">🌊</span><span class="badge" id="badgeB">2</span></button>
     <span class="lb" id="labelB">موجة</span>
   </div>
+  <div class="ctl">
+    <button class="cbtn" id="btnC"><span class="glyph" id="glyphC"><svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 13.5 12 6l7.5 7.5"/><path d="M4.5 20 12 12.5 19.5 20" opacity=".5"/></svg></span><span class="badge" id="badgeC">2</span></button>
+    <span class="lb" id="labelC">دفعة</span>
+  </div>
 </div>
 
 <section class="overlay sunburst" id="menu">
@@ -157,10 +162,10 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
       <button class="dbtn" id="btnDaily">العب</button>
     </div>
     <h1 class="gameTitle chunk rise" style="animation-delay:.05s;margin-top:28px">NEON<br>BRICK RUSH</h1>
-    <div class="bestLine rise" style="animation-delay:.1s">أفضل تصويبة دائمًا<br><span style="font-size:31px;color:#fff"><svg viewBox="0 0 24 24"><path d="M6.5 3h11v5.6a5.5 5.5 0 0 1-11 0z" fill="#ffc93c"/><path d="M12 10.1l.75 1.6 1.72.2-1.26 1.18.32 1.7L12 14l-1.53.78.32-1.7-1.26-1.18 1.72-.2z" fill="#b45309"/><path d="M10.9 14h2.2v3h-2.2z" fill="#f5a623"/><path d="M7.6 17h8.8v2.8H7.6z" fill="#f5a623"/></svg> <span id="menuBest">0</span></span></div>
+    <div class="bestLine rise" style="animation-delay:.1s">أفضل نتيجة دائمًا<br><span style="font-size:31px;color:#fff"><svg viewBox="0 0 24 24"><path d="M6.5 3h11v5.6a5.5 5.5 0 0 1-11 0z" fill="#ffc93c"/><path d="M12 10.1l.75 1.6 1.72.2-1.26 1.18.32 1.7L12 14l-1.53.78.32-1.7-1.26-1.18 1.72-.2z" fill="#b45309"/><path d="M10.9 14h2.2v3h-2.2z" fill="#f5a623"/><path d="M7.6 17h8.8v2.8H7.6z" fill="#f5a623"/></svg> <span id="menuBest">0</span></span></div>
     <button class="whiteBtn rise" id="btnPlay" style="animation-delay:.16s"><span class="playFlame" id="playFlame" hidden>🔥 2</span><span class="t1" id="playT1">لعبة جديدة</span><span class="t2" id="playT2">مستوى 1</span></button>
-    <button class="textBtn rise" id="btnFreshMenu" style="animation-delay:.2s" hidden>ابدأ من الأول خالص</button>
-    <div class="tag rise" style="animation-delay:.22s;font-size:12px;color:#9db8e8">أفضل نتيجة بتتحفظ على جهازك تلقائيًا</div>
+    <button class="textBtn rise" id="btnFreshMenu" style="animation-delay:.2s" hidden>ابدأ من جديد</button>
+    <div class="tag rise" style="animation-delay:.22s;font-size:12px;color:#9db8e8">تُحفظ أفضل نتيجة على جهازك تلقائيًا</div>
   </div>
   <div class="page" id="pageChal" hidden>
     <div class="pageTitle rise"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></g><path d="M12 12.1l1.05 2.25 2.45.3-1.8 1.7.45 2.42L12 17.65l-2.15 1.12.45-2.42-1.8-1.7 2.45-.3z" fill="#ffc93c"/></svg> التحديات</div>
@@ -172,7 +177,7 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
       <button class="dbtn" id="btnDaily2">العب</button>
     </div>
     <div class="miniCard rise">
-      <div class="histRow"><span>تحديات خلّصتها لحد دلوقتي</span><b id="chalDoneCount">0</b></div>
+      <div class="histRow"><span>التحديات التي أنجزتها حتى الآن</span><b id="chalDoneCount">0</b></div>
       <div id="chalHist"></div>
     </div>
   </div>
@@ -180,20 +185,21 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
     <div class="pageTitle rise"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4.3"/><path d="M3.8 21.2c1.1-4.1 4.3-6.2 8.2-6.2s7.1 2.1 8.2 6.2z"/></svg> أنا</div>
     <div class="statCard rise" style="margin-top:14px;flex:none">
       <div class="srow"><span class="lab">أفضل نتيجة دائمًا</span><span class="val" id="meBest">0</span></div>
-      <div class="srow"><span class="lab">واصل لمستوى</span><span class="val" id="meLevel">1</span></div>
-      <div class="srow"><span class="lab">الستريك الحالي</span><span class="val" id="meStreak">—</span></div>
-      <div class="srow"><span class="lab">أفضل نتيجة النهاردة</span><span class="val" id="meToday">0</span></div>
+      <div class="srow"><span class="lab">وصلت إلى مستوى</span><span class="val" id="meLevel">1</span></div>
+      <div class="srow"><span class="lab">سلسلة الانتصارات الحالية</span><span class="val" id="meStreak">—</span></div>
+      <div class="srow"><span class="lab">أفضل نتيجة اليوم</span><span class="val" id="meToday">0</span></div>
     </div>
     <div class="howCard rise">
-    <div class="hrow"><span class="hi">◎</span>اسحب بإصبعك للتصويب، وسيب عشان الكرات تنطلق</div>
-    <div class="hrow"><span class="hi">▲</span>الطوب المثلث بيحرّف الكورة بزاوية — استغله لصالحك</div>
-    <div class="hrow"><span class="hi">✚</span>اجمع الكرات +، واضرب أهداف الليزر والمتقاطع لتفجير صفوف كاملة</div>
-    <div class="hrow"><span class="hi">✦</span>الطوبة النجمة بتنفجر ليزر في ٨ اتجاهات، وعنصر التشتيت بيولّد كرات وهمية من أي كرة تلمسه</div>
-    <div class="hrow"><span class="hi">≈</span>«إضافة» +٥ كرات و«موجة» بتضعف كل الطوب — وأثناء اللعب الزراير بتبقى «عودة» و«تراجع»</div>
-    <div class="hrow"><span class="hi"><svg viewBox="0 0 24 24"><path d="M12.7 2.4c.4 3.3-1 5-2.3 6.5C9.2 10.3 8 11.9 8 14a4.5 4.5 0 0 0 9 0c0-1.6-.7-2.9-1.5-4.1-.3 1-.9 1.8-1.7 2.2.4-3-.6-6.7-3.1-9.7z" fill="#ff922e"/><path d="M12 21.6a2.9 2.9 0 0 1-2.9-2.9c0-1.3.7-2.3 1.4-3.2.5-.6 1-1.3 1.5-2.1.5.8 1 1.5 1.5 2.1.7.9 1.4 1.9 1.4 3.2A2.9 2.9 0 0 1 12 21.6z" fill="#ffc93c"/></svg></span>اكسب مستويات ورا بعض من غير ما تخسر عشان تكبّر الستريك اللي جنب الترس</div>
-    <div class="hrow"><span class="hi">⚑</span>كل مستوى لوحده كامل — خلّص كل الطوب قبل ما يوصلك عشان تعدّي للمستوى اللي بعده</div>
+    <div class="hrow"><span class="hi">◎</span>اسحب بإصبعك للتصويب، ثم اترك لتنطلق الكرات</div>
+    <div class="hrow"><span class="hi">▲</span>الطوب المثلث يحرّف الكرة بزاوية — استغله لصالحك</div>
+    <div class="hrow"><span class="hi">✚</span>اجمع كرات +، واضرب أهداف الليزر والمتقاطع لتفجير صفوف كاملة</div>
+    <div class="hrow"><span class="hi">✦</span>الطوبة النجمة تنفجر بالليزر في ٨ اتجاهات، وعنصر التشتيت يولّد كرات وهمية من أي كرة تلمسه</div>
+    <div class="hrow"><span class="hi">≈</span>«إضافة» تمنحك +٥ كرات و«موجة» تُضعف كل الطوب — وأثناء اللعب تتحول الأزرار إلى «عودة» و«تراجع»</div>
+    <div class="hrow"><span class="hi">⬆</span>«دفعة» تُرجع كل الطوب صفّين إلى الأعلى — لديك دفعتان في كل جولة، وتظهر عند الخسارة لتكمل من نفس النقطة</div>
+    <div class="hrow"><span class="hi"><svg viewBox="0 0 24 24"><path d="M12.7 2.4c.4 3.3-1 5-2.3 6.5C9.2 10.3 8 11.9 8 14a4.5 4.5 0 0 0 9 0c0-1.6-.7-2.9-1.5-4.1-.3 1-.9 1.8-1.7 2.2.4-3-.6-6.7-3.1-9.7z" fill="#ff922e"/><path d="M12 21.6a2.9 2.9 0 0 1-2.9-2.9c0-1.3.7-2.3 1.4-3.2.5-.6 1-1.3 1.5-2.1.5.8 1 1.5 1.5 2.1.7.9 1.4 1.9 1.4 3.2A2.9 2.9 0 0 1 12 21.6z" fill="#ffc93c"/></svg></span>اربح مستويات متتالية دون أن تخسر لتكبّر سلسلة انتصاراتك الظاهرة بجانب الترس</div>
+    <div class="hrow"><span class="hi">⚑</span>كل مستوى قائم بذاته — دمّر كل الطوب قبل أن يصل إليك لتنتقل إلى المستوى التالي</div>
     </div>
-    <button class="textBtn rise" id="btnFreshMe" style="margin-top:18px;font-size:14.5px;color:#b9cff5">ابدأ من الأول خالص</button>
+    <button class="textBtn rise" id="btnFreshMe" style="margin-top:18px;font-size:14.5px;color:#b9cff5">ابدأ من جديد</button>
   </div>
   <nav id="tabbar">
     <button class="tab on" id="tabHome"><span class="ti"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3.1 21.2 11h-2.7v8.9a1.1 1.1 0 0 1-1.1 1.1H6.6a1.1 1.1 0 0 1-1.1-1.1V11H2.8z"/></svg></span><span class="tl">الرئيسية</span></button>
@@ -205,39 +211,40 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
 <section class="overlay scrim" id="pauseMenu" hidden>
   <div class="sheet rise">
     <h2>⚙ الإعدادات</h2>
-    <button class="sbtn primary" id="btnResume">▶ كمّل لعب</button>
+    <button class="sbtn primary" id="btnResume">▶ أكمل اللعب</button>
     <button class="sbtn" id="btnSpeed">⚡ السرعة ×1</button>
-    <button class="sbtn" id="btnSound">🔊 الصوت: شغال</button>
-    <button class="sbtn" id="btnRestart2">↻ إعادة المستوى ده</button>
-    <button class="sbtn" id="btnHome2">القايمة الرئيسية</button>
+    <button class="sbtn" id="btnSound">🔊 الصوت: مفعّل</button>
+    <button class="sbtn" id="btnRestart2">↻ إعادة هذا المستوى</button>
+    <button class="sbtn" id="btnHome2">القائمة الرئيسية</button>
   </div>
 </section>
 
 <section class="overlay sunburst" id="overMenu" hidden>
-  <div class="arcTitle rise" id="overTitle">أفضل تصويبة<br>جديدة دائمًا</div>
+  <div class="arcTitle rise" id="overTitle">أفضل نتيجة<br>جديدة على الإطلاق</div>
   <div class="rise" style="animation-delay:.06s"><span class="bigScore chunk" id="ovScore">0</span> <span class="trophy"><svg viewBox="0 0 24 24"><path d="M6.5 3h11v5.6a5.5 5.5 0 0 1-11 0z" fill="#ffc93c"/><path d="M12 10.1l.75 1.6 1.72.2-1.26 1.18.32 1.7L12 14l-1.53.78.32-1.7-1.26-1.18 1.72-.2z" fill="#b45309"/><path d="M10.9 14h2.2v3h-2.2z" fill="#f5a623"/><path d="M7.6 17h8.8v2.8H7.6z" fill="#f5a623"/></svg></span></div>
   <div class="shotFrame rise" style="animation-delay:.12s">
-    <img id="boardShot" alt="شكل البورد في نهاية اللعبة">
+    <img id="boardShot" alt="شكل اللوحة في نهاية اللعبة">
     <div class="shotPill" id="ovPill">مكتمل</div>
   </div>
-  <div class="statsTitle rise" style="animation-delay:.18s">أفضل تصويبة</div>
+  <div class="statsTitle rise" style="animation-delay:.18s">أفضل نتيجة</div>
   <div class="statCard rise" style="animation-delay:.22s">
     <div class="srow"><span class="lab">اليوم</span><span class="val"><span class="delta" id="dDay">+0</span><span id="vDay">0</span></span></div>
     <div class="srow"><span class="lab">هذا الأسبوع</span><span class="val"><span class="delta" id="dWeek">+0</span><span id="vWeek">0</span></span></div>
     <div class="srow"><span class="lab">هذا الشهر</span><span class="val"><span class="delta" id="dMonth">+0</span><span id="vMonth">0</span></span></div>
     <div class="srow"><span class="lab">جميع الأوقات</span><span class="val"><span class="delta" id="dAll">+0</span><span id="vAll">0</span></span></div>
   </div>
-  <button class="whiteBtn rise" id="btnAgain" style="animation-delay:.28s"><span class="t1">↩ حاول المستوى ده تاني</span><span class="t2" id="ovLevelTxt">المرحلة 1 — ليفل 1</span></button>
+  <button class="whiteBtn rise" id="btnRevive" style="animation-delay:.24s" hidden><span class="t1">استمر — ادفع الطوب صفّين للأعلى</span><span class="t2" id="reviveTxt">دفعات متبقية: 2</span></button>
+  <button class="whiteBtn rise" id="btnAgain" style="animation-delay:.28s"><span class="t1">↩ حاول هذا المستوى مجددًا</span><span class="t2" id="ovLevelTxt">المستوى 1</span></button>
   <button class="textBtn rise" id="btnHome" style="animation-delay:.34s">الرئيسية</button>
-  <button class="textBtn rise" id="btnFresh" style="animation-delay:.38s;font-size:14.5px;color:#b9cff5">ابدأ من الأول خالص</button>
+  <button class="textBtn rise" id="btnFresh" style="animation-delay:.38s;font-size:14.5px;color:#b9cff5">ابدأ من جديد</button>
 </section>
 
 <section class="overlay scrim" id="levelMenu" hidden>
   <div class="sheet rise" style="text-align:center">
-    <h2 id="lcTitle">خلّصت المستوى!</h2>
+    <h2 id="lcTitle">أكملت المستوى!</h2>
     <p id="lcSub" style="margin:0;color:#d7e5ff;font-weight:700;line-height:1.8">مكافأة إكمال: +0 نقطة</p>
-    <button class="sbtn primary" id="btnNextLevel" style="margin-top:8px">▶ اللي بعده</button>
-    <button class="sbtn" id="btnHome3">القايمة الرئيسية</button>
+    <button class="sbtn primary" id="btnNextLevel" style="margin-top:8px">▶ التالي</button>
+    <button class="sbtn" id="btnHome3">القائمة الرئيسية</button>
   </div>
 </section>
 
@@ -278,7 +285,7 @@ let returnX=225,firstReturn=null,launchTime=0,launched=0,finished=0;
 let volleyHits=0,combo=0,maxCombo=0,shake=0,lastSpawnT=0,soundOn=localStorage.nbrSound!=='0';
 let volleyScore=0,volleyKills=0,strongestHp=0,volleyStrongDone=false,brickSeq=0;
 let volleyHitIds=new Set(),volleyStartIds=new Set();
-let streak=+(localStorage.nbrStreak||0),boostLeft=3,waveLeft=2;
+let streak=+(localStorage.nbrStreak||0),boostLeft=3,waveLeft=2,pushLeft=2,pushLeftLevelStart=2;
 let dailyMode=false;
 let bricksDestroyedLevel=0,bricksSpawnedLevel=0,aimTarget=null,aimPlus=false;
 
@@ -303,7 +310,7 @@ function recordDaily(sc,completed){
 }
 function startDaily(){
   dailyMode=true;level=dailyLevel();score=0;maxCombo=0;ballCount=ballFloor(level);
-  boostLeft=3;waveLeft=2;seedRnd=makeDailyRnd();
+  boostLeft=3;waveLeft=2;pushLeft=2;seedRnd=makeDailyRnd();
   startLevel();
 }
 
@@ -355,6 +362,7 @@ function updateControls(){
     $('glyphB').textContent='🌊';$('labelB').textContent='موجة';$('badgeB').hidden=false;
     $('badgeB').textContent=waveLeft;$('btnB').classList.toggle('off',waveLeft<=0);
   }
+  $('badgeC').textContent=pushLeft;$('btnC').classList.toggle('off',pushLeft<=0);
 }
 function updateUI(){
   setScoreBig();
@@ -364,7 +372,7 @@ function updateUI(){
   const stb=$('streakBadge');stb.hidden=streak<2;stb.textContent='🔥'+streak;
   updateControls();
   $('btnSpeed').textContent='⚡ السرعة ×'+speed;
-  $('btnSound').textContent=soundOn?'🔊 الصوت: شغال':'🔇 الصوت: مقفول';
+  $('btnSound').textContent=soundOn?'🔊 الصوت: مفعّل':'🔇 الصوت: مكتوم';
 }
 function showOverlay(id){['menu','pauseMenu','overMenu','levelMenu'].forEach(o=>$(o).hidden=o!==id)}
 function hideOverlays(){['menu','pauseMenu','overMenu','levelMenu'].forEach(o=>$(o).hidden=true)}
@@ -378,7 +386,7 @@ function startLevel(){
   rowsSpawned=0;rowsTotal=rowsForLevel();marchTick=0;
   ballCount=Math.max(ballCount,ballFloor(level));levelBalls=ballCount;
   bricksDestroyedLevel=0;bricksSpawnedLevel=0;volleyScore=0;
-  scoreLevelStart=score;ballCountLevelStart=ballCount;
+  scoreLevelStart=score;ballCountLevelStart=ballCount;pushLeftLevelStart=pushLeft;
   mode='playing';hideOverlays();
   for(let i=0;i<2;i++)spawnRow();
   updateUI();
@@ -387,22 +395,22 @@ function startLevel(){
 function startRun(lv){
   dailyMode=false;seedRnd=null;
   level=lv;score=0;maxCombo=0;ballCount=ballFloor(lv);
-  boostLeft=3;waveLeft=2;
+  boostLeft=3;waveLeft=2;pushLeft=2;
   startLevel();
 }
-function retryLevel(){score=scoreLevelStart;ballCount=ballCountLevelStart;if(dailyMode)seedRnd=makeDailyRnd();startLevel()}
+function retryLevel(){score=scoreLevelStart;ballCount=ballCountLevelStart;pushLeft=pushLeftLevelStart;if(dailyMode)seedRnd=makeDailyRnd();startLevel()}
 function renderHome(){
   const d=new Date(),label=d.getDate()+' '+MONTHS_AR[d.getMonth()];
   $('dailyDate').textContent=label;$('dailyDate2').textContent=label;
   const all=loadDaily(),cur=all[todayKey()];
-  const st=cur?(cur.done?'خلّصته النهاردة ✓':'أحسن نتيجة: '+fmt(cur.best)):'لسه ملعبتوش النهاردة';
+  const st=cur?(cur.done?'أنجزته اليوم ✓':'أفضل نتيجة: '+fmt(cur.best)):'لم تلعبه اليوم بعد';
   $('dailyStatus').textContent=st;$('dailyStatus2').textContent=st;
-  $('btnDaily').textContent=cur&&cur.done?'العب تاني':'العب';$('btnDaily2').textContent=$('btnDaily').textContent;
+  $('btnDaily').textContent=cur&&cur.done?'العب مجددًا':'العب';$('btnDaily2').textContent=$('btnDaily').textContent;
   $('chalDoneCount').textContent=Object.values(all).filter(x=>x.done).length;
   let hist='';
   for(let i=0;i<7;i++){
     const dd=new Date(d.getFullYear(),d.getMonth(),d.getDate()-i),k=dateKey(dd),r=all[k];
-    const nm=i===0?'النهاردة':i===1?'إمبارح':dd.getDate()+' '+MONTHS_AR[dd.getMonth()];
+    const nm=i===0?'اليوم':i===1?'أمس':dd.getDate()+' '+MONTHS_AR[dd.getMonth()];
     hist+='<div class="histRow"><span>'+nm+'</span>'+(r?(r.done?'<span class="ok">✓ '+fmt(r.best)+'</span>':'<span>'+fmt(r.best)+'</span>'):'<span class="no">لم يُلعب</span>')+'</div>';
   }
   $('chalHist').innerHTML=hist;
@@ -422,7 +430,7 @@ function goHome(){
   $('menuBest').textContent=fmt(best);
   renderHome();setTab('Home');
   const pr=loadProgress();
-  if(pr.l>1){$('playT1').textContent='كمّل اللعب';$('playT2').textContent='مستوى '+pr.l;$('btnFreshMenu').hidden=false}
+  if(pr.l>1){$('playT1').textContent='أكمل اللعب';$('playT2').textContent='مستوى '+pr.l;$('btnFreshMenu').hidden=false}
   else{$('playT1').textContent='لعبة جديدة';$('playT2').textContent='مستوى 1';$('btnFreshMenu').hidden=true}
   showOverlay('menu');updateUI();
 }
@@ -432,13 +440,13 @@ function levelComplete(){
     if(score>best){best=score;localStorage.nbrBest=best}
     recordDaily(score,true);
     mode='clear';shooting=false;aiming=false;
-    $('lcTitle').textContent='خلّصت تحدي اليوم!';
-    $('lcSub').innerHTML='نتيجتك في التحدي: '+fmt(score)+' نقطة<br>ارجع بكرة — في تحدي جديد كل يوم';
-    $('btnNextLevel').textContent='العب التحدي تاني';
+    $('lcTitle').textContent='أنجزت تحدي اليوم!';
+    $('lcSub').innerHTML='نتيجتك في التحدي: '+fmt(score)+' نقطة<br>عُد غدًا — هناك تحدي جديد كل يوم';
+    $('btnNextLevel').textContent='العب التحدي مجددًا';
     showOverlay('levelMenu');updateUI();sLevel();if(navigator.vibrate)navigator.vibrate([30,40,30]);
     return;
   }
-  $('btnNextLevel').textContent='▶ اللي بعده';
+  $('btnNextLevel').textContent='▶ التالي';
   const doneLvl=level,bonus=40*level;
   score+=bonus;
   if(score>best){best=score;localStorage.nbrBest=best}
@@ -447,8 +455,8 @@ function levelComplete(){
   level++;
   saveProgress(level);
   mode='clear';shooting=false;aiming=false;
-  $('lcTitle').textContent='خلّصت مستوى '+doneLvl+'!';
-  $('lcSub').innerHTML='مكافأة إكمال: +'+fmt(bonus)+' نقطة ⭐<br>كراتك بقت ×'+ballCount+' — اللي جاي: مستوى '+level+(streak>=2?'<br>🔥 ستريك ×'+streak+' — كمّل كده!':'');
+  $('lcTitle').textContent='أكملت المستوى '+doneLvl+'!';
+  $('lcSub').innerHTML='مكافأة إكمال: +'+fmt(bonus)+' نقطة<br>كراتك الآن ×'+ballCount+' — التالي: مستوى '+level+(streak>=2?'<br>🔥 سلسلة انتصارات ×'+streak+' — واصل هكذا!':'');
   showOverlay('levelMenu');updateUI();
   sLevel();if(navigator.vibrate)navigator.vibrate([30,40,30]);
 }
@@ -471,12 +479,13 @@ function endGame(){
   if(score>best){best=score;localStorage.nbrBest=best}
   captureBoard();
   const per=recordScore(score);
-  $('overTitle').innerHTML=rec?'أفضل تصويبة<br>جديدة دائمًا':'انتهت اللعبة 💥';
-  $('ovPill').textContent=rec?'مكتمل 🏆':'وصلت لمستوى '+level;
+  $('overTitle').innerHTML=rec?'أفضل نتيجة<br>جديدة على الإطلاق':'انتهت اللعبة 💥';
+  $('ovPill').textContent=rec?'مكتمل':'وصلت إلى المستوى '+level;
   $('ovScore').textContent=fmt(score);
   $('vDay').textContent=fmt(per.day);$('vWeek').textContent=fmt(per.week);$('vMonth').textContent=fmt(per.month);$('vAll').textContent=fmt(per.all);
   const dl='+'+fmt(score);$('dDay').textContent=dl;$('dWeek').textContent=dl;$('dMonth').textContent=dl;$('dAll').textContent=dl;
   $('ovLevelTxt').textContent=dailyMode?'تحدي اليوم':'مستوى '+level;
+  $('btnRevive').hidden=pushLeft<=0;$('reviveTxt').textContent='دفعات متبقية: '+pushLeft;
   showOverlay('overMenu');updateUI();sOver();
 }
 
@@ -535,7 +544,7 @@ function endVolley(){
     const allHit=volleyStartIds.size>=4&&[...volleyStartIds].every(id=>volleyHitIds.has(id)||!bricks.some(b=>b.id===id));
     if(allHit)comic(W/2,topY+120,'أصبت كل الكتل!','#7dd3fc');
     else if(volleyScore>=300)comic(W/2,topY+120,'!اكتساح هائل','#ff4fd8');
-    else if(volleyScore>=150)comic(W/2,topY+120,'!تصويبة كبيرة','#ffb52e');
+    else if(volleyScore>=150)comic(W/2,topY+120,'!تسديدة كبيرة','#ffb52e');
   }
   volleyScore=0;volleyKills=0;
   returnX=firstReturn??returnX;combo=0;volleyHits=0;
@@ -574,7 +583,7 @@ function killBrick(b,byBall){
     damageCell(o=>o!==b&&(o.r===b.r||o.c===b.c||Math.abs(o.r-b.r)===Math.abs(o.c-b.c)),pts);
     comic(x,y-6,'!نجمة','#a5f3fc');sLaser();shake=Math.max(shake,6);
   }else sBreak();
-  if(byBall){byBall.kills=(byBall.kills||0)+1;if(byBall.kills>=3&&!byBall.smart){byBall.smart=true;comic(W/2,topY+120,'!تصويبة ذكية','#7dd3fc')}}
+  if(byBall){byBall.kills=(byBall.kills||0)+1;if(byBall.kills>=3&&!byBall.smart){byBall.smart=true;comic(W/2,topY+120,'!تسديدة ذكية','#7dd3fc')}}
   score+=5;volleyScore+=5;combo++;maxCombo=Math.max(maxCombo,combo);
   if(combo===10)comic(W/2,topY+120,'!رائع','#3dff62');
   if(combo===25)comic(W/2,topY+120,'!!مذهل','#ff4fd8');
@@ -786,7 +795,7 @@ function draw(now){
   }
   /* bricks */
   for(const b of bricks){
-    const cx0=offsetX+b.c*cell+31,cy0=topY+b.r*cell+31+shift;
+    const cx0=offsetX+b.c*cell+31,cy0=topY+b.r*cell+31+shift+jumpY(b,now);
     const ez=b.born?clamp((now-b.born)/170,0,1):1,eze=1-Math.pow(1-ez,2);
     const s=Math.max((cell-3)*eze,4),x=cx0-s/2,y=cy0-s/2;
     const popF=b.pop?1+.13*Math.max(0,1-(now-b.pop)/130):1;
@@ -822,7 +831,7 @@ function draw(now){
   }
   /* pickups */
   for(const p of pickups){
-    const x=offsetX+p.c*cell+31,y=topY+p.r*cell+31+shift,pl=1+.1*Math.sin(now/230+p.c*1.7);
+    const x=offsetX+p.c*cell+31,y=topY+p.r*cell+31+shift+jumpY(p,now),pl=1+.1*Math.sin(now/230+p.c*1.7);
     if(p.type==='ball'){
       ctx.strokeStyle='rgba(255,255,255,.85)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,15.5*pl,0,6.283);ctx.stroke();
       drawBall(x,y,9.5*pl,['#fff7cc','#ffc93c','#e07f00']);
@@ -951,6 +960,7 @@ $('btnFreshMenu').onclick=()=>{saveProgress(1);startRun(1)};
 $('btnAgain').onclick=()=>{ac();retryLevel()};
 $('btnFresh').onclick=()=>{saveProgress(1);startRun(1)};
 $('btnNextLevel').onclick=()=>{ac();if(dailyMode)startDaily();else startLevel()};
+$('btnRevive').onclick=()=>{ac();if(pushLeft<=0||mode!=='over')return;mode='playing';balls=[];shooting=false;aiming=false;hideOverlays();pushUp();addFloat(W/2,topY+90,'استمر!','#7dd3fc',22)};
 $('btnDaily').onclick=()=>{ac();startDaily()};
 $('btnDaily2').onclick=()=>{ac();startDaily()};
 $('tabHome').onclick=()=>setTab('Home');
@@ -962,16 +972,31 @@ $('btnRestart2').onclick=()=>retryLevel();
 $('btnHome').onclick=goHome;$('btnHome2').onclick=goHome;$('btnHome3').onclick=goHome;
 $('btnBack').onclick=()=>{if(mode==='playing'||mode==='paused')goHome()};
 $('btnGear').onclick=()=>{if(mode==='playing')pauseGame();else if(mode==='paused')resumeGame();else if(mode==='menu')goHome()};
+function jumpY(o,now){if(!o.ju)return 0;const t=(now-o.ju)/280;if(t>=1)return 0;const e=1-Math.pow(1-t,3);return Math.round(2*cell*(1-e))}
+function pushUp(){
+  if(pushLeft<=0)return false;
+  const now=performance.now(),colsMap={};
+  const put=o=>{(colsMap[o.c]=colsMap[o.c]||[]).push(o)};
+  bricks.forEach(put);pickups.forEach(put);
+  for(const c in colsMap){
+    const items=colsMap[c].sort((a,b)=>a.r-b.r);let prev=-1;
+    for(const o of items){o.r=Math.max(o.r-2,prev+1);prev=o.r;o.ju=now}
+  }
+  pushLeft--;
+  comic(W/2,topY+120,'دفعة إنقاذ!','#7dd3fc');sPickup();
+  if(navigator.vibrate)navigator.vibrate(25);
+  updateUI();return true;
+}
 function doUndo(){
   if(undoUsed||!snapshot||mode!=='playing')return;
   const s=JSON.parse(snapshot);
   bricks=s.bricks;pickups=s.pickups;ballCount=s.ballCount;level=s.level;rowsSpawned=s.rowsSpawned;rowsTotal=s.rowsTotal;score=s.score;returnX=s.returnX;combo=s.combo;maxCombo=s.maxCombo;
-  undoUsed=true;shooting=false;balls=[];firstReturn=null;volleyScore=0;volleyHits=0;updateUI();toast('رجعنا خطوة ↩');
+  undoUsed=true;shooting=false;balls=[];firstReturn=null;volleyScore=0;volleyHits=0;updateUI();toast('تراجعنا خطوة ↩');
 }
 $('btnA').onclick=()=>{
   if(mode!=='playing')return;
   if(shooting){recall();toast('تم استدعاء الكرات ⬇',700);return}
-  if(boostLeft<=0){toast('خلصت الإضافات المرة دي',800);return}
+  if(boostLeft<=0){toast('انتهت الإضافات هذه المرة',800);return}
   boostLeft--;ballCount+=5;
   addFloat(returnX,launcherY-32,'كرات +5','#ff8fd8',19);
   burst(returnX,launcherY-8,'#ff8fd8',10);sPickup();updateUI();
@@ -979,13 +1004,19 @@ $('btnA').onclick=()=>{
 $('btnB').onclick=()=>{
   if(mode!=='playing')return;
   if(shooting){doUndo();return}
-  if(waveLeft<=0){toast('خلصت الموجات المرة دي',800);return}
+  if(waveLeft<=0){toast('انتهت الموجات هذه المرة',800);return}
   waveLeft--;volleyKills=0;
   beams.push({kind:'wave',t:performance.now()});
   damageCell(()=>true,Math.max(3,Math.round(levelBalls*.3)));
   shake=Math.max(shake,8);sBomb();comic(W/2,topY+120,'!موجة','#7dd3fc');
   if(mode==='playing'&&bricks.length===0&&rowsSpawned>=rowsTotal){updateUI();levelComplete();return}
   updateUI();
+};
+$('btnC').onclick=()=>{
+  if(mode!=='playing')return;
+  if(pushLeft<=0){toast('انتهت الدفعات هذه المرة',800);return}
+  if(!bricks.length){toast('لا يوجد طوب بعد',800);return}
+  pushUp();
 };
 $('btnSpeed').onclick=()=>{speed=speed>=3?1:speed+1;localStorage.nbrSpeed=speed;updateUI();toast('السرعة ×'+speed,700)};
 $('btnSound').onclick=()=>{soundOn=!soundOn;localStorage.nbrSound=soundOn?'1':'0';updateUI();if(soundOn){ac();sPickup()}};
