@@ -160,6 +160,8 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .side b .ic{width:15px;height:15px;vertical-align:-2px}
 .playFlame .ic{width:14px;height:14px;vertical-align:-2px}
 #streakBadge .ic{width:14px;height:14px;vertical-align:-2px}
+#coinPill{position:absolute;right:58px;top:7px;z-index:6;display:flex;align-items:center;gap:5px;background:rgba(10,22,55,.55);color:#ffd76e;font-size:13.5px;font-weight:900;border-radius:99px;padding:3px 11px;border:1.5px solid rgba(255,201,60,.6);box-shadow:0 3px 8px rgba(8,20,50,.35);white-space:nowrap;pointer-events:none;font-variant-numeric:tabular-nums}
+#coinPill svg{width:15px;height:15px}
 #lvlStar svg{width:17px;height:17px;display:block}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
@@ -171,6 +173,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 <div id="topbar">
   <button class="tbtn" id="btnGear" aria-label="الإعدادات">⚙</button>
   <div id="streakBadge" hidden><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.7 2.4c.4 3.3-1 5-2.3 6.5C9.2 10.3 8 11.9 8 14a4.5 4.5 0 0 0 9 0c0-1.6-.7-2.9-1.5-4.1-.3 1-.9 1.8-1.7 2.2.4-3-.6-6.7-3.1-9.7z" fill="#ff922e"/><path d="M12 21.6a2.9 2.9 0 0 1-2.9-2.9c0-1.3.7-2.3 1.4-3.2.5-.6 1-1.3 1.5-2.1.5.8 1 1.5 1.5 2.1.7.9 1.4 1.9 1.4 3.2A2.9 2.9 0 0 1 12 21.6z" fill="#ffc93c"/></svg>2</div>
+  <div id="coinPill"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="#ffc93c"/><circle cx="12" cy="12" r="6.6" fill="none" stroke="#b45309" stroke-width="1.7"/><path d="M12 8.7l.95 2.05 2.24.28-1.63 1.55.41 2.2L12 13.8l-1.97.98.41-2.2-1.63-1.55 2.24-.28z" fill="#b45309"/></svg><span id="coinCount">0</span></div>
   <button class="tbtn" id="btnBack" aria-label="رجوع">›</button>
   <div id="scoreRow">
     <div class="side best"><small>دائمًا</small><b><span id="best">0</span> <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3h11v5.6a5.5 5.5 0 0 1-11 0z" fill="#ffc93c"/><path d="M10.9 14h2.2v3h-2.2z" fill="#f5a623"/><path d="M7.6 17h8.8v2.8H7.6z" fill="#f5a623"/></svg></b></div>
@@ -183,17 +186,17 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 
 <div id="controls">
   <div class="ctl">
-    <button class="cbtn" id="btnA" aria-label="إضافة"><span class="glyph" id="glyphA">✚</span><span class="badge" id="badgeA">3</span></button>
+    <button class="cbtn" id="btnA" aria-label="إضافة"><span class="glyph" id="glyphA">✚</span><span class="badge" id="badgeA">0</span></button>
     <button class="plusBtn" id="plusA" aria-label="شراء شحنة كرات"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
     <span class="lb" id="labelA">إضافة</span>
   </div>
   <div class="ctl">
-    <button class="cbtn" id="btnB" aria-label="موجة"><span class="glyph" id="glyphB"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M2.5 9q3-3.2 6 0t6 0 6 0M2.5 15.5q3-3.2 6 0t6 0 6 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></span><span class="badge" id="badgeB">2</span></button>
+    <button class="cbtn" id="btnB" aria-label="موجة"><span class="glyph" id="glyphB"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M2.5 9q3-3.2 6 0t6 0 6 0M2.5 15.5q3-3.2 6 0t6 0 6 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></span><span class="badge" id="badgeB">1</span></button>
     <button class="plusBtn" id="plusB" aria-label="شراء شحنة موجة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
     <span class="lb" id="labelB">موجة</span>
   </div>
   <div class="ctl">
-    <button class="cbtn" id="btnC" aria-label="دفعة"><span class="glyph" id="glyphC"><svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 13.5 12 6l7.5 7.5"/><path d="M4.5 20 12 12.5 19.5 20" opacity=".5"/></svg></span><span class="badge" id="badgeC">2</span></button>
+    <button class="cbtn" id="btnC" aria-label="دفعة"><span class="glyph" id="glyphC"><svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 13.5 12 6l7.5 7.5"/><path d="M4.5 20 12 12.5 19.5 20" opacity=".5"/></svg></span><span class="badge" id="badgeC">1</span></button>
     <button class="plusBtn" id="plusC" aria-label="شراء شحنة دفعة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
     <span class="lb" id="labelC">دفعة</span>
   </div>
@@ -238,14 +241,14 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
       <div class="srow"><span class="lab">عملاتي</span><span class="val coinVal"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="#ffc93c"/><circle cx="12" cy="12" r="6.6" fill="none" stroke="#b45309" stroke-width="1.7"/><path d="M12 8.7l.95 2.05 2.24.28-1.63 1.55.41 2.2L12 13.8l-1.97.98.41-2.2-1.63-1.55 2.24-.28z" fill="#b45309"/></svg><span id="meCoins">0</span></span></div>
     </div>
     <div class="shopCard rise">
-      <div class="shopHead"><span class="shopTitle">الترقيات الدائمة</span><span class="coinBal"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="#ffc93c"/><circle cx="12" cy="12" r="6.6" fill="none" stroke="#b45309" stroke-width="1.7"/><path d="M12 8.7l.95 2.05 2.24.28-1.63 1.55.41 2.2L12 13.8l-1.97.98.41-2.2-1.63-1.55 2.24-.28z" fill="#b45309"/></svg><span id="shopCoins">0</span></span></div>
-      <div class="upRow"><span class="upIc"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.2" cy="15.4" r="5.2" fill="#ff922e"/><circle cx="16.6" cy="9" r="4.4" fill="#ff4fd8"/><circle cx="17.4" cy="17.8" r="3.1" fill="#38e1ff"/></svg></span><div class="upTx"><div class="upName">كرات بداية</div><div class="upDesc">+5 كرات عند بدء كل مستوى</div><div class="upPips" id="pipsBalls"></div></div><button class="buyBtn" id="buyBalls"></button></div>
-      <div class="upRow"><span class="upIc"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 13.5 12 6l7.5 7.5"/><path d="M4.5 20 12 12.5 19.5 20" opacity=".5"/></svg></span><div class="upTx"><div class="upName">دفعة إضافية</div><div class="upDesc">+1 دفعة في كل جولة</div><div class="upPips" id="pipsPush"></div></div><button class="buyBtn" id="buyPush"></button></div>
-      <div class="upRow"><span class="upIc"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M2.5 9q3-3.2 6 0t6 0 6 0M2.5 15.5q3-3.2 6 0t6 0 6 0"/></svg></span><div class="upTx"><div class="upName">موجة إضافية</div><div class="upDesc">+1 موجة في كل جولة</div><div class="upPips" id="pipsWave"></div></div><button class="buyBtn" id="buyWave"></button></div>
-      <div class="shopNote">اجمع عملة عن كل طوبة تدمّرها، و25 عملة عند إكمال كل مستوى</div>
+      <div class="shopHead"><span class="shopTitle">الشراء الدائم</span><span class="coinBal"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="#ffc93c"/><circle cx="12" cy="12" r="6.6" fill="none" stroke="#b45309" stroke-width="1.7"/><path d="M12 8.7l.95 2.05 2.24.28-1.63 1.55.41 2.2L12 13.8l-1.97.98.41-2.2-1.63-1.55 2.24-.28z" fill="#b45309"/></svg><span id="shopCoins">0</span></span></div>
+      <div class="upRow"><span class="upIc"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.2" cy="15.4" r="5.2" fill="#ff922e"/><circle cx="16.6" cy="9" r="4.4" fill="#ff4fd8"/><circle cx="17.4" cy="17.8" r="3.1" fill="#38e1ff"/></svg></span><div class="upTx"><div class="upName">كرات إضافية</div><div class="upDesc">+1 محاولة «إضافة» مع بداية كل مستوى</div><div class="upPips" id="pipsBalls"></div></div><button class="buyBtn" id="buyBalls"></button></div>
+      <div class="upRow"><span class="upIc"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 13.5 12 6l7.5 7.5"/><path d="M4.5 20 12 12.5 19.5 20" opacity=".5"/></svg></span><div class="upTx"><div class="upName">دفعة إضافية</div><div class="upDesc">+1 دفعة مع بداية كل مستوى</div><div class="upPips" id="pipsPush"></div></div><button class="buyBtn" id="buyPush"></button></div>
+      <div class="upRow"><span class="upIc"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M2.5 9q3-3.2 6 0t6 0 6 0M2.5 15.5q3-3.2 6 0t6 0 6 0"/></svg></span><div class="upTx"><div class="upName">موجة إضافية</div><div class="upDesc">+1 موجة مع بداية كل مستوى</div><div class="upPips" id="pipsWave"></div></div><button class="buyBtn" id="buyWave"></button></div>
+      <div class="shopNote">كل نقطة تتملى مع بداية كل مستوى جديد — ولا تتجدد عند إعادة المستوى نفسه. كسب العملات: عملة لكل طوبة و25 لكل مستوى</div>
     </div>
     <div class="shopCard rise">
-      <div class="shopHead"><span class="shopTitle">شحنات تُستهلك</span><span class="coinBal"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="#ffc93c"/><circle cx="12" cy="12" r="6.6" fill="none" stroke="#b45309" stroke-width="1.7"/><path d="M12 8.7l.95 2.05 2.24.28-1.63 1.55.41 2.2L12 13.8l-1.97.98.41-2.2-1.63-1.55 2.24-.28z" fill="#b45309"/></svg><span id="shopCoins3">0</span></span></div>
+      <div class="shopHead"><span class="shopTitle">الشراء المنتهي</span><span class="coinBal"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="#ffc93c"/><circle cx="12" cy="12" r="6.6" fill="none" stroke="#b45309" stroke-width="1.7"/><path d="M12 8.7l.95 2.05 2.24.28-1.63 1.55.41 2.2L12 13.8l-1.97.98.41-2.2-1.63-1.55 2.24-.28z" fill="#b45309"/></svg><span id="shopCoins3">0</span></span></div>
       <div class="upRow"><span class="upIc"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.2" cy="15.4" r="5.2" fill="#ff922e"/><circle cx="16.6" cy="9" r="4.4" fill="#ff4fd8"/><circle cx="17.4" cy="17.8" r="3.1" fill="#38e1ff"/></svg></span><div class="upTx"><div class="upName">شحنة كرات +5</div><div class="upDesc">مخزونك: <span id="stockBoost">0</span> — تُستهلك من زرار «إضافة»</div></div><button class="buyBtn" id="buySBoost"></button></div>
       <div class="upRow"><span class="upIc"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M2.5 9q3-3.2 6 0t6 0 6 0M2.5 15.5q3-3.2 6 0t6 0 6 0"/></svg></span><div class="upTx"><div class="upName">شحنة موجة</div><div class="upDesc">مخزونك: <span id="stockWave">0</span> — تُستهلك من زرار «موجة»</div></div><button class="buyBtn" id="buySWave"></button></div>
       <div class="upRow"><span class="upIc"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 13.5 12 6l7.5 7.5"/><path d="M4.5 20 12 12.5 19.5 20" opacity=".5"/></svg></span><div class="upTx"><div class="upName">شحنة دفعة</div><div class="upDesc">مخزونك: <span id="stockPush">0</span> — تُستهلك من زرار «دفعة» والإنعاش</div></div><button class="buyBtn" id="buySPush"></button></div>
@@ -366,26 +369,28 @@ let returnX=225,firstReturn=null,launchTime=0,launched=0,finished=0;
 let volleyHits=0,combo=0,maxCombo=0,shake=0,lastSpawnT=0,soundOn=localStorage.nbrSound!=='0';
 let volleyScore=0,volleyKills=0,strongestHp=0,volleyStrongDone=false,brickSeq=0,bossSeq=0;
 let volleyHitIds=new Set(),volleyStartIds=new Set();
-let streak=+(localStorage.nbrStreak||0),boostLeft=3,waveLeft=2,pushLeft=2,pushLeftLevelStart=2;
+let streak=+(localStorage.nbrStreak||0),boostLeft=0,waveLeft=1,pushLeft=1,pushLeftLevelStart=1;
 let coins=+(localStorage.nbrCoins||0);
-let upg={balls:0,push:0,wave:0};try{const u=JSON.parse(localStorage.nbrUpgrades||'null');if(u)for(const k of['balls','push','wave'])upg[k]=Math.min(4,Math.max(0,+u[k]||0))}catch(e){}
-const UP_COST=[150,350,750,1500];
+let upg={balls:0,push:0,wave:0};try{const u=JSON.parse(localStorage.nbrUpgrades||'null');if(u)for(const k of['balls','push','wave'])upg[k]=Math.min(3,Math.max(0,+u[k]||0))}catch(e){}
+const UP_COST=[500,1000,1500];
 function saveCoins(){localStorage.nbrCoins=coins}
 function saveUpg(){localStorage.nbrUpgrades=JSON.stringify(upg)}
-function earnCoins(n){coins+=n;saveCoins()}
-function maxPush(){return 2+upg.push}
-function maxWave(){return 2+upg.wave}
+function earnCoins(n){coins+=n;saveCoins();$('coinCount').textContent=fmt(coins)}
+function maxPush(){return 1+upg.push}
+function maxWave(){return 1+upg.wave}
+function maxBoost(){return upg.balls}
 let stock={boost:0,wave:0,push:0};try{const st=JSON.parse(localStorage.nbrStock||'null');if(st)for(const k of['boost','wave','push'])stock[k]=Math.min(999,Math.max(0,+st[k]||0))}catch(e){}
-const STOCK_PRICE={boost:25,wave:40,push:60};
+const STOCK_PRICE={boost:80,wave:100,push:120};
 const STOCK_NAME={boost:'شحنة كرات +5',wave:'شحنة موجة',push:'شحنة دفعة'};
 const STOCK_DESC={boost:'زرار «إضافة» يمنحك 5 كرات إضافية عند استخدامها',wave:'زرار «موجة» يُضعف كل الطوب على اللوحة عند استخدامها',push:'زرار «دفعة» يرفع الطوب صفّين — وتعمل أيضًا إنعاشًا عند الخسارة'};
 function saveStock(){localStorage.nbrStock=JSON.stringify(stock)}
 function saveCharges(){if(dailyMode)return;localStorage.nbrCharges=JSON.stringify({boost:boostLeft,wave:waveLeft,push:pushLeft})}
-function fullCharges(){boostLeft=3;waveLeft=maxWave();pushLeft=maxPush();saveCharges()}
+let allotLevel=+(localStorage.nbrAllot||0);
+function grantAllotment(){boostLeft=maxBoost();waveLeft=maxWave();pushLeft=maxPush();allotLevel=level;localStorage.nbrAllot=level;saveCharges()}
 function applyCharges(){
   let c=null;try{c=JSON.parse(localStorage.nbrCharges||'null')}catch(e){}
-  if(!c){fullCharges();return}
-  boostLeft=Math.min(3,Math.max(0,+c.boost||0));waveLeft=Math.min(maxWave(),Math.max(0,+c.wave||0));pushLeft=Math.min(maxPush(),Math.max(0,+c.push||0));
+  if(!c){boostLeft=maxBoost();waveLeft=maxWave();pushLeft=maxPush();return}
+  boostLeft=Math.min(maxBoost(),Math.max(0,+c.boost||0));waveLeft=Math.min(maxWave(),Math.max(0,+c.wave||0));pushLeft=Math.min(maxPush(),Math.max(0,+c.push||0));
 }
 function buyStock(key){
   const price=STOCK_PRICE[key];
@@ -413,7 +418,7 @@ const ballTheme=()=>BALL_THEMES[(level-1)%BALL_THEMES.length];
 const pw=()=>level; /* difficulty driver = level number */
 function loadProgress(){try{const p=JSON.parse(localStorage.nbrProgress||'null');if(p){if(p.s>=1&&p.l>=1)return{l:(p.s-1)*3+p.l};if(p.l>=1)return{l:p.l}}}catch(e){}return{l:1}}
 function saveProgress(lv){localStorage.nbrProgress=JSON.stringify({l:lv})}
-function ballFloor(L){return 6+4*L+5*upg.balls}
+function ballFloor(L){return 6+4*L}
 /* ===== Daily challenge ===== */
 const MONTHS_AR=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
 function dateKey(d){return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
@@ -490,7 +495,7 @@ function updateControls(){
   setChargeBadge('C',pushLeft,stock.push);
 }
 function updateUI(){
-  setScoreBig();
+  setScoreBig();$('coinCount').textContent=fmt(coins);
   $('level').textContent=dailyMode?new Date().getDate():level;$('stageLbl').textContent=dailyMode?'تحدي اليوم':'مستوى';$('best').textContent=fmt(best);
   const pct=bricksSpawnedLevel?Math.min(100,Math.round(bricksDestroyedLevel/bricksSpawnedLevel*100)):0;
   $('lvlFill').style.transform='scaleX('+(pct/100)+')';const trkW=$('lvlProg').clientWidth||0;$('lvlStar').style.transform='translate('+Math.round(trkW*pct/100)+'px,0) translateX(-50%)';$('lvlStar').style.opacity=pct>=80?1:.45;
@@ -509,6 +514,7 @@ function startLevel(){
   combo=0;volleyHits=0;shooting=false;aiming=false;undoUsed=false;snapshot=null;
   returnX=225;firstReturn=null;shake=0;
   rowsSpawned=0;rowsTotal=rowsForLevel();marchTick=0;
+  if(!dailyMode&&level!==allotLevel)grantAllotment();
   ballCount=Math.max(ballCount,ballFloor(level));levelBalls=ballCount;
   bricksDestroyedLevel=0;bricksSpawnedLevel=0;volleyScore=0;
   scoreLevelStart=score;ballCountLevelStart=ballCount;pushLeftLevelStart=pushLeft;
@@ -521,7 +527,8 @@ function startLevel(){
 function startRun(lv,fresh){
   dailyMode=false;seedRnd=null;
   level=lv;score=0;maxCombo=0;ballCount=ballFloor(lv);
-  if(fresh)fullCharges();else applyCharges();
+  if(fresh){allotLevel=0;localStorage.nbrAllot=0}
+  applyCharges();
   startLevel();
 }
 function retryLevel(){score=scoreLevelStart;ballCount=ballCountLevelStart;if(dailyMode)seedRnd=makeDailyRnd();startLevel()}
@@ -553,10 +560,10 @@ function renderShop(){
   $('meCoins').textContent=fmt(coins);$('shopCoins').textContent=fmt(coins);
   for(const sfx of['Balls','Push','Wave']){
     const t=upg[sfx.toLowerCase()];
-    let pips='';for(let i=0;i<4;i++)pips+='<i class="'+(i<t?'on':'')+'"></i>';
+    let pips='';for(let i=0;i<3;i++)pips+='<i class="'+(i<t?'on':'')+'"></i>';
     $('pips'+sfx).innerHTML=pips;
     const btn=$('buy'+sfx);
-    if(t>=4){btn.disabled=true;btn.classList.add('maxed');btn.textContent='الأقصى'}
+    if(t>=3){btn.disabled=true;btn.classList.add('maxed');btn.textContent='الأقصى'}
     else{const c=UP_COST[t];btn.classList.remove('maxed');btn.disabled=coins<c;btn.innerHTML=COIN_SVG+' '+fmt(c)}
   }
   $('shopCoins3').textContent=fmt(coins);
@@ -566,7 +573,7 @@ function renderShop(){
   }
 }
 function buyUp(key){
-  const t=upg[key];if(t>=4)return;const c=UP_COST[t];
+  const t=upg[key];if(t>=3)return;const c=UP_COST[t];
   if(coins<c){toast('عملاتك لا تكفي — العب واجمع المزيد',900);return}
   coins-=c;upg[key]++;saveCoins();saveUpg();renderShop();sPickup();toast('تمت الترقية!',800);
 }
