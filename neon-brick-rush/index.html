@@ -6,12 +6,12 @@
 <meta name="theme-color" content="#3c5a99">
 <title>Neon Brick Rush</title>
 <style>
-:root{--navy:#13224e;--ink:#0e1c42;--dim:#a9bde4;--gold:#ffc93c}
+:root{--navy:#13224e;--ink:#0e1c42;--dim:#a9bde4;--gold:var(--gold);--surface:#13224e;--surface-deep:#0e1c42;--on-surface:#fff;--accent:#ff7b00;--accent-2:#ffb52e;--success:var(--success);--danger:#ff3c4b;--ctl-border:var(--ctl-border);--ink-2:var(--ink-2);--ink-3:var(--ink-3);--bg:#2e4a85;--blue-300:#557cc0;--blue-400:#4a6db3;--blue-500:#3f61a1;--blue-600:#2f6fd0;--blue-700:#2b62c4;--blue-900:#1e4fae;--shell-lo:#385792;--btn-hi:#86aaea;--btn-mid:#4d6fb2;--btn-lo:#3a5896;--sbtn-hi:#7ea2e4;--sbtn-mid:#46679f;--motion-fast:.1s;--motion-med:.2s;--motion-slow:.35s}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
-body{margin:0;background:#2e4a85;color:#fff;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
-#app{height:100dvh;display:flex;align-items:center;justify-content:center;background:radial-gradient(80vw 50vh at 50% -10%,#557cc0,#2e4a85 70%)}
-#shell{position:relative;width:100vw;height:100dvh;background:linear-gradient(180deg,#4a6db3 0%,#3f61a1 55%,#385792 100%);overflow:hidden}
+body{margin:0;background:var(--bg);color:#fff;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+#app{height:100dvh;display:flex;align-items:center;justify-content:center;background:radial-gradient(80vw 50vh at 50% -10%,var(--blue-300),var(--bg) 70%)}
+#shell{position:relative;width:100vw;height:100dvh;background:linear-gradient(180deg,var(--blue-400) 0%,var(--blue-500) 55%,var(--shell-lo) 100%);overflow:hidden}
 @media(min-width:520px) and (min-height:900px){#shell{border-radius:28px;box-shadow:0 40px 90px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.15)}}
 canvas{width:100%;height:100%;display:block;touch-action:none}
 /* ===== Top bar ===== */
@@ -27,28 +27,28 @@ canvas{width:100%;height:100%;display:block;touch-action:none}
 .side.level{text-align:start}
 .side.best{text-align:end}
 #scoreBig{flex:1;text-align:center;font-size:47px;line-height:1;font-weight:900;font-style:italic;letter-spacing:.5px;color:#fff;-webkit-text-stroke:2.2px var(--ink);paint-order:stroke fill;text-shadow:0 4px 0 rgba(14,28,66,.55),0 8px 22px rgba(10,25,60,.35);font-variant-numeric:tabular-nums;transition:color .25s}
-#scoreBig.t1{color:#3dff62}
+#scoreBig.t1{color:var(--success)}
 #scoreBig.t3{color:#ffb52e}
-#streakBadge{position:absolute;left:58px;top:7px;z-index:6;background:linear-gradient(180deg,#ffb52e,#ff7b00);color:#fff;font-size:13px;font-weight:900;border-radius:99px;padding:3px 10px;border:1.5px solid #ffe1a8;box-shadow:0 3px 8px rgba(8,20,50,.4);white-space:nowrap;pointer-events:none}
+#streakBadge{position:absolute;left:58px;top:7px;z-index:6;background:linear-gradient(180deg,var(--accent-2),var(--accent));color:#fff;font-size:13px;font-weight:900;border-radius:99px;padding:3px 10px;border:1.5px solid #ffe1a8;box-shadow:0 3px 8px rgba(8,20,50,.4);white-space:nowrap;pointer-events:none}
 .cbtn .badge[hidden]{display:none}
 #lvlProg{position:relative;height:10px;margin:10px 92px 0;border-radius:99px;background:rgba(10,22,55,.45);border:1.5px solid rgba(255,255,255,.28);overflow:visible}
-#lvlFill{position:absolute;top:0;left:0;height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,#ffc93c,#ff7b00);box-shadow:0 0 10px rgba(255,150,20,.7);transition:width .35s ease}
-#lvlStar{position:absolute;top:-8px;left:0%;font-size:15px;transform:translateX(-50%);transition:left .35s ease;filter:drop-shadow(0 2px 3px rgba(8,20,50,.5))}
+#lvlFill{position:absolute;top:0;left:0;height:100%;width:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--accent));box-shadow:0 0 10px rgba(255,150,20,.7);transform:scaleX(0);transform-origin:left center;transition:transform var(--motion-slow) ease}
+#lvlStar{position:absolute;top:-8px;left:0;transform:translateX(-50%);transition:transform var(--motion-slow) ease,opacity var(--motion-med) ease;filter:drop-shadow(0 2px 3px rgba(8,20,50,.5))}
 #scoreBig.t2{color:#ff4fd8;animation:scoreGlow .7s ease-in-out infinite alternate}
 @keyframes scoreGlow{from{text-shadow:0 4px 0 rgba(14,28,66,.55),0 0 14px rgba(255,79,216,.55)}to{text-shadow:0 4px 0 rgba(14,28,66,.55),0 0 30px rgba(255,79,216,.95)}}
 /* toast */
-#toast{position:absolute;top:17.5%;left:50%;transform:translate(-50%,-6px) scale(.9);z-index:6;background:rgba(14,26,58,.92);border:1.5px solid rgba(255,201,60,.6);color:#ffe9a8;font-weight:900;font-size:15.5px;padding:8px 18px;border-radius:99px;opacity:0;pointer-events:none;transition:all .2s cubic-bezier(.2,.9,.3,1.4);white-space:nowrap;box-shadow:0 10px 26px rgba(5,12,35,.4)}
+#toast{position:absolute;top:17.5%;left:50%;transform:translate(-50%,-6px) scale(.9);z-index:6;background:rgba(14,26,58,.92);border:1.5px solid rgba(255,201,60,.6);color:#ffe9a8;font-weight:900;font-size:15.5px;padding:8px 18px;border-radius:99px;opacity:0;pointer-events:none;transition:transform var(--motion-med) cubic-bezier(.2,.9,.3,1.4),opacity .15s ease;white-space:nowrap;box-shadow:0 10px 26px rgba(5,12,35,.4)}
 #toast.show{opacity:1;transform:translate(-50%,0) scale(1)}
 /* ===== Bottom controls: two big circles like the reference ===== */
 #controls{position:absolute;bottom:calc(16px + env(safe-area-inset-bottom));left:0;right:0;z-index:5;display:flex;justify-content:center;gap:38px}
 .whiteBtn[hidden]{display:none}
 .ctl{display:flex;flex-direction:column;align-items:center;gap:5px}
-.cbtn{position:relative;width:74px;height:74px;border-radius:50%;border:2px solid #2b4376;background:radial-gradient(circle at 33% 27%,#86aaea,#4d6fb2 56%,#3a5896);box-shadow:0 6px 0 #2b4376,0 12px 22px rgba(8,20,50,.4),inset 0 2px 3px rgba(255,255,255,.5);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .1s;font:inherit}
-.cbtn:active{transform:translateY(4px);box-shadow:0 2px 0 #2b4376,0 6px 12px rgba(8,20,50,.4),inset 0 2px 3px rgba(255,255,255,.5)}
+.cbtn{position:relative;width:74px;height:74px;border-radius:50%;border:2px solid var(--ctl-border);background:radial-gradient(circle at 33% 27%,var(--btn-hi),var(--btn-mid) 56%,var(--btn-lo));box-shadow:0 6px 0 var(--ctl-border),0 12px 22px rgba(8,20,50,.4),inset 0 2px 3px rgba(255,255,255,.5);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform var(--motion-fast),box-shadow var(--motion-fast);font:inherit}
+.cbtn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--ctl-border),0 6px 12px rgba(8,20,50,.4),inset 0 2px 3px rgba(255,255,255,.5)}
 .cbtn.off{opacity:.45}
 .cbtn .glyph{font-size:29px;line-height:1;text-shadow:0 2px 4px rgba(10,25,60,.45)}
 .cbtn .balldot{position:absolute;top:13px;left:50%;transform:translateX(-50%);width:15px;height:15px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff2c9,#ffb52e 60%,#e07f00);box-shadow:0 2px 5px rgba(0,0,0,.35)}
-.cbtn .badge{position:absolute;top:-3px;inset-inline-end:-3px;background:#fff;color:#24407c;font-size:13.5px;font-weight:900;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(8,20,50,.35);border:2px solid #dbe7ff}
+.cbtn .badge{position:absolute;top:-3px;inset-inline-end:-3px;background:#fff;color:var(--ink-3);font-size:13.5px;font-weight:900;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(8,20,50,.35);border:2px solid #dbe7ff}
 .ctl span.lb{font-size:13.5px;font-weight:800;color:#eaf1ff;text-shadow:0 2px 5px rgba(10,25,60,.4)}
 /* ===== Overlays ===== */
 .overlay{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;text-align:center;padding:calc(16px + env(safe-area-inset-top)) 22px calc(18px + env(safe-area-inset-bottom));animation:fadeIn .3s ease;overflow-x:hidden;overflow-y:auto;scrollbar-width:none}
@@ -56,7 +56,7 @@ canvas{width:100%;height:100%;display:block;touch-action:none}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 .rise{animation:rise .45s cubic-bezier(.2,.8,.2,1) both}
-.sunburst{background:repeating-conic-gradient(from -90deg at 50% 30%,rgba(255,255,255,.055) 0deg 9deg,rgba(255,255,255,0) 9deg 18deg),linear-gradient(180deg,#2f6fd0 0%,#2b62c4 45%,#1e4fae 100%)}
+.sunburst{background:repeating-conic-gradient(from -90deg at 50% 30%,rgba(255,255,255,.055) 0deg 9deg,rgba(255,255,255,0) 9deg 18deg),linear-gradient(180deg,var(--blue-600) 0%,var(--blue-700) 45%,var(--blue-900) 100%)}
 .chunk{font-weight:900;font-style:italic;color:#fff;-webkit-text-stroke:2px var(--ink);paint-order:stroke fill;text-shadow:0 4px 0 rgba(14,28,66,.5)}
 h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
 .arcTitle{font-size:25px;font-weight:900;line-height:1.45;text-shadow:0 3px 10px rgba(10,30,80,.35)}
@@ -72,8 +72,8 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
 .srow:last-child{border-bottom:0}
 .srow .lab{font-size:17.5px;font-weight:700}
 .srow .val{display:flex;align-items:center;gap:9px;font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
-.srow .delta{background:#fff;color:#2c4a8a;font-size:13.5px;font-weight:900;border-radius:8px;padding:2.5px 8px;direction:ltr}
-.whiteBtn{margin-top:auto;width:88%;max-width:360px;border:0;border-radius:99px;background:#fff;color:#2c4a8a;font:inherit;padding:13px 10px 11px;cursor:pointer;box-shadow:0 8px 0 rgba(16,36,88,.4),0 18px 34px rgba(5,18,55,.35);transition:transform .12s}
+.srow .delta{background:#fff;color:var(--ink-2);font-size:13.5px;font-weight:900;border-radius:8px;padding:2.5px 8px;direction:ltr}
+.whiteBtn{margin-top:auto;width:88%;max-width:360px;border:0;border-radius:99px;background:#fff;color:var(--ink-2);font:inherit;padding:13px 10px 11px;cursor:pointer;box-shadow:0 8px 0 rgba(16,36,88,.4),0 18px 34px rgba(5,18,55,.35);transition:transform .12s}
 .whiteBtn:active{transform:scale(.97)}
 .whiteBtn .t1{display:block;font-size:21px;font-weight:900}
 .whiteBtn .t2{display:block;font-size:13.5px;font-weight:700;color:#8499c6;margin-top:1px}
@@ -86,9 +86,9 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
 .scrim{background:rgba(8,17,43,.72);backdrop-filter:blur(6px);justify-content:center}
 .sheet{width:100%;max-width:330px;background:linear-gradient(180deg,#4d6fb2,#3a5896);border:2px solid rgba(170,200,255,.4);border-radius:24px;padding:22px 20px;box-shadow:0 30px 60px rgba(3,10,35,.55);display:flex;flex-direction:column;gap:10px}
 .sheet h2{margin:0 0 6px;font-size:23px;font-weight:900}
-.sbtn{border:2px solid #2b4376;border-radius:16px;background:radial-gradient(circle at 30% 20%,#7ea2e4,#46679f 70%);color:#fff;font:inherit;font-size:16.5px;font-weight:800;padding:13px;cursor:pointer;box-shadow:0 4px 0 #2b4376;transition:transform .1s}
-.sbtn:active{transform:translateY(3px);box-shadow:0 1px 0 #2b4376}
-.sbtn.primary{background:#fff;color:#2c4a8a;border-color:#c9dcff;box-shadow:0 4px 0 #9db9e8}
+.sbtn{border:2px solid var(--ctl-border);border-radius:16px;background:radial-gradient(circle at 30% 20%,var(--sbtn-hi),var(--sbtn-mid) 70%);color:#fff;font:inherit;font-size:16.5px;font-weight:800;padding:13px;cursor:pointer;box-shadow:0 4px 0 var(--ctl-border);transition:transform .1s}
+.sbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ctl-border)}
+.sbtn.primary{background:#fff;color:var(--ink-2);border-color:#c9dcff;box-shadow:0 4px 0 #9db9e8}
 .whiteBtn{position:relative}
 #menu{padding-bottom:0}
 .page{flex:1;min-height:0;width:100%;display:flex;flex-direction:column;align-items:center;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding:2px 2px 8px}
@@ -100,17 +100,17 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
 .dailyCard .ds{font-size:13.5px;font-weight:700;color:rgba(255,255,255,.92);min-height:19px}
 .dailyCard .dbtn{margin-top:10px;border:0;border-radius:99px;background:rgba(255,255,255,.28);color:#fff;font:inherit;font-size:17px;font-weight:900;padding:8px 46px;cursor:pointer;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.35);transition:transform .1s}
 .dailyCard .dbtn:active{transform:scale(.96)}
-.playFlame{position:absolute;top:-15px;inset-inline-start:16px;background:linear-gradient(180deg,#ffb52e,#ff7b00);border:1.5px solid #ffe1a8;color:#fff;font-size:14.5px;font-weight:900;border-radius:99px;padding:3px 11px;box-shadow:0 5px 12px rgba(8,20,50,.35);z-index:2}
+.playFlame{position:absolute;top:-15px;inset-inline-start:16px;background:linear-gradient(180deg,var(--accent-2),var(--accent));border:1.5px solid #ffe1a8;color:#fff;font-size:14.5px;font-weight:900;border-radius:99px;padding:3px 11px;box-shadow:0 5px 12px rgba(8,20,50,.35);z-index:2}
 #tabbar{flex:none;width:calc(100% + 44px);margin:4px -22px 0;display:flex;background:rgba(11,24,58,.55);border-top:1.5px solid rgba(160,195,255,.28);padding-bottom:env(safe-area-inset-bottom)}
 .tab{flex:1;background:none;border:0;color:#fff;font:inherit;padding:9px 0 8px;cursor:pointer;opacity:.55;display:flex;flex-direction:column;align-items:center;gap:2px}
 .tab .ti{font-size:23px;line-height:1.1}
 .tab .tl{font-size:12.5px;font-weight:800}
-.tab.on{opacity:1;background:rgba(255,255,255,.13);box-shadow:inset 0 2.5px 0 #ffc93c}
+.tab.on{opacity:1;background:rgba(255,255,255,.13);box-shadow:inset 0 2.5px 0 var(--gold)}
 .pageTitle{font-size:21px;font-weight:900;margin-top:18px;flex:none}
 .miniCard{width:100%;max-width:340px;background:rgba(13,28,70,.35);border:1.5px solid rgba(160,195,255,.3);border-radius:18px;padding:4px 16px;margin-top:14px;text-align:start;flex:none}
 .histRow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.16);font-size:14.5px;font-weight:700}
 .histRow:last-child{border-bottom:0}
-.histRow .ok{color:#3dff62;font-weight:900}
+.histRow .ok{color:var(--success);font-weight:900}
 .histRow .no{color:#9db8e8}
 .tab .ti svg{width:26px;height:26px;display:block}
 .dailyCard .dico svg{width:37px;height:37px}
@@ -118,36 +118,46 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
 .pageTitle svg{width:22px;height:22px;vertical-align:-4px}
 .hrow .hi svg{width:18px;height:18px}
 .trophy svg{width:38px;height:38px;vertical-align:-7px}
+
+/* ===== v13: focus, inline icons, reduced motion ===== */
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.ic{width:16px;height:16px;vertical-align:-3px}
+.sbtn .ic{width:18px;height:18px;vertical-align:-4px}
+.side b .ic{width:18px;height:18px}
+.playFlame .ic{width:14px;height:14px;vertical-align:-2px}
+#streakBadge .ic{width:14px;height:14px;vertical-align:-2px}
+#lvlStar svg{width:17px;height:17px;display:block}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
 <div id="app"><div id="shell">
-<canvas id="game" width="450" height="800"></canvas>
+<canvas id="game" width="450" height="800" role="img" aria-label="لوحة اللعب"></canvas>
 
 <div id="topbar">
   <button class="tbtn" id="btnGear" aria-label="الإعدادات">⚙</button>
-  <div id="streakBadge" hidden>🔥2</div>
+  <div id="streakBadge" hidden><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.7 2.4c.4 3.3-1 5-2.3 6.5C9.2 10.3 8 11.9 8 14a4.5 4.5 0 0 0 9 0c0-1.6-.7-2.9-1.5-4.1-.3 1-.9 1.8-1.7 2.2.4-3-.6-6.7-3.1-9.7z" fill="#ff922e"/><path d="M12 21.6a2.9 2.9 0 0 1-2.9-2.9c0-1.3.7-2.3 1.4-3.2.5-.6 1-1.3 1.5-2.1.5.8 1 1.5 1.5 2.1.7.9 1.4 1.9 1.4 3.2A2.9 2.9 0 0 1 12 21.6z" fill="#ffc93c"/></svg>2</div>
   <button class="tbtn" id="btnBack" aria-label="رجوع">›</button>
   <div id="scoreRow">
-    <div class="side best"><small>دائمًا</small><b><span id="best">0</span> 🏆</b></div>
+    <div class="side best"><small>دائمًا</small><b><span id="best">0</span> <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3h11v5.6a5.5 5.5 0 0 1-11 0z" fill="#ffc93c"/><path d="M10.9 14h2.2v3h-2.2z" fill="#f5a623"/><path d="M7.6 17h8.8v2.8H7.6z" fill="#f5a623"/></svg></b></div>
     <div id="scoreBig">0</div>
     <div class="side level"><small id="stageLbl">مستوى</small><b id="level">1</b></div>
   </div>
-  <div id="lvlProg"><div id="lvlFill"></div><span id="lvlStar">⭐</span></div>
+  <div id="lvlProg"><div id="lvlFill"></div><span id="lvlStar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.5l-5.9 3.1 1.2-6.5L2.5 9.5l6.6-.9z" fill="#ffc93c"/></svg></span></div>
 </div>
 <div id="toast"></div>
 
 <div id="controls">
   <div class="ctl">
-    <button class="cbtn" id="btnA"><span class="glyph" id="glyphA">✚</span><span class="badge" id="badgeA">3</span></button>
+    <button class="cbtn" id="btnA" aria-label="إضافة"><span class="glyph" id="glyphA">✚</span><span class="badge" id="badgeA">3</span></button>
     <span class="lb" id="labelA">إضافة</span>
   </div>
   <div class="ctl">
-    <button class="cbtn" id="btnB"><span class="glyph" id="glyphB">🌊</span><span class="badge" id="badgeB">2</span></button>
+    <button class="cbtn" id="btnB" aria-label="موجة"><span class="glyph" id="glyphB"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M2.5 9q3-3.2 6 0t6 0 6 0M2.5 15.5q3-3.2 6 0t6 0 6 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></span><span class="badge" id="badgeB">2</span></button>
     <span class="lb" id="labelB">موجة</span>
   </div>
   <div class="ctl">
-    <button class="cbtn" id="btnC"><span class="glyph" id="glyphC"><svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 13.5 12 6l7.5 7.5"/><path d="M4.5 20 12 12.5 19.5 20" opacity=".5"/></svg></span><span class="badge" id="badgeC">2</span></button>
+    <button class="cbtn" id="btnC" aria-label="دفعة"><span class="glyph" id="glyphC"><svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 13.5 12 6l7.5 7.5"/><path d="M4.5 20 12 12.5 19.5 20" opacity=".5"/></svg></span><span class="badge" id="badgeC">2</span></button>
     <span class="lb" id="labelC">دفعة</span>
   </div>
 </div>
@@ -163,7 +173,7 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
     </div>
     <h1 class="gameTitle chunk rise" style="animation-delay:.05s;margin-top:28px">NEON<br>BRICK RUSH</h1>
     <div class="bestLine rise" style="animation-delay:.1s">أفضل نتيجة دائمًا<br><span style="font-size:31px;color:#fff"><svg viewBox="0 0 24 24"><path d="M6.5 3h11v5.6a5.5 5.5 0 0 1-11 0z" fill="#ffc93c"/><path d="M12 10.1l.75 1.6 1.72.2-1.26 1.18.32 1.7L12 14l-1.53.78.32-1.7-1.26-1.18 1.72-.2z" fill="#b45309"/><path d="M10.9 14h2.2v3h-2.2z" fill="#f5a623"/><path d="M7.6 17h8.8v2.8H7.6z" fill="#f5a623"/></svg> <span id="menuBest">0</span></span></div>
-    <button class="whiteBtn rise" id="btnPlay" style="animation-delay:.16s"><span class="playFlame" id="playFlame" hidden>🔥 2</span><span class="t1" id="playT1">لعبة جديدة</span><span class="t2" id="playT2">مستوى 1</span></button>
+    <button class="whiteBtn rise" id="btnPlay" style="animation-delay:.16s"><span class="playFlame" id="playFlame" hidden><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.7 2.4c.4 3.3-1 5-2.3 6.5C9.2 10.3 8 11.9 8 14a4.5 4.5 0 0 0 9 0c0-1.6-.7-2.9-1.5-4.1-.3 1-.9 1.8-1.7 2.2.4-3-.6-6.7-3.1-9.7z" fill="#ff922e"/><path d="M12 21.6a2.9 2.9 0 0 1-2.9-2.9c0-1.3.7-2.3 1.4-3.2.5-.6 1-1.3 1.5-2.1.5.8 1 1.5 1.5 2.1.7.9 1.4 1.9 1.4 3.2A2.9 2.9 0 0 1 12 21.6z" fill="#ffc93c"/></svg> 2</span><span class="t1" id="playT1">لعبة جديدة</span><span class="t2" id="playT2">مستوى 1</span></button>
     <button class="textBtn rise" id="btnFreshMenu" style="animation-delay:.2s" hidden>ابدأ من جديد</button>
     <div class="tag rise" style="animation-delay:.22s;font-size:12px;color:#9db8e8">تُحفظ أفضل نتيجة على جهازك تلقائيًا</div>
   </div>
@@ -212,8 +222,8 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
   <div class="sheet rise">
     <h2>⚙ الإعدادات</h2>
     <button class="sbtn primary" id="btnResume">▶ أكمل اللعب</button>
-    <button class="sbtn" id="btnSpeed">⚡ السرعة ×1</button>
-    <button class="sbtn" id="btnSound">🔊 الصوت: مفعّل</button>
+    <button class="sbtn" id="btnSpeed"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4.5 13.5H11L9.8 22 19 9.8h-6.5z" fill="#ffc93c"/></svg> السرعة ×1</button>
+    <button class="sbtn" id="btnSound"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.6V5.4L7.5 9.5H4z" fill="#fff"/><path d="M15 9.2a4 4 0 0 1 0 5.6M17.5 6.8a7.4 7.4 0 0 1 0 10.4" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/></svg> الصوت: مفعّل</button>
     <button class="sbtn" id="btnRestart2">↻ إعادة هذا المستوى</button>
     <button class="sbtn" id="btnHome2">القائمة الرئيسية</button>
   </div>
@@ -260,6 +270,12 @@ const $=id=>document.getElementById(id);
 const DPR=Math.min(2,window.devicePixelRatio||1);
 canvas.width=W*DPR;canvas.height=H*DPR;
 const fmt=n=>Math.round(n).toLocaleString('en-US');
+const REDUCED=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+const IC_FLAME='<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.7 2.4c.4 3.3-1 5-2.3 6.5C9.2 10.3 8 11.9 8 14a4.5 4.5 0 0 0 9 0c0-1.6-.7-2.9-1.5-4.1-.3 1-.9 1.8-1.7 2.2.4-3-.6-6.7-3.1-9.7z" fill="#ff922e"/><path d="M12 21.6a2.9 2.9 0 0 1-2.9-2.9c0-1.3.7-2.3 1.4-3.2.5-.6 1-1.3 1.5-2.1.5.8 1 1.5 1.5 2.1.7.9 1.4 1.9 1.4 3.2A2.9 2.9 0 0 1 12 21.6z" fill="#ffc93c"/></svg>';
+const IC_BOLT='<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4.5 13.5H11L9.8 22 19 9.8h-6.5z" fill="#ffc93c"/></svg>';
+const IC_SND_ON='<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.6V5.4L7.5 9.5H4z" fill="#fff"/><path d="M15 9.2a4 4 0 0 1 0 5.6M17.5 6.8a7.4 7.4 0 0 1 0 10.4" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/></svg>';
+const IC_SND_OFF='<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.6V5.4L7.5 9.5H4z" fill="#fff"/><path d="M15.5 9.5l5 5m0-5l-5 5" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/></svg>';
+const IC_WAVE='<svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M2.5 9q3-3.2 6 0t6 0 6 0M2.5 15.5q3-3.2 6 0t6 0 6 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>';
 let seedRnd=null;
 function rnd(){return seedRnd?seedRnd():Math.random()}
 const rand=(a,b)=>a+rnd()*(b-a);
@@ -346,7 +362,7 @@ function setScoreBig(){
   const sb=$('scoreBig');const t=scoreTier();
   sb.textContent=fmt(shooting?volleyScore:score);
   sb.classList.toggle('t1',t===1);sb.classList.toggle('t2',t===2);sb.classList.toggle('t3',t===3);
-  if(t>lastTier&&shooting&&sb.animate){try{sb.animate([{transform:'scale(1.22)'},{transform:'scale(1)'}],{duration:170,easing:'ease-out'})}catch(e){}}
+  if(t>lastTier&&shooting&&sb.animate&&!REDUCED){try{sb.animate([{transform:'scale(1.22)'},{transform:'scale(1)'}],{duration:170,easing:'ease-out'})}catch(e){}}
   lastTier=t;
 }
 function updateControls(){
@@ -359,7 +375,7 @@ function updateControls(){
   }else{
     $('glyphA').textContent='✚';$('labelA').textContent='إضافة';$('badgeA').hidden=false;
     $('badgeA').textContent=boostLeft;$('btnA').classList.toggle('off',boostLeft<=0);
-    $('glyphB').textContent='🌊';$('labelB').textContent='موجة';$('badgeB').hidden=false;
+    $('glyphB').innerHTML=IC_WAVE;$('labelB').textContent='موجة';$('badgeB').hidden=false;
     $('badgeB').textContent=waveLeft;$('btnB').classList.toggle('off',waveLeft<=0);
   }
   $('badgeC').textContent=pushLeft;$('btnC').classList.toggle('off',pushLeft<=0);
@@ -368,11 +384,11 @@ function updateUI(){
   setScoreBig();
   $('level').textContent=dailyMode?new Date().getDate():level;$('stageLbl').textContent=dailyMode?'تحدي اليوم':'مستوى';$('best').textContent=fmt(best);
   const pct=bricksSpawnedLevel?Math.min(100,Math.round(bricksDestroyedLevel/bricksSpawnedLevel*100)):0;
-  $('lvlFill').style.width=pct+'%';$('lvlStar').style.left=pct+'%';$('lvlStar').style.opacity=pct>=80?1:.45;
-  const stb=$('streakBadge');stb.hidden=streak<2;stb.textContent='🔥'+streak;
+  $('lvlFill').style.transform='scaleX('+(pct/100)+')';const trkW=$('lvlProg').clientWidth||0;$('lvlStar').style.transform='translate('+Math.round(trkW*pct/100)+'px,0) translateX(-50%)';$('lvlStar').style.opacity=pct>=80?1:.45;
+  const stb=$('streakBadge');stb.hidden=streak<2;stb.innerHTML=IC_FLAME+streak;
   updateControls();
-  $('btnSpeed').textContent='⚡ السرعة ×'+speed;
-  $('btnSound').textContent=soundOn?'🔊 الصوت: مفعّل':'🔇 الصوت: مكتوم';
+  $('btnSpeed').innerHTML=IC_BOLT+' السرعة ×'+speed;
+  $('btnSound').innerHTML=soundOn?IC_SND_ON+' الصوت: مفعّل':IC_SND_OFF+' الصوت: مكتوم';
 }
 function showOverlay(id){['menu','pauseMenu','overMenu','levelMenu'].forEach(o=>$(o).hidden=o!==id)}
 function hideOverlays(){['menu','pauseMenu','overMenu','levelMenu'].forEach(o=>$(o).hidden=true)}
@@ -416,10 +432,10 @@ function renderHome(){
   $('chalHist').innerHTML=hist;
   $('meBest').textContent=fmt(best);
   $('meLevel').textContent=loadProgress().l;
-  $('meStreak').textContent=streak>=2?'🔥 ×'+streak:'—';
+  if(streak>=2){$('meStreak').innerHTML=IC_FLAME+' ×'+streak}else{$('meStreak').textContent='—'}
   const per=loadPeriods(),pk=periodKeys();
   $('meToday').textContent=fmt(per.d&&per.d.k===pk.day?per.d.v:0);
-  const fl=$('playFlame');fl.hidden=streak<2;fl.textContent='🔥 '+streak;
+  const fl=$('playFlame');fl.hidden=streak<2;fl.innerHTML=IC_FLAME+' '+streak;
 }
 function setTab(name){
   for(const pg of ['pageHome','pageChal','pageMe'])$(pg).hidden=pg!=='page'+name;
@@ -456,7 +472,7 @@ function levelComplete(){
   saveProgress(level);
   mode='clear';shooting=false;aiming=false;
   $('lcTitle').textContent='أكملت المستوى '+doneLvl+'!';
-  $('lcSub').innerHTML='مكافأة إكمال: +'+fmt(bonus)+' نقطة<br>كراتك الآن ×'+ballCount+' — التالي: مستوى '+level+(streak>=2?'<br>🔥 سلسلة انتصارات ×'+streak+' — واصل هكذا!':'');
+  $('lcSub').innerHTML='مكافأة إكمال: +'+fmt(bonus)+' نقطة<br>كراتك الآن ×'+ballCount+' — التالي: مستوى '+level+(streak>=2?'<br>'+IC_FLAME+' سلسلة انتصارات ×'+streak+' — واصل هكذا!':'');
   showOverlay('levelMenu');updateUI();
   sLevel();if(navigator.vibrate)navigator.vibrate([30,40,30]);
 }
@@ -479,7 +495,7 @@ function endGame(){
   if(score>best){best=score;localStorage.nbrBest=best}
   captureBoard();
   const per=recordScore(score);
-  $('overTitle').innerHTML=rec?'أفضل نتيجة<br>جديدة على الإطلاق':'انتهت اللعبة 💥';
+  $('overTitle').innerHTML=rec?'أفضل نتيجة<br>جديدة على الإطلاق':'انتهت اللعبة';
   $('ovPill').textContent=rec?'مكتمل':'وصلت إلى المستوى '+level;
   $('ovScore').textContent=fmt(score);
   $('vDay').textContent=fmt(per.day);$('vWeek').textContent=fmt(per.week);$('vMonth').textContent=fmt(per.month);$('vAll').textContent=fmt(per.all);
@@ -557,7 +573,7 @@ function endVolley(){
 }
 
 /* ===== Combat ===== */
-function burst(x,y,color,n){for(let i=0;i<(n||6);i++)particles.push({x,y,vx:rand(-3.6,3.6),vy:rand(-4,2.2),life:rand(16,30),max:30,color,sz:rand(3,6.5),rot:rand(0,3.2),vr:rand(-.35,.35)})}
+function burst(x,y,color,n){if(REDUCED)n=Math.min(n||6,2);for(let i=0;i<(n||6);i++)particles.push({x,y,vx:rand(-3.6,3.6),vy:rand(-4,2.2),life:rand(16,30),max:30,color,sz:rand(3,6.5),rot:rand(0,3.2),vr:rand(-.35,.35)})}
 function addFloat(x,y,text,color,size){floats.push({x,y,text,color,size:size||15,t:performance.now()})}
 function comic(x,y,text,color){floats=floats.filter(f=>!f.comic);floats.push({x:clamp(x,100,W-100),y,text,color,size:31,comic:true,t:performance.now()})}
 function volleyKillCommon(b){
@@ -738,7 +754,7 @@ function drawBall(x,y,r,theme){
 function draw(now){
   ctx.setTransform(DPR,0,0,DPR,0,0);
   ctx.clearRect(0,0,W,H);
-  if(shake>0){ctx.translate(rand(-shake,shake),rand(-shake,shake));shake*=.88;if(shake<.4)shake=0}
+  if(shake>0){if(!REDUCED)ctx.translate(rand(-shake,shake),rand(-shake,shake));shake*=.88;if(shake<.4)shake=0}
   /* board panel */
   ctx.fillStyle='#141f45';rr(3,topY-5,W-6,bottomY-topY+11,10);ctx.fill();
   ctx.strokeStyle='rgba(150,185,245,.5)';ctx.lineWidth=2.5;rr(3,topY-5,W-6,bottomY-topY+11,10);ctx.stroke();
@@ -749,7 +765,7 @@ function draw(now){
   let maxR=-1;for(const b of bricks)if(b.r>maxR)maxR=b.r;
   dangerOn=mode==='playing'&&maxR>=ROWS-3;
   if(dangerOn){
-    const pl=.5+.5*Math.sin(now/170);
+    const pl=REDUCED?.75:.5+.5*Math.sin(now/170);
     const grd=ctx.createLinearGradient(0,bottomY-cell*2.2,0,bottomY);
     grd.addColorStop(0,'rgba(255,45,60,0)');grd.addColorStop(1,'rgba(255,45,60,'+(.26+.22*pl).toFixed(3)+')');
     ctx.fillStyle=grd;ctx.fillRect(6,bottomY-cell*2.2,W-12,cell*2.2);
@@ -831,7 +847,7 @@ function draw(now){
   }
   /* pickups */
   for(const p of pickups){
-    const x=offsetX+p.c*cell+31,y=topY+p.r*cell+31+shift+jumpY(p,now),pl=1+.1*Math.sin(now/230+p.c*1.7);
+    const x=offsetX+p.c*cell+31,y=topY+p.r*cell+31+shift+jumpY(p,now),pl=REDUCED?1:1+.1*Math.sin(now/230+p.c*1.7);
     if(p.type==='ball'){
       ctx.strokeStyle='rgba(255,255,255,.85)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,15.5*pl,0,6.283);ctx.stroke();
       drawBall(x,y,9.5*pl,['#fff7cc','#ffc93c','#e07f00']);
@@ -881,7 +897,7 @@ function draw(now){
     }
     const ex=pts[pts.length-1][0],ey=pts[pts.length-1][1];
     ctx.save();ctx.shadowColor='#ffc93c';ctx.shadowBlur=12;ctx.fillStyle='#ffe9a8';ctx.beginPath();ctx.arc(ex,ey,4.6,0,6.283);ctx.fill();ctx.restore();
-    ctx.strokeStyle='rgba(255,233,168,.8)';ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(ex,ey,9+2*Math.sin(now/150),0,6.283);ctx.stroke();
+    ctx.strokeStyle='rgba(255,233,168,.8)';ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(ex,ey,REDUCED?9:9+2*Math.sin(now/150),0,6.283);ctx.stroke();
     if(aimTarget){
       const bx=offsetX+aimTarget.c*cell+1.5,by=topY+aimTarget.r*cell+1.5;
       ctx.save();ctx.setLineDash([7,6]);ctx.lineDashOffset=-now/28;ctx.strokeStyle='rgba(255,255,255,.95)';ctx.lineWidth=2.4;rr(bx,by,cell-3,cell-3,7);ctx.stroke();ctx.restore();
@@ -904,7 +920,7 @@ function draw(now){
   /* first-return landing marker */
   if(shooting&&firstReturn!==null){
     ctx.strokeStyle='rgba(255,255,255,.65)';ctx.lineWidth=2;
-    ctx.beginPath();ctx.arc(firstReturn,launcherY,11+2*Math.sin(now/170),0,6.283);ctx.stroke();
+    ctx.beginPath();ctx.arc(firstReturn,launcherY,REDUCED?11:11+2*Math.sin(now/170),0,6.283);ctx.stroke();
   }
   /* particles + floats */
   for(const p of particles){ctx.globalAlpha=Math.max(0,p.life/p.max);ctx.fillStyle=p.color;
