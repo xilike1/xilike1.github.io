@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#3c5a99">
 <title>Neon Brick Rush</title>
 <style>
-:root{--navy:#13224e;--ink:#0e1c42;--dim:#a9bde4;--gold:var(--gold);--surface:#13224e;--surface-deep:#0e1c42;--on-surface:#fff;--accent:#ff7b00;--accent-2:#ffb52e;--success:var(--success);--danger:#ff3c4b;--ctl-border:var(--ctl-border);--ink-2:var(--ink-2);--ink-3:var(--ink-3);--bg:#2e4a85;--blue-300:#557cc0;--blue-400:#4a6db3;--blue-500:#3f61a1;--blue-600:#2f6fd0;--blue-700:#2b62c4;--blue-900:#1e4fae;--shell-lo:#385792;--btn-hi:#86aaea;--btn-mid:#4d6fb2;--btn-lo:#3a5896;--sbtn-hi:#7ea2e4;--sbtn-mid:#46679f;--motion-fast:.1s;--motion-med:.2s;--motion-slow:.35s}
+:root{--navy:#13224e;--ink:#0e1c42;--dim:#a9bde4;--gold:#ffc93c;--surface:#13224e;--surface-deep:#0e1c42;--on-surface:#fff;--accent:#ff7b00;--accent-2:#ffb52e;--success:#3dff62;--danger:#ff3c4b;--ctl-border:#2b4376;--ink-2:#2c4a8a;--ink-3:#24407c;--bg:#2e4a85;--blue-300:#557cc0;--blue-400:#4a6db3;--blue-500:#3f61a1;--blue-600:#2f6fd0;--blue-700:#2b62c4;--blue-900:#1e4fae;--shell-lo:#385792;--btn-hi:#86aaea;--btn-mid:#4d6fb2;--btn-lo:#3a5896;--sbtn-hi:#7ea2e4;--sbtn-mid:#46679f;--motion-fast:.1s;--motion-med:.2s;--motion-slow:.35s}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
 body{margin:0;background:var(--bg);color:#fff;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
@@ -23,7 +23,7 @@ canvas{width:100%;height:100%;display:block;touch-action:none}
 #scoreRow{margin-top:44px;display:flex;align-items:flex-start;padding:0 14px}
 .side{width:86px;flex:none}
 .side small{display:block;font-size:13px;color:var(--dim);font-weight:700}
-.side b{display:block;font-size:19px;font-weight:800;margin-top:1px;font-variant-numeric:tabular-nums}
+.side b{display:block;font-size:19px;font-weight:800;margin-top:1px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .side.level{text-align:start}
 .side.best{text-align:end}
 #scoreBig{flex:1;text-align:center;font-size:47px;line-height:1;font-weight:900;font-style:italic;letter-spacing:.5px;color:#fff;-webkit-text-stroke:2.2px var(--ink);paint-order:stroke fill;text-shadow:0 4px 0 rgba(14,28,66,.55),0 8px 22px rgba(10,25,60,.35);font-variant-numeric:tabular-nums;transition:color .25s}
@@ -123,7 +123,7 @@ h1.gameTitle{margin:8px 0 0;font-size:41px;line-height:1.12}
 button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .ic{width:16px;height:16px;vertical-align:-3px}
 .sbtn .ic{width:18px;height:18px;vertical-align:-4px}
-.side b .ic{width:18px;height:18px}
+.side b .ic{width:15px;height:15px;vertical-align:-2px}
 .playFlame .ic{width:14px;height:14px;vertical-align:-2px}
 #streakBadge .ic{width:14px;height:14px;vertical-align:-2px}
 #lvlStar svg{width:17px;height:17px;display:block}
