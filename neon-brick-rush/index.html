@@ -42,13 +42,21 @@ canvas{width:100%;height:100%;display:block;touch-action:none}
 /* ===== Bottom controls: two big circles like the reference ===== */
 #controls{position:absolute;bottom:calc(16px + env(safe-area-inset-bottom));left:0;right:0;z-index:5;display:flex;justify-content:center;gap:38px}
 .whiteBtn[hidden]{display:none}
-.ctl{display:flex;flex-direction:column;align-items:center;gap:5px}
+.ctl{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px}
 .cbtn{position:relative;width:74px;height:74px;border-radius:50%;border:2px solid var(--ctl-border);background:radial-gradient(circle at 33% 27%,var(--btn-hi),var(--btn-mid) 56%,var(--btn-lo));box-shadow:0 6px 0 var(--ctl-border),0 12px 22px rgba(8,20,50,.4),inset 0 2px 3px rgba(255,255,255,.5);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform var(--motion-fast),box-shadow var(--motion-fast);font:inherit}
 .cbtn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--ctl-border),0 6px 12px rgba(8,20,50,.4),inset 0 2px 3px rgba(255,255,255,.5)}
 .cbtn.off{opacity:.45}
 .cbtn .glyph{font-size:29px;line-height:1;text-shadow:0 2px 4px rgba(10,25,60,.45)}
 .cbtn .balldot{position:absolute;top:13px;left:50%;transform:translateX(-50%);width:15px;height:15px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff2c9,#ffb52e 60%,#e07f00);box-shadow:0 2px 5px rgba(0,0,0,.35)}
 .cbtn .badge{position:absolute;top:-3px;inset-inline-end:-3px;background:#fff;color:var(--ink-3);font-size:13.5px;font-weight:900;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(8,20,50,.35);border:2px solid #dbe7ff}
+.cbtn .badge.stock{background:#ffc93c;color:#3a2403;border-color:#ffe1a8}
+.plusBtn{position:absolute;top:-7px;inset-inline-start:-7px;width:27px;height:27px;border-radius:50%;border:2px solid #ffe1a8;background:linear-gradient(180deg,#ffd76e,#ffb52e);color:#3a2403;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 3px 8px rgba(8,20,50,.4);z-index:3;padding:0;font:inherit}
+.plusBtn svg{width:14px;height:14px}
+.plusBtn:active{transform:scale(.92)}
+.plusBtn[hidden]{display:none}
+.shopDesc{font-size:14.5px;color:#b9cff5;font-weight:700;text-align:center;margin:2px 0 8px;line-height:1.8}
+.buyInfo{display:flex;justify-content:space-between;align-items:center;font-size:15.5px;font-weight:800;padding:8px 2px;color:#dbe7ff;border-bottom:1px solid rgba(255,255,255,.16)}
+.sheet .sbtn:disabled{opacity:.45;cursor:default}
 .ctl span.lb{font-size:13.5px;font-weight:800;color:#eaf1ff;text-shadow:0 2px 5px rgba(10,25,60,.4)}
 /* ===== Overlays ===== */
 .overlay{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;text-align:center;padding:calc(16px + env(safe-area-inset-top)) 22px calc(18px + env(safe-area-inset-bottom));animation:fadeIn .3s ease;overflow-x:hidden;overflow-y:auto;scrollbar-width:none}
@@ -176,14 +184,17 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 <div id="controls">
   <div class="ctl">
     <button class="cbtn" id="btnA" aria-label="إضافة"><span class="glyph" id="glyphA">✚</span><span class="badge" id="badgeA">3</span></button>
+    <button class="plusBtn" id="plusA" aria-label="شراء شحنة كرات"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
     <span class="lb" id="labelA">إضافة</span>
   </div>
   <div class="ctl">
     <button class="cbtn" id="btnB" aria-label="موجة"><span class="glyph" id="glyphB"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M2.5 9q3-3.2 6 0t6 0 6 0M2.5 15.5q3-3.2 6 0t6 0 6 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></span><span class="badge" id="badgeB">2</span></button>
+    <button class="plusBtn" id="plusB" aria-label="شراء شحنة موجة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
     <span class="lb" id="labelB">موجة</span>
   </div>
   <div class="ctl">
     <button class="cbtn" id="btnC" aria-label="دفعة"><span class="glyph" id="glyphC"><svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 13.5 12 6l7.5 7.5"/><path d="M4.5 20 12 12.5 19.5 20" opacity=".5"/></svg></span><span class="badge" id="badgeC">2</span></button>
+    <button class="plusBtn" id="plusC" aria-label="شراء شحنة دفعة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
     <span class="lb" id="labelC">دفعة</span>
   </div>
 </div>
@@ -233,6 +244,13 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
       <div class="upRow"><span class="upIc"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M2.5 9q3-3.2 6 0t6 0 6 0M2.5 15.5q3-3.2 6 0t6 0 6 0"/></svg></span><div class="upTx"><div class="upName">موجة إضافية</div><div class="upDesc">+1 موجة في كل جولة</div><div class="upPips" id="pipsWave"></div></div><button class="buyBtn" id="buyWave"></button></div>
       <div class="shopNote">اجمع عملة عن كل طوبة تدمّرها، و25 عملة عند إكمال كل مستوى</div>
     </div>
+    <div class="shopCard rise">
+      <div class="shopHead"><span class="shopTitle">شحنات تُستهلك</span><span class="coinBal"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="#ffc93c"/><circle cx="12" cy="12" r="6.6" fill="none" stroke="#b45309" stroke-width="1.7"/><path d="M12 8.7l.95 2.05 2.24.28-1.63 1.55.41 2.2L12 13.8l-1.97.98.41-2.2-1.63-1.55 2.24-.28z" fill="#b45309"/></svg><span id="shopCoins3">0</span></span></div>
+      <div class="upRow"><span class="upIc"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.2" cy="15.4" r="5.2" fill="#ff922e"/><circle cx="16.6" cy="9" r="4.4" fill="#ff4fd8"/><circle cx="17.4" cy="17.8" r="3.1" fill="#38e1ff"/></svg></span><div class="upTx"><div class="upName">شحنة كرات +5</div><div class="upDesc">مخزونك: <span id="stockBoost">0</span> — تُستهلك من زرار «إضافة»</div></div><button class="buyBtn" id="buySBoost"></button></div>
+      <div class="upRow"><span class="upIc"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M2.5 9q3-3.2 6 0t6 0 6 0M2.5 15.5q3-3.2 6 0t6 0 6 0"/></svg></span><div class="upTx"><div class="upName">شحنة موجة</div><div class="upDesc">مخزونك: <span id="stockWave">0</span> — تُستهلك من زرار «موجة»</div></div><button class="buyBtn" id="buySWave"></button></div>
+      <div class="upRow"><span class="upIc"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 13.5 12 6l7.5 7.5"/><path d="M4.5 20 12 12.5 19.5 20" opacity=".5"/></svg></span><div class="upTx"><div class="upName">شحنة دفعة</div><div class="upDesc">مخزونك: <span id="stockPush">0</span> — تُستهلك من زرار «دفعة» والإنعاش</div></div><button class="buyBtn" id="buySPush"></button></div>
+      <div class="shopNote">الشحنات تنتهي عند الاستخدام ولا تتجدد عند بدء جولة جديدة — وتقدر تشتريها كمان من زرار + الذهبي على أزرار اللعب</div>
+    </div>
     <div class="howCard rise">
     <div class="hrow"><span class="hi">◎</span>اسحب بإصبعك للتصويب، ثم اترك لتنطلق الكرات</div>
     <div class="hrow"><span class="hi">▲</span>الطوب المثلث يحرّف الكرة بزاوية — استغله لصالحك</div>
@@ -242,6 +260,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
     <div class="hrow"><span class="hi">⬆</span>«دفعة» تُرجع كل الطوب صفّين إلى الأعلى — عدد دفعاتك يزيد بترقيات «أنا»، وتظهر عند الخسارة لتكمل من نفس النقطة</div>
     <div class="hrow"><span class="hi"><svg viewBox="0 0 24 24"><path d="M12.7 2.4c.4 3.3-1 5-2.3 6.5C9.2 10.3 8 11.9 8 14a4.5 4.5 0 0 0 9 0c0-1.6-.7-2.9-1.5-4.1-.3 1-.9 1.8-1.7 2.2.4-3-.6-6.7-3.1-9.7z" fill="#ff922e"/><path d="M12 21.6a2.9 2.9 0 0 1-2.9-2.9c0-1.3.7-2.3 1.4-3.2.5-.6 1-1.3 1.5-2.1.5.8 1 1.5 1.5 2.1.7.9 1.4 1.9 1.4 3.2A2.9 2.9 0 0 1 12 21.6z" fill="#ffc93c"/></svg></span>اربح مستويات متتالية دون أن تخسر لتكبّر سلسلة انتصاراتك الظاهرة بجانب الترس</div>
     <div class="hrow"><span class="hi"><svg viewBox="0 0 24 24"><path d="M3 17 2 7l5.5 4L12 5l4.5 6L22 7l-1 10z" fill="#ffc93c"/><rect x="3" y="18.4" width="18" height="2.4" fill="#ffc93c"/></svg></span>كل 10 مستويات يظهر زعيم — كتلة عملاقة 2×2 بصحة واحدة مشتركة، تتشقّق على مراحل وتنهار دفعة واحدة</div>
+    <div class="hrow"><span class="hi">✚</span>الزرار الذهبي + على أزرار اللعب يشتري شحنات إضافية بعملاتك — الشحنة تُستهلك عند استخدامها ولا تتجدد، والشارات الذهبية على الأزرار تعرض مخزونك</div>
     <div class="hrow"><span class="hi">⚑</span>كل مستوى قائم بذاته — دمّر كل الطوب قبل أن يصل إليك لتنتقل إلى المستوى التالي</div>
     </div>
     <button class="textBtn rise" id="btnFreshMe" style="margin-top:18px;font-size:14.5px;color:#b9cff5">ابدأ من جديد</button>
@@ -282,6 +301,17 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
   <button class="whiteBtn rise" id="btnAgain" style="animation-delay:.28s"><span class="t1"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5.5 4.8 9.2l3.7 3.7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 9.2h9.5a5 5 0 0 1 0 10H11" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg> حاول هذا المستوى مجددًا</span><span class="t2" id="ovLevelTxt">المستوى 1</span></button>
   <button class="textBtn rise" id="btnHome" style="animation-delay:.34s">الرئيسية</button>
   <button class="textBtn rise" id="btnFresh" style="animation-delay:.38s;font-size:14.5px;color:#b9cff5">ابدأ من جديد</button>
+</section>
+
+<section class="overlay scrim" id="shopMenu" hidden>
+  <div class="sheet rise">
+    <h2 id="shopTitle">شحنة إضافية</h2>
+    <div class="shopDesc" id="shopDesc"></div>
+    <div class="buyInfo"><span>عملاتك</span><span id="shopCoins2">0</span></div>
+    <div class="buyInfo"><span>مخزونك من هذه الشحنة</span><span id="shopStock">0</span></div>
+    <button class="sbtn primary" id="btnBuyItem">شراء</button>
+    <button class="sbtn" id="btnShopClose">إغلاق</button>
+  </div>
 </section>
 
 <section class="overlay scrim" id="levelMenu" hidden>
@@ -345,6 +375,28 @@ function saveUpg(){localStorage.nbrUpgrades=JSON.stringify(upg)}
 function earnCoins(n){coins+=n;saveCoins()}
 function maxPush(){return 2+upg.push}
 function maxWave(){return 2+upg.wave}
+let stock={boost:0,wave:0,push:0};try{const st=JSON.parse(localStorage.nbrStock||'null');if(st)for(const k of['boost','wave','push'])stock[k]=Math.min(999,Math.max(0,+st[k]||0))}catch(e){}
+const STOCK_PRICE={boost:25,wave:40,push:60};
+const STOCK_NAME={boost:'شحنة كرات +5',wave:'شحنة موجة',push:'شحنة دفعة'};
+const STOCK_DESC={boost:'زرار «إضافة» يمنحك 5 كرات إضافية عند استخدامها',wave:'زرار «موجة» يُضعف كل الطوب على اللوحة عند استخدامها',push:'زرار «دفعة» يرفع الطوب صفّين — وتعمل أيضًا إنعاشًا عند الخسارة'};
+function saveStock(){localStorage.nbrStock=JSON.stringify(stock)}
+function buyStock(key){
+  const price=STOCK_PRICE[key];
+  if(coins<price){toast('عملاتك لا تكفي — العب واجمع المزيد',900);return false}
+  coins-=price;stock[key]++;saveCoins();saveStock();sPickup();updateUI();renderShop();return true;
+}
+let shopKey=null;
+function openShop(key){
+  shopKey=key;
+  $('shopTitle').textContent=STOCK_NAME[key];
+  $('shopDesc').textContent=STOCK_DESC[key]+' — تُستهلك عند الاستخدام ولا تتجدد أبدًا';
+  refreshShopSheet();showOverlay('shopMenu');
+}
+function refreshShopSheet(){
+  if(!shopKey)return;
+  $('shopCoins2').textContent=fmt(coins);$('shopStock').textContent=stock[shopKey];
+  const btn=$('btnBuyItem');btn.textContent='شراء بـ '+fmt(STOCK_PRICE[shopKey])+' عملة';btn.disabled=coins<STOCK_PRICE[shopKey];
+}
 let dailyMode=false;
 let bricksDestroyedLevel=0,bricksSpawnedLevel=0,aimTarget=null,aimPlus=false;
 
@@ -408,20 +460,27 @@ function setScoreBig(){
   if(t>lastTier&&shooting&&sb.animate&&!REDUCED){try{sb.animate([{transform:'scale(1.22)'},{transform:'scale(1)'}],{duration:170,easing:'ease-out'})}catch(e){}}
   lastTier=t;
 }
+function setChargeBadge(sfx,free,stk){
+  const badge=$('badge'+sfx);
+  if(free>0){badge.textContent=free;badge.classList.remove('stock')}
+  else{badge.textContent=stk;badge.classList.toggle('stock',stk>0)}
+  $('btn'+sfx).classList.toggle('off',free+stk<=0);
+}
 function updateControls(){
+  $('plusA').hidden=shooting;$('plusB').hidden=shooting;$('plusC').hidden=shooting;
   if(shooting){
     $('glyphA').textContent='⬇';$('labelA').textContent='عودة';$('badgeA').hidden=true;
     $('btnA').classList.remove('off');
     $('glyphB').textContent='↩';$('labelB').textContent='تراجع';$('badgeB').hidden=false;
-    $('badgeB').textContent=undoUsed?0:1;
+    $('badgeB').classList.remove('stock');$('badgeB').textContent=undoUsed?0:1;
     $('btnB').classList.toggle('off',undoUsed||!snapshot);
   }else{
     $('glyphA').textContent='✚';$('labelA').textContent='إضافة';$('badgeA').hidden=false;
-    $('badgeA').textContent=boostLeft;$('btnA').classList.toggle('off',boostLeft<=0);
+    setChargeBadge('A',boostLeft,stock.boost);
     $('glyphB').innerHTML=IC_WAVE;$('labelB').textContent='موجة';$('badgeB').hidden=false;
-    $('badgeB').textContent=waveLeft;$('btnB').classList.toggle('off',waveLeft<=0);
+    setChargeBadge('B',waveLeft,stock.wave);
   }
-  $('badgeC').textContent=pushLeft;$('btnC').classList.toggle('off',pushLeft<=0);
+  setChargeBadge('C',pushLeft,stock.push);
 }
 function updateUI(){
   setScoreBig();
@@ -433,8 +492,8 @@ function updateUI(){
   $('btnSpeed').innerHTML=IC_BOLT+' السرعة ×'+speed;
   $('btnSound').innerHTML=soundOn?IC_SND_ON+' الصوت: مفعّل':IC_SND_OFF+' الصوت: مكتوم';
 }
-function showOverlay(id){['menu','pauseMenu','overMenu','levelMenu'].forEach(o=>$(o).hidden=o!==id)}
-function hideOverlays(){['menu','pauseMenu','overMenu','levelMenu'].forEach(o=>$(o).hidden=true)}
+function showOverlay(id){['menu','pauseMenu','overMenu','levelMenu','shopMenu'].forEach(o=>$(o).hidden=o!==id)}
+function hideOverlays(){['menu','pauseMenu','overMenu','levelMenu','shopMenu'].forEach(o=>$(o).hidden=true)}
 
 /* ===== Flow ===== */
 function rowsForLevel(){return Math.min(6+Math.ceil(level*.8),16)}
@@ -492,6 +551,11 @@ function renderShop(){
     const btn=$('buy'+sfx);
     if(t>=4){btn.disabled=true;btn.classList.add('maxed');btn.textContent='الأقصى'}
     else{const c=UP_COST[t];btn.classList.remove('maxed');btn.disabled=coins<c;btn.innerHTML=COIN_SVG+' '+fmt(c)}
+  }
+  $('shopCoins3').textContent=fmt(coins);
+  for(const[sfx,key]of[['Boost','boost'],['Wave','wave'],['Push','push']]){
+    $('stock'+sfx).textContent=stock[key];
+    const sb=$('buyS'+sfx);sb.disabled=coins<STOCK_PRICE[key];sb.innerHTML=COIN_SVG+' '+fmt(STOCK_PRICE[key]);
   }
 }
 function buyUp(key){
@@ -564,7 +628,7 @@ function endGame(){
   $('vDay').textContent=fmt(per.day);$('vWeek').textContent=fmt(per.week);$('vMonth').textContent=fmt(per.month);$('vAll').textContent=fmt(per.all);
   const dl='+'+fmt(score);$('dDay').textContent=dl;$('dWeek').textContent=dl;$('dMonth').textContent=dl;$('dAll').textContent=dl;
   $('ovLevelTxt').textContent=dailyMode?'تحدي اليوم':'مستوى '+level;
-  $('btnRevive').hidden=pushLeft<=0;$('reviveTxt').textContent='دفعات متبقية: '+pushLeft;
+  $('btnRevive').hidden=pushLeft+stock.push<=0;$('reviveTxt').textContent='دفعات متبقية: '+(pushLeft+stock.push);
   showOverlay('overMenu');updateUI();sOver();
 }
 
@@ -1082,7 +1146,7 @@ $('btnFreshMenu').onclick=()=>{saveProgress(1);startRun(1)};
 $('btnAgain').onclick=()=>{ac();retryLevel()};
 $('btnFresh').onclick=()=>{saveProgress(1);startRun(1)};
 $('btnNextLevel').onclick=()=>{ac();if(dailyMode)startDaily();else startLevel()};
-$('btnRevive').onclick=()=>{ac();if(pushLeft<=0||mode!=='over')return;mode='playing';balls=[];shooting=false;aiming=false;hideOverlays();pushUp();addFloat(W/2,topY+90,'استمر!','#7dd3fc',22)};
+$('btnRevive').onclick=()=>{ac();if((pushLeft<=0&&stock.push<=0)||mode!=='over')return;mode='playing';balls=[];shooting=false;aiming=false;hideOverlays();pushUp();addFloat(W/2,topY+90,'استمر!','#7dd3fc',22)};
 $('btnDaily').onclick=()=>{ac();startDaily()};
 $('btnDaily2').onclick=()=>{ac();startDaily()};
 $('tabHome').onclick=()=>setTab('Home');
@@ -1096,7 +1160,7 @@ $('btnBack').onclick=()=>{if(mode==='playing'||mode==='paused')goHome()};
 $('btnGear').onclick=()=>{if(mode==='playing')pauseGame();else if(mode==='paused')resumeGame();else if(mode==='menu')goHome()};
 function jumpY(o,now){if(!o.ju)return 0;const t=(now-o.ju)/280;if(t>=1)return 0;const e=1-Math.pow(1-t,3);return Math.round(2*cell*(1-e))}
 function pushUp(){
-  if(pushLeft<=0)return false;
+  if(pushLeft<=0&&stock.push<=0)return false;
   const now=performance.now(),colsMap={};
   const put=o=>{(colsMap[o.c]=colsMap[o.c]||[]).push(o)};
   bricks.forEach(put);pickups.forEach(put);
@@ -1111,7 +1175,7 @@ function pushUp(){
     const block=new Set(bossCells.map(b=>b.c+','+b.r));
     for(const o of bricks){if(o.type!=='boss'&&block.has(o.c+','+o.r)){const taken=new Set(bricks.filter(x=>x!==o).map(x=>x.c+','+x.r));let nr=o.r+1;while(taken.has(o.c+','+nr))nr++;o.r=nr;o.ju=now}}
   }
-  pushLeft--;
+  if(pushLeft>0)pushLeft--;else{stock.push--;saveStock()}
   comic(W/2,topY+120,'دفعة إنقاذ!','#7dd3fc');sPickup();
   if(navigator.vibrate)navigator.vibrate(25);
   updateUI();return true;
@@ -1126,16 +1190,18 @@ function doUndo(){
 $('btnA').onclick=()=>{
   if(mode!=='playing')return;
   if(shooting){recall();toast('تم استدعاء الكرات ⬇',700);return}
-  if(boostLeft<=0){toast('انتهت الإضافات هذه المرة',800);return}
-  boostLeft--;ballCount+=5;
+  if(boostLeft<=0&&stock.boost<=0){openShop('boost');return}
+  if(boostLeft>0)boostLeft--;else{stock.boost--;saveStock()}
+  ballCount+=5;
   addFloat(returnX,launcherY-32,'كرات +5','#ff8fd8',19);
   burst(returnX,launcherY-8,'#ff8fd8',10);sPickup();updateUI();
 };
 $('btnB').onclick=()=>{
   if(mode!=='playing')return;
   if(shooting){doUndo();return}
-  if(waveLeft<=0){toast('انتهت الموجات هذه المرة',800);return}
-  waveLeft--;volleyKills=0;
+  if(waveLeft<=0&&stock.wave<=0){openShop('wave');return}
+  if(waveLeft>0)waveLeft--;else{stock.wave--;saveStock()}
+  volleyKills=0;
   beams.push({kind:'wave',t:performance.now()});
   damageCell(()=>true,Math.max(3,Math.round(levelBalls*.3)));
   shake=Math.max(shake,8);sBomb();comic(W/2,topY+120,'!موجة','#7dd3fc');
@@ -1144,13 +1210,21 @@ $('btnB').onclick=()=>{
 };
 $('btnC').onclick=()=>{
   if(mode!=='playing')return;
-  if(pushLeft<=0){toast('انتهت الدفعات هذه المرة',800);return}
+  if(pushLeft<=0&&stock.push<=0){openShop('push');return}
   if(!bricks.length){toast('لا يوجد طوب بعد',800);return}
   pushUp();
 };
 $('buyBalls').onclick=()=>buyUp('balls');
 $('buyPush').onclick=()=>buyUp('push');
 $('buyWave').onclick=()=>buyUp('wave');
+$('buySBoost').onclick=()=>buyStock('boost');
+$('buySWave').onclick=()=>buyStock('wave');
+$('buySPush').onclick=()=>buyStock('push');
+$('plusA').onclick=()=>{if(mode==='playing'&&!shooting)openShop('boost')};
+$('plusB').onclick=()=>{if(mode==='playing'&&!shooting)openShop('wave')};
+$('plusC').onclick=()=>{if(mode==='playing'&&!shooting)openShop('push')};
+$('btnBuyItem').onclick=()=>{if(shopKey&&buyStock(shopKey)){refreshShopSheet();toast('تم الشراء — الشحنة في مخزونك',800)}};
+$('btnShopClose').onclick=()=>{hideOverlays()};
 $('btnSpeed').onclick=()=>{speed=speed>=3?1:speed+1;localStorage.nbrSpeed=speed;updateUI();toast('السرعة ×'+speed,700)};
 $('btnSound').onclick=()=>{soundOn=!soundOn;localStorage.nbrSound=soundOn?'1':'0';updateUI();if(soundOn){ac();sPickup()}};
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&mode==='playing')pauseGame()});
