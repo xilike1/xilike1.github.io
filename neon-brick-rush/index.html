@@ -380,6 +380,13 @@ const STOCK_PRICE={boost:25,wave:40,push:60};
 const STOCK_NAME={boost:'شحنة كرات +5',wave:'شحنة موجة',push:'شحنة دفعة'};
 const STOCK_DESC={boost:'زرار «إضافة» يمنحك 5 كرات إضافية عند استخدامها',wave:'زرار «موجة» يُضعف كل الطوب على اللوحة عند استخدامها',push:'زرار «دفعة» يرفع الطوب صفّين — وتعمل أيضًا إنعاشًا عند الخسارة'};
 function saveStock(){localStorage.nbrStock=JSON.stringify(stock)}
+function saveCharges(){if(dailyMode)return;localStorage.nbrCharges=JSON.stringify({boost:boostLeft,wave:waveLeft,push:pushLeft})}
+function fullCharges(){boostLeft=3;waveLeft=maxWave();pushLeft=maxPush();saveCharges()}
+function applyCharges(){
+  let c=null;try{c=JSON.parse(localStorage.nbrCharges||'null')}catch(e){}
+  if(!c){fullCharges();return}
+  boostLeft=Math.min(3,Math.max(0,+c.boost||0));waveLeft=Math.min(maxWave(),Math.max(0,+c.wave||0));pushLeft=Math.min(maxPush(),Math.max(0,+c.push||0));
+}
 function buyStock(key){
   const price=STOCK_PRICE[key];
   if(coins<price){toast('عملاتك لا تكفي — العب واجمع المزيد',900);return false}
@@ -511,13 +518,13 @@ function startLevel(){
   updateUI();
   addFloat(W/2,topY+46,dailyMode?'تحدي اليوم':'مستوى '+level,'#ffffff',24);
 }
-function startRun(lv){
+function startRun(lv,fresh){
   dailyMode=false;seedRnd=null;
   level=lv;score=0;maxCombo=0;ballCount=ballFloor(lv);
-  boostLeft=3;waveLeft=maxWave();pushLeft=maxPush();
+  if(fresh)fullCharges();else applyCharges();
   startLevel();
 }
-function retryLevel(){score=scoreLevelStart;ballCount=ballCountLevelStart;pushLeft=pushLeftLevelStart;if(dailyMode)seedRnd=makeDailyRnd();startLevel()}
+function retryLevel(){score=scoreLevelStart;ballCount=ballCountLevelStart;if(dailyMode)seedRnd=makeDailyRnd();startLevel()}
 function renderHome(){
   const d=new Date(),label=d.getDate()+' '+MONTHS_AR[d.getMonth()];
   $('dailyDate').textContent=label;$('dailyDate2').textContent=label;
@@ -923,7 +930,7 @@ function draw(now){
   for(let y=topY;y<bottomY;y+=cell){ctx.beginPath();ctx.moveTo(6,y);ctx.lineTo(W-6,y);ctx.stroke()}
   /* danger: bricks close to the line -> red pulse */
   let maxR=-1;for(const b of bricks)if(b.r>maxR)maxR=b.r;
-  dangerOn=mode==='playing'&&maxR>=ROWS-3;
+  dangerOn=mode==='playing'&&maxR>=ROWS-2;
   if(dangerOn){
     const pl=REDUCED?.75:.5+.5*Math.sin(now/170);
     const grd=ctx.createLinearGradient(0,bottomY-cell*2.2,0,bottomY);
@@ -1141,10 +1148,10 @@ canvas.addEventListener('pointercancel',()=>{aiming=false});
 canvas.addEventListener('contextmenu',e=>e.preventDefault());
 
 /* ===== Buttons ===== */
-$('btnPlay').onclick=()=>{ac();const pr=loadProgress();startRun(pr.l)};
-$('btnFreshMenu').onclick=()=>{saveProgress(1);startRun(1)};
+$('btnPlay').onclick=()=>{ac();const pr=loadProgress();startRun(pr.l,pr.l<=1)};
+$('btnFreshMenu').onclick=()=>{saveProgress(1);startRun(1,true)};
 $('btnAgain').onclick=()=>{ac();retryLevel()};
-$('btnFresh').onclick=()=>{saveProgress(1);startRun(1)};
+$('btnFresh').onclick=()=>{saveProgress(1);startRun(1,true)};
 $('btnNextLevel').onclick=()=>{ac();if(dailyMode)startDaily();else startLevel()};
 $('btnRevive').onclick=()=>{ac();if((pushLeft<=0&&stock.push<=0)||mode!=='over')return;mode='playing';balls=[];shooting=false;aiming=false;hideOverlays();pushUp();addFloat(W/2,topY+90,'استمر!','#7dd3fc',22)};
 $('btnDaily').onclick=()=>{ac();startDaily()};
@@ -1152,7 +1159,7 @@ $('btnDaily2').onclick=()=>{ac();startDaily()};
 $('tabHome').onclick=()=>setTab('Home');
 $('tabChal').onclick=()=>setTab('Chal');
 $('tabMe').onclick=()=>setTab('Me');
-$('btnFreshMe').onclick=()=>{saveProgress(1);startRun(1)};
+$('btnFreshMe').onclick=()=>{saveProgress(1);startRun(1,true)};
 $('btnResume').onclick=resumeGame;
 $('btnRestart2').onclick=()=>retryLevel();
 $('btnHome').onclick=goHome;$('btnHome2').onclick=goHome;$('btnHome3').onclick=goHome;
@@ -1175,7 +1182,7 @@ function pushUp(){
     const block=new Set(bossCells.map(b=>b.c+','+b.r));
     for(const o of bricks){if(o.type!=='boss'&&block.has(o.c+','+o.r)){const taken=new Set(bricks.filter(x=>x!==o).map(x=>x.c+','+x.r));let nr=o.r+1;while(taken.has(o.c+','+nr))nr++;o.r=nr;o.ju=now}}
   }
-  if(pushLeft>0)pushLeft--;else{stock.push--;saveStock()}
+  if(pushLeft>0){pushLeft--;saveCharges()}else{stock.push--;saveStock()}
   comic(W/2,topY+120,'دفعة إنقاذ!','#7dd3fc');sPickup();
   if(navigator.vibrate)navigator.vibrate(25);
   updateUI();return true;
@@ -1191,7 +1198,7 @@ $('btnA').onclick=()=>{
   if(mode!=='playing')return;
   if(shooting){recall();toast('تم استدعاء الكرات ⬇',700);return}
   if(boostLeft<=0&&stock.boost<=0){openShop('boost');return}
-  if(boostLeft>0)boostLeft--;else{stock.boost--;saveStock()}
+  if(boostLeft>0){boostLeft--;saveCharges()}else{stock.boost--;saveStock()}
   ballCount+=5;
   addFloat(returnX,launcherY-32,'كرات +5','#ff8fd8',19);
   burst(returnX,launcherY-8,'#ff8fd8',10);sPickup();updateUI();
@@ -1200,7 +1207,7 @@ $('btnB').onclick=()=>{
   if(mode!=='playing')return;
   if(shooting){doUndo();return}
   if(waveLeft<=0&&stock.wave<=0){openShop('wave');return}
-  if(waveLeft>0)waveLeft--;else{stock.wave--;saveStock()}
+  if(waveLeft>0){waveLeft--;saveCharges()}else{stock.wave--;saveStock()}
   volleyKills=0;
   beams.push({kind:'wave',t:performance.now()});
   damageCell(()=>true,Math.max(3,Math.round(levelBalls*.3)));
