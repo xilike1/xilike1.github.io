@@ -329,7 +329,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 <section class="overlay scrim" id="levelMenu" hidden>
   <div class="sheet rise" style="text-align:center">
     <h2 id="lcTitle">أكملت المستوى!</h2>
-    <p id="lcSub" style="margin:0;color:#d7e5ff;font-weight:700;line-height:1.8">أكبر رمية: 0 طوبة في رمية واحدة</p>
+    <p id="lcSub" style="margin:0;color:#d7e5ff;font-weight:700;line-height:1.8">مكاسب المستوى: +0 عملة</p>
     <button class="sbtn primary" id="btnNextLevel" style="margin-top:8px">▶ التالي</button>
     <button class="sbtn" id="btnHome3">القائمة الرئيسية</button>
   </div>
@@ -384,7 +384,7 @@ let upg={balls:0,push:0,wave:0};try{const u=JSON.parse(localStorage.nbrUpgrades|
 const UP_COST=[500,1000,1500];
 function saveCoins(){localStorage.nbrCoins=coins}
 function saveUpg(){localStorage.nbrUpgrades=JSON.stringify(upg)}
-function earnCoins(n){coins+=n;saveCoins();$('coinCount').textContent=fmt(coins)}
+function earnCoins(n){coins+=n;levelCoinsEarned+=n;saveCoins();$('coinCount').textContent=fmt(coins)}
 function maxPush(){return 1+upg.push}
 function maxWave(){return 1+upg.wave}
 function maxBoost(){return upg.balls}
@@ -424,7 +424,7 @@ function refreshShopSheet(){
 }
 let dailyMode=false;
 let bricksDestroyedLevel=0,bricksSpawnedLevel=0,aimTarget=null,aimPlus=false;
-let volleyBricks=0,levelBestVolley=0;
+let levelCoinsEarned=0;
 
 /* ball colour theme changes every 2 levels (orange → pink → cyan → lime → violet) */
 const BALL_THEMES=[['#ffd76e','#ffa726','#e07f00'],['#ffb1e6','#ff5fc8','#d81b9a'],['#a5f3fc','#22d3ee','#0284c7'],['#bef264','#84cc16','#4d7c0f'],['#ddd6fe','#a78bfa','#7c3aed']];
@@ -534,7 +534,7 @@ function startLevel(){
   rowsSpawned=0;rowsTotal=rowsForLevel();marchTick=0;
   if(!dailyMode&&level!==allotLevel)grantAllotment();
   ballCount=Math.max(ballCount,ballFloor(level));levelBalls=ballCount;
-  bricksDestroyedLevel=0;bricksSpawnedLevel=0;volleyScore=0;levelBestVolley=0;volleyBricks=0;
+  bricksDestroyedLevel=0;bricksSpawnedLevel=0;volleyScore=0;levelCoinsEarned=0;
   scoreLevelStart=score;ballCountLevelStart=ballCount;pushLeftLevelStart=pushLeft;
   mode='playing';hideOverlays();
   for(let i=0;i<2;i++)spawnRow();
@@ -630,7 +630,7 @@ function levelComplete(){
   saveProgress(level);
   mode='clear';shooting=false;aiming=false;
   $('lcTitle').textContent='أكملت المستوى '+doneLvl+'!';
-  $('lcSub').innerHTML='أكبر رمية: '+fmt(levelBestVolley)+' طوبة في رمية واحدة<br>كراتك الآن ×'+ballCount+' — التالي: مستوى '+level+(streak>=2?'<br>'+IC_FLAME+' سلسلة انتصارات ×'+streak+' — واصل هكذا!':'')+'<br>رصيد عملاتك: '+fmt(coins);
+  $('lcSub').innerHTML='مكاسب المستوى: +'+fmt(levelCoinsEarned)+' عملة<br>كراتك الآن ×'+ballCount+' — التالي: مستوى '+level+(streak>=2?'<br>'+IC_FLAME+' سلسلة انتصارات ×'+streak+' — واصل هكذا!':'')+'<br>رصيد عملاتك: '+fmt(coins);
   showOverlay('levelMenu');updateUI();
   sLevel();if(navigator.vibrate)navigator.vibrate([30,40,30]);
 }
@@ -703,7 +703,7 @@ function fire(){
   if(shooting||mode!=='playing')return;
   snapshot=JSON.stringify({bricks,pickups,ballCount,level,rowsSpawned,rowsTotal,score,returnX,combo,maxCombo});
   shooting=true;volleyTotal=ballCount;balls=[];launched=0;finished=0;
-  volleyScore=0;volleyKills=0;volleyStrongDone=false;volleyBricks=0;
+  volleyScore=0;volleyKills=0;volleyStrongDone=false;
   volleyHitIds=new Set();volleyStartIds=new Set(bricks.map(b=>b.id));
   strongestHp=bricks.reduce((m,b)=>Math.max(m,b.maxHp),0);
   firstReturn=null;launchTime=0;aiming=false;combo=0;volleyHits=0;sLaunch();updateUI();
@@ -736,9 +736,8 @@ function endVolley(){
 function burst(x,y,color,n){if(REDUCED)n=Math.min(n||6,2);for(let i=0;i<(n||6);i++)particles.push({x,y,vx:rand(-3.6,3.6),vy:rand(-4,2.2),life:rand(16,30),max:30,color,sz:rand(3,6.5),rot:rand(0,3.2),vr:rand(-.35,.35)})}
 function addFloat(x,y,text,color,size){floats.push({x,y,text,color,size:size||15,t:performance.now()})}
 function comic(x,y,text,color){floats=floats.filter(f=>!f.comic);floats.push({x:clamp(x,100,W-100),y,text,color,size:31,comic:true,t:performance.now()})}
-function noteBrickKill(){if(!shooting)return;volleyBricks++;if(volleyBricks>levelBestVolley)levelBestVolley=volleyBricks}
 function volleyKillCommon(b){
-  volleyKills++;bricksDestroyedLevel++;earnCoins(1);noteBrickKill();
+  volleyKills++;bricksDestroyedLevel++;earnCoins(1);
   if(volleyKills===3)comic(W/2,topY+120,'تم تدمير 3 من الكتل!','#7dd3fc');
   else if(volleyKills===5)comic(W/2,topY+120,'تم تدمير 5 من الكتل!','#3dff62');
   else if(volleyKills===10)comic(W/2,topY+120,'تم تدمير 10 من الكتل!','#ffb52e');
@@ -764,7 +763,7 @@ function destroyBoss(b){
 }
 function splashDamage(o,pts){
   if(o.type==='boss'){if(o.boss.hp>0){o.boss.hp-=pts;o.flash=1;mirrorBoss(o);if(o.boss.hp<=0)destroyBoss(o)}return}
-  o.hp-=pts;o.flash=1;if(o.hp<=0){score+=5;volleyScore+=5;earnCoins(1);noteBrickKill()}
+  o.hp-=pts;o.flash=1;if(o.hp<=0){score+=5;volleyScore+=5;earnCoins(1)}
 }
 function killBrick(b,byBall){
   const x=offsetX+b.c*cell+31,y=topY+b.r*cell+31;
