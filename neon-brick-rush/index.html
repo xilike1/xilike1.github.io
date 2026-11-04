@@ -281,6 +281,12 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 #btnPlay:active .playBtnImg{transform:scale(.98)}
 #playT1{display:none}
 #playT2{position:absolute;left:50%;transform:translateX(-50%);bottom:7.5%;z-index:2;color:#7c2d12;font-size:13.5px;font-weight:800;white-space:nowrap}
+
+/* ===== v32: frame fix + floor as a calm bottom band ===== */
+#btnPlay.goldPlay{border:0}
+#pageHome>.floorScene{height:118px;object-fit:cover;object-position:bottom;opacity:.92;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 42%);mask-image:linear-gradient(to bottom,transparent 0,#000 42%)}
+#playT2{bottom:10%}
+.tag{text-shadow:0 1px 10px rgba(2,6,30,.9),0 0 3px rgba(2,6,30,.7)}
 </style>
 </head>
 <body>
