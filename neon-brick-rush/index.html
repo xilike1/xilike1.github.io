@@ -1475,11 +1475,23 @@ function pushUp(){
   const now=performance.now(),colsMap={};
   const put=o=>{(colsMap[o.c]=colsMap[o.c]||[]).push(o)};
   bricks.forEach(put);pickups.forEach(put);
-  for(const c in colsMap){
-    const items=colsMap[c].sort((a,b)=>a.r-b.r);let prev=-1;
-    for(const o of items){o.r=Math.max(o.r-2,prev+1);prev=o.r;o.ju=now}
-  }
   const bossCells=bricks.filter(b=>b.type==='boss');
+  const bossCols=new Set(bossCells.map(b=>b.c));
+  const dead=new Set();
+  for(const c in colsMap){
+    const items=colsMap[c].sort((a,b)=>a.r-b.r);
+    if(items[items.length-1].r>=9&&!bossCols.has(+c)){
+      // Overflow column (a brick sits on the death row): a compressed lift
+      // cannot move a packed column at all, so lift it truly — rows pushed
+      // above the top are crushed off the board and the bottom gains its
+      // full 2 rows. Shallow columns keep the gentle compressed lift.
+      for(const o of items){if(o.r<2)dead.add(o);else{o.r-=2;o.ju=now}}
+    }else{
+      let prev=-1;
+      for(const o of items){o.r=Math.max(o.r-2,prev+1);prev=o.r;o.ju=now}
+    }
+  }
+  if(dead.size){bricks=bricks.filter(b=>!dead.has(b));pickups=pickups.filter(pk=>!dead.has(pk))}
   if(bossCells.length){
     const topMin=Math.min(...bossCells.map(b=>b.r));
     for(const b of bossCells){b.r=topMin+b.bossDy;b.ju=now}
