@@ -343,7 +343,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
   <div class="ctl">
     <button class="cbtn" id="btnC" aria-label="دفعة"><span class="glyph" id="glyphC"><svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 13.5 12 6l7.5 7.5"/><path d="M4.5 20 12 12.5 19.5 20" opacity=".5"/></svg></span><span class="badge" id="badgeC">1</span></button>
     <button class="plusBtn" id="plusC" aria-label="شراء شحنة دفعة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
-    <span class="lb" id="labelC">دفعة</span>
+    <span class="lb" data-i18n="ctrlPush" id="labelC">دفعة</span>
   </div>
 </div>
 
@@ -702,6 +702,7 @@ function updateControls(){
     $('glyphB').innerHTML=IC_WAVE;$('labelB').textContent=t('ctrlWave');$('badgeB').hidden=false;
     setChargeBadge('B',waveAvail(),stock.wave);
   }
+  $('labelC').textContent=t('ctrlPush');
   setChargeBadge('C',pushAvail(),stock.push);
 }
 function updateUI(){
