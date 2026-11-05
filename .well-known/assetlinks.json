@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.xilike1.neonbrickrush",
+      "sha256_cert_fingerprints": ["EF:6D:EF:56:21:00:0A:3E:EA:87:65:97:72:D2:AB:9B:89:8A:C5:23:E2:95:56:2C:9D:8D:2C:6D:D5:90:4B:08"]
+    }
+  }
+]
